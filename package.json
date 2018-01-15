@@ -1,0 +1,25 @@
+{
+  "name": "vmix",
+  "version": "1.0.0",
+  "description": "vmix view module web component system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peterli888/vmix.git"
+  },
+  "keywords": [
+    "view",
+    "module",
+    "web",
+    "component"
+  ],
+  "author": "Peter Li",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/peterli888/vmix/issues"
+  },
+  "homepage": "https://github.com/peterli888/vmix#readme"
+}
