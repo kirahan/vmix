@@ -33,9 +33,10 @@ or module.exports={
 - [x] interact:   up-down through defined data-option-state-event
 - [x] custom Element name,private style,dom slot,inline js,
 
-[demo](https://github.com/peterli888/vmix/demo.md)
-[api](https://github.com/peterli888/vmix/api.md)
-[app](https://github.com/peterli888/vmix/app.md)
-[file](https://github.com/peterli888/vmix/file.md)
-[dataflow](https://github.com/peterli888/vmix/dataflow.md)
-[interact](https://github.com/peterli888/vmix/interact.md)
+
+## [demo](https://github.com/peterli888/vmix/demo.md)
+## [api](https://github.com/peterli888/vmix/api.md)
+## [app](https://github.com/peterli888/vmix/app.md)
+## [file](https://github.com/peterli888/vmix/file.md)
+## [dataflow](https://github.com/peterli888/vmix/dataflow.md)
+## [interact](https://github.com/peterli888/vmix/interact.md)
