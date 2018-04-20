@@ -9,8 +9,12 @@ view module web component system,with loader,parser,binder,watcher,dataflow-cont
 <style>...</style> 
 <template>...</template> 
 <script>
-this.abc=xyz;
-module.exports={,,,}
+this.data={};
+this.abc=function(){};
+
+or module.exports={
+  option,state,event,method,fn,
+}
 </script>
 ```
 ## step.3 import abc.html
@@ -20,10 +24,11 @@ module.exports={,,,}
 <abc id='xyz'/>                                   custom Element name
 ```
 ## specific
-- [x] code style: node style js module exports, 
-- [x] viewModule: plain js define,need not create,no relation with el and core engine,
-- [x] file:       auto load-parse-cache file,js inline,js require,
+- [x] only define:no "new vm()",vmix.js do everrything,
+- [x] code style: node style js module exports, or just this.abc=xyz,
+- [x] viewModule: plain js define,no relation with html element,
+- [x] file:       auto load-parse-cache-clean file,js inline,js require,
 - [x] data-el:    one-way two-way data-bind,
-- [x] dataflow:   3 data type,3 data source with permission,transparent controllable dataflow,
+- [x] dataflow:   3 data type(data,option,state),3 data source(store,parent,self),controllable dataflow,
 - [x] interact:   up-down through defined data-option-state-event
-- [x] custom Element name,private style,dom slot,
+- [x] custom Element name,private style,dom slot,inline js,
