@@ -1,23 +1,23 @@
 # vmix
 view module web component system,with loader,parser,binder,watcher,dataflow-control,extend,private-style,custome-element,slot
 
-## step.1 include vmix.js
+## step.1 include vmix.js,it will take care everything
 ```<script src="vmix.js" data-role='vmix' app-file="app.js" index-file='index.vm.html'></script>```
 
-## step.2 write a vm with filename=abc.html
-## mix your template-style-data-event,
-```<style>...</style> 
-<html>...</html> 
-<script>this.abc=xyz;</script>
+## step.2 write a vm file,mix your html-style-data-event,
+```
+<style>...</style> 
+<template>...</template> 
+<script>
+this.abc=xyz;
+module.exports={,,,}
+</script>
 ```
 ## step.3 import abc.html
 ```
 <vm  id='xyz' src='./abc.html' />                 use default tag name,and define a src,
 <div id='xyz' vm -src='./abc.html'/>              use any     tag name,and define a vm-src
-<abc id='xyz'/>\n
-<import type="vm" src="./abc.html" name='abc'/>   import,then custome tag name <abc id='xyz'/>
-app.config.path.vm.abc='abc.html'                 define,then custome tag name <abc id='xyz'/>
-app.use('vm','abc',{template,style,lib}           app.use                      <abc id='yxz'/>
+<abc id='xyz'/>                                   custom Element name
 ```
 ## specific
 - [x] code style: node style js module exports, 
