@@ -20,10 +20,10 @@ app.config.path.vm.abc='abc.html'                 define,then custome tag name <
 app.use('vm','abc',{template,style,lib}           app.use                      <abc id='yxz'/>
 ```
 ## specific
-### code style: node style js module exports, 
-### viewModule: plain js define,need not create,no relation with el and core engine,
-### file:       auto load-parse-cache file,js inline,js require,
-### data-el:    one-way two-way data-bind,
-### dataflow:   3 data type,3 data source with permission,transparent controllable dataflow,
-### interact:   up-down through defined data-option-state-event
-### custom Element name,private style,dom slot,
+- [x] code style: node style js module exports, 
+- [x] viewModule: plain js define,need not create,no relation with el and core engine,
+- [x] file:       auto load-parse-cache file,js inline,js require,
+- [x] data-el:    one-way two-way data-bind,
+- [x] dataflow:   3 data type,3 data source with permission,transparent controllable dataflow,
+- [x] interact:   up-down through defined data-option-state-event
+- [x] custom Element name,private style,dom slot,
