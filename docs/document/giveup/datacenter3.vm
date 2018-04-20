@@ -1,0 +1,17 @@
+<html>
+<div>
+<button >this is datacenter3,from root.datacenter version=  {version}</button>  
+</div>
+</html>
+<script>
+var obj={
+	ondata:function(error,data){
+		console.log("datacenter3 ondata ",error,data);
+		//if(!error)this.data.obj.version=data.obj.version +1 ;
+	},
+	data:{
+	},
+}
+module.exports=obj;
+
+</script>

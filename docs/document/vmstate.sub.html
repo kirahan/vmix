@@ -1,0 +1,24 @@
+
+<template>
+<button on-click='test'>this is child,setstate</button>
+<input type='text' value="{!this.state.name!}" style='width:70px'/>
+<!-- <input type='text' value="not bind:{this.state.name}" style='width:70px'/>
+ -->
+</template>
+
+<script>
+var mod={
+	state:{name:1},
+	test:function(){
+		this.setState("name",parseInt(Math.random()*100),function(data){
+			console.log('setstate,pvm said',data)
+		})
+	},
+	event:{
+		'setstate':function(data){
+			console.log('setstate',data)
+		}
+	}
+}
+module.exports=mod;
+</script>

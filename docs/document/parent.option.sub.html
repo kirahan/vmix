@@ -1,0 +1,56 @@
+
+<template>
+<div >
+<table class="table table-striped table-bordered"  >
+<tbody>
+<tr><td>in child</td><td>result</td><td>code</td><td>type</td><td>result</td><td>code</td></tr>
+
+
+<tr>
+<td>float</td><td><button>{$opt.floata}</button></td><td><code>{$opt.floata}</code></td>
+
+<td>inline</td><td>{$opt.abc}</td><td><code>{$opt.abc}</code></td>
+</tr>
+
+<tr>
+<td>bool</td><td>{$opt.boola}</td><td><code>{$opt.boola}</code></td>
+<td>string</td><td><button>{$opt.stringa}</button></td><td><code>{$opt.stringa}</code></td>
+
+</tr>
+
+<tr>
+<td>json</td><td><button>{$opt.obj.a}</button></td><td><code>{$opt.obj.a}</code></td>
+<td>json</td><td>{$opt.arrayb[1]}</td><td><code>{$opt.arrayb[1]}</code></td>
+</tr>
+
+
+<tr>
+<td>option.color</td><td><button watch-this-option-color=toel-style-color>{$opt.color}</button></td><td><code>{$opt.color}</code></td>
+<td>json</td><td>{$opt.arrayb[1]}</td><td><code>{$opt.arrayb[1]}</code></td>
+</tr>
+</tbody>
+</table>
+</div> 
+
+</template>
+
+<script>
+var mod={
+	data:{
+		x:'1',
+	},
+	option:{	
+		obj:{},arrayb:[],
+	},
+	event:{}
+}
+mod.hookTemplate=function(str){
+	return str.replace(/\$opt\./g,'this.option.');
+}
+mod.event['pvm.setoption']=function(data){
+	console.log('pvm.setoption',data)
+}
+mod.onstart=function(){
+}
+module.exports=mod;
+</script>

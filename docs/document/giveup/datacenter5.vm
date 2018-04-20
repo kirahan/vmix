@@ -1,0 +1,17 @@
+<html>
+<div>
+<button >this is datacenter5,from datacentersample.vm ,will error,version={version}</button>  
+</div>
+</html>
+<script>
+var obj={
+	ondata:function(error,data){
+		//console.error("这是设计的错误 datacenter5 ondata",error,data);
+	},
+	data:{
+		obj:{name:'liyong',age:123},
+	},
+}
+module.exports=obj;
+
+</script>

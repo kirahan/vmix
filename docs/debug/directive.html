@@ -1,0 +1,33 @@
+<html>
+
+<h4>element directive</h4>
+<pre>
+1.expression ......<tag a="{b}" /> <tag>{abc}</tag> 
+2.domevent ........<tag on-abc='www' />   
+3.dataevent .......<tag watch-cba='xxx' />  
+4.el filter .......<tag el-filter='if:yyy' />
+5.el getter .......<tag id='abc'  class='cba'/>
+6.custome .........<tag el-hook='xyz.js' data-x=123/>
+7.array ...........<tag el-list='book in books'/>
+</pre>
+
+<button on-click='js:app.navigate("#!/document/vmimport")'>custome element</button>
+
+<button on-click='js:app.navigate("#!/document/extend.elhook")'>custome directive</button>
+</html>
+
+<script>
+var mod={};
+mod.onstart=function(){
+	/*console.log("function");
+	for(var k in this){
+		if(typeof this[k]=='function') console.log(k);
+	}
+	console.log("\nother");
+	
+	for(var k in this){
+		if(typeof this[k]!=='function') console.log(k,typeof this[k]);
+	}*/
+}
+module.exports=mod;
+</script>

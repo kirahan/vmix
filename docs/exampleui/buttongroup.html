@@ -1,0 +1,49 @@
+<template>
+
+<buttongroup event-btnclick='backto'>
+	<data titles=this.data.titles
+		groups="[
+		{otherclass:'btn-default', btns:[11,2,3,4]},
+		{otherclass:'btn-lg btn-danger', btns:[111,12,13,14]}]"
+		 
+	/>
+	<option otherclass="btn-lg btn-default btn-primary"/>
+</buttongroup>
+<pre>
+<buttongroup event-btnclick='backto'>
+	<data titles=this.data.titles
+		groups="[
+		{otherclass:'btn-default', btns:[11,2,3,4]},
+		{otherclass:'btn-lg btn-danger', btns:[111,12,13,14]}]"
+		 
+	/>
+	<option otherclass="btn-lg btn-default btn-primary">
+</buttongroup>
+
+</pre>
+
+
+<h4>buttongroup.vm source</h4>
+<pre id='source'></pre>
+
+</template>
+
+<script>
+var mod={};
+mod.data={
+	name:'123',
+	titles:[1,2,3]
+}
+mod.backto=function(opt,e){
+	console.log("btngroup click," ,opt,e);
+}
+mod.hook=function(when,cvm){
+	//console.error('main.hook',when,this.id)
+	if(when=='onstart'){
+		app.pub('getvmsource','/libui/buttongroup.vm',function(text){
+			this.getel('#source').textContent=text;
+		}.bind(this))	
+	}
+}
+module.exports=mod;
+</script>

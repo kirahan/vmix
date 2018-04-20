@@ -1,0 +1,46 @@
+
+<html>
+<h4>template block example</h4>
+
+<div >
+themebutton will appendto ppel,color bgcolor is controled by config.theme<br>
+<themebutton data-text='www' on-click=clicktest id='123' option-width='300px'/>
+<br>
+<button on-click='js:this.get("123").close()'>themebutton close</button>
+
+<button on-click='js:this.get("123").start()'>themebutton start</button>
+<button on-click='js:this.getChild("123").hide()'>themebutton hide</button>
+
+<button on-click='js:this.getChild("123").show()'>themebutton show</button>
+
+<button on-click='js:this.setChildOption("123","width",parseInt(Math.random()*300)+"px")'>setChildOption</button>
+
+
+<br>
+<code>
+<themebutton data-text='www' on-click=clicktest id='123'/>
+</code>
+
+</div>
+<alert data-text='you must has a email' id='block_alert' />
+<code><alert data-text='you must has a email' /></code>
+<button on-click='js:this.getel("#block_alert").style.display="none"'>hide</button>
+<button on-click='js:this.getel("#block_alert").style.display=""'>show</button>
+
+<br><br>
+</html>
+
+<script>
+
+var mod={};
+mod.data={
+	name:100,
+}
+mod.modname=function(e,p){
+	this.setData('name',parseInt(Math.random()*100))
+}
+mod.clicktest=function(e,p){
+	console.log('clicktest',e,p,app.theme)
+}
+module.exports=mod;
+</script>

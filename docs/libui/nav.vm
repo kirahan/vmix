@@ -1,0 +1,96 @@
+
+<html lang="en">
+{% if {this.option.usebar}==true %}
+<nav class="navbar navbar-default">
+  <div class="container-fluid">  
+    <div class="collapse navbar-collapse"  >
+{%endif%}
+
+<ul class="nav {this.option.navbarclass} nav-{this.option.type} {this.option.otherclass}" 
+watch-this-option-navbarclass-watch-this-option-type=typechanged-toel-class role="ul">
+  <li role="presentation" el-list='title in navs' class="{ifactive({$index})} linav">
+  <a href="{genhash($index)}" title="{gentitle($index)}" on-click='actcb({$index})'>{genname($index)}</a>
+  </li>
+</ul>
+
+{% if {this.option.usebar}==true %}
+
+    </div> 
+  </div> 
+</nav>
+{%endif%}
+</html>
+<script>
+
+var obj={
+	data:{
+		activeindex:0,
+		navs:[],
+	},option:{	
+		usebar:false,
+		navbarclass:'',
+		type:'tabs',//pillsmtabs	
+		otherclass:'',//nav-justified nav-stacked
+	},
+	config:{cacheClasses:['linav']},
+	beforestart:function(){
+		if(this.option.usebar==true)this.option.navbarclass='navbar-nav';
+		//console.error('beforeStart.navbarclass',this.option.navbarclass)
+	},
+	
+	genhash:function(index){
+		return this.data.navs[index].hash||'#';
+	},
+	gentitle:function(index){
+		return this.data.navs[index].title||this.data.navs[index].toString();
+	},
+	genname:function(index){
+		return this.data.navs[index].name||this.data.navs[index].toString();
+	},
+	ifactive:function(index){
+		if(index==this.data.activeindex)return 'active';
+		else return '';
+	},
+	typechanged:function(e,opt){
+		//console.log('typechanged',event.newv,this.option.type);
+		
+		this.option.type=(!e ||!e.newv || e.newv!=='pills')?'tabs':'pills';
+		return "nav "+this.option.navbarclass+" nav-"+this.option.type+" "+this.option.otherclass;
+	},
+	actcb:function(e,para){
+		var els=this.getel(".linav");
+		var index=els.indexOf(e.target.parentNode);
+		if(els){
+			for(var k in els){
+				if(k==parseInt(index)){	
+					els[k].classList.add("active");
+				}else{
+					els[k].classList.remove("active");			
+				}
+			}
+		}
+		this.pubup('tabclick',index);
+	},
+}
+module.exports=obj;
+/*
+node.classList本身有
+"add"
+"remove"
+"toggle"
+"replace"
+
+
+"length"
+"value"
+"item"
+"contains"
+"supports"
+"toString"
+"entries"
+"forEach"
+"keys"
+"values"
+"constructor"
+*/
+</script>

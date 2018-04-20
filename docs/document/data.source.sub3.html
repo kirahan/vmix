@@ -1,0 +1,29 @@
+<body>
+<div style="background-Color:#ddd;">
+<button >this is sub3 ,data from self</button>
+<button text={!name} />
+<button on-click="mytest">self setData ok,cause it is from myself</button>
+<br>
+input.value=<button text={!inp} />
+<input type=text value='{inp}' on-input="js:this.setData('inp',e.target.value)" />
+<button el-list='a in s' text={a} />
+<br>
+
+<button text="add,no permission" on-click='js:this.addData("s",-1,3)'/>
+<button text="del,no permission" on-click='js:this.delData("s",0,1)'/>
+<div>
+</body>
+<script>
+var mod={}
+mod.data={	name:'0',inp:'1',
+	s:[1,2]
+}
+mod.mytest=function(){
+	this.setData('name',parseInt(Math.random()*100),function(res){
+		console.log(res)
+	})
+}
+mod.event={
+}
+module.exports=mod;
+</script>

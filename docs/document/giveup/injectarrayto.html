@@ -1,0 +1,29 @@
+
+<template>
+
+
+
+<div><button style='width:100px'>static</button><button el-list="a in static">{!a}</button>
+<button on-click="js:this.data.static[0]=parseInt(Math.random()*100);">mod0</button> </div> 
+
+<div><button style='width:100px'>nodeep</button><button el-list="a in nodeep" >{!a}</button></div>
+
+<div><button style='width:100px'>deep</button><button el-list="a in deep" >{!a.name}</button></div> 
+
+ 
+
+</template>
+
+<script>
+var mod={};
+mod.data={
+	static:[9,9,9,4,5,5,5],
+	nodeep:[1,2,3],
+	deep:[{name:1},{name:2}],
+}
+mod.beforeinject=function(tag,value){
+	if(!tag)console.log("beforestart",this.data);
+	return true;
+}
+module.exports=mod;
+</script>

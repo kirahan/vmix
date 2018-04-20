@@ -1,0 +1,91 @@
+<html>
+<div> 
+ <ul class="nav  nav-pills" role="tablist">
+   <li class="{ifactive($index)}" el-list="title in titles" on-click='switchtab'  >
+		<slot el-filter="if: {hasSlot(title{$index})}" name="title{$index}" ></slot>
+        <a el-filter="else">{!title}</a>
+	</li>
+  </ul>
+
+   <div class="tab-content"  role="contentlist">
+    <div   class="tab-pane {ifactive($index)}" el-list="title in titles" style='{genstyle()}' >
+	<slot name='tab{$index}' />
+	</div>	
+  </div> 
+</div>
+
+</html>
+
+<script>
+function getNodeIndex(el){ 
+    var i=0;  
+    while(el = el.previousSibling)i++; 
+    return i;  
+}
+
+var obj={
+	data:{
+		titles:[],
+	},
+	state:{activesn:0},
+	option:{
+		height:'',
+		background:'',
+		activeindex:0,
+	},
+	event:{
+		'pvm.switchto':function(newv){
+			this.on_StateChanged({oldv:this.state.activesn,newv:newv});
+		}
+	},
+	on_StateChanged:function(data){
+		if(data.newv===parseInt(data.newv) && data.oldv===parseInt(data.oldv)
+		&& data.oldv!==data.newv ){
+			this.state.activesn=data.newv;
+			this.__switch(data.newv,data.oldv,1);
+		}
+	},
+	beforestart:function(){
+		this.state.activesn=this.option.activeindex;
+	},
+	genstyle:function(){ 
+		var text='';
+		if(this.option.background)text+='background-color:'+this.option.background+';';
+		if(this.option.height)text+='height:'+this.option.height;
+		return text;
+	},
+	ifactive:function(index){
+		if(index==this.option.activeindex)return 'active';
+		else return '';
+	},
+	__switch:function(index,oldv,frompvm){
+		var el_heads=this.getel("$tablist")[0];
+		var el_conts=this.getel("$contentlist")[0];
+		if(!el_heads || !el_conts ){
+			return;
+		}
+		var len=el_heads.childNodes.length-1;
+		if(index>len || oldv>len)return;
+		el_heads.childNodes[oldv]['className']='';
+		el_heads.childNodes[index]['className']="active";
+
+		if(el_conts.childNodes.length>oldv)el_conts.childNodes[oldv].className="tab-pane";
+		if(el_conts.childNodes.length>index)el_conts.childNodes[index].className="tab-pane active";
+		if(!frompvm){
+			this.state.activesn=index;
+			this.pubup('switch',index);
+		}
+	},
+	switchtab:function(e){
+		var el=e.target;
+		while(true){
+			if(el.tagName=='LI')break;
+			else el=el.parentNode;
+		}
+		var index=getNodeIndex(el);
+		console.log('index='+index)
+		this.__switch(index,this.state.activesn,0);
+	}
+}
+module.exports=obj;
+</script>

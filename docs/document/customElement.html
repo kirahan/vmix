@@ -1,0 +1,44 @@
+
+<html >
+<h4>apple is defined in config.vmpath,i will auto load and cache it</h4>
+
+<h4>normaly, you need inject something to it</h4>
+<pre>
+<apple>
+<data color=red size= 8cm bgcolor=#999/>
+</apple>
+
+<apple>
+<data color=blue size= 9cm/>
+<node id='cb'>
+<button on-click='cback'>callback me</button>
+</node>
+</apple>
+</pre>
+
+
+<h4>sample</h4>
+<div style='display:inline-block;'>
+<div style='width:50%;float:left'>
+<apple>
+<data color=red size= 8cm bgcolor=#999/>
+<cbbtn><button on-click='cback'>callback</button></cbbtn>
+</apple>
+</div>
+<div style='width:50%;float:right'>
+<apple>
+<data color=blue size= 9cm/>
+<node id='cb'>
+<button on-click='cback'>callback me</button></node>
+</apple>
+</div>
+</div>
+
+</html>
+<script>
+module.exports={
+	domevent:{
+		cback:function(){console.log("this.id="+this.id)}
+	}
+}
+</script>

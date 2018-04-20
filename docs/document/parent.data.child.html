@@ -1,0 +1,67 @@
+
+<template>
+<div >
+<table class="table table-striped table-bordered"  >
+<tbody>
+<tr><td>in child</td><td>result</td><td>code</td><td>type</td><td>result</td><td>code</td></tr>
+
+
+<tr><td>string</td><td>{stringa}</td><td><code>{stringa}</code></td>
+<td>object </td><td><button>{!objx.a}</button></td><td ><code>{!objx.a}</code>
+<button on-click='js:this.setData("objx.a",parseInt(Math.random()*100))'>set data.from.pvm fail</button>
+
+</td>
+</tr>
+
+<tr><td>bool</td><td>{boola}</td><td><code>{boola}</code></td>
+<td>object </td><td><button>{!objy.b.c}</button></td><td ><code>{!objy.b.c}</code></td>
+</tr>
+
+<tr><td>inline</td><td>{!abc}</td><td><code>{!abc}</code></td>
+<td>float</td><td><button>{!floata}</button></td><td><code>{!floata}</code></td></tr>
+
+<tr>
+
+<td>json</td><td>{!arrayb[1]}</td><td><code>{!arrayb[1]}</code></td>
+
+<td >array</td>
+<td><button el-list='bk in bks'>{!bk.name}</button></td>
+<td><code><a el-list='bk in bks'>{!bk.name}</a></code>
+</td></tr> 
+
+
+<tr>
+<td>json</td><td>{config.a}</td><td><code>{config.a}</code></td>
+
+
+<td >array</td>
+<td><button el-list='bk in bks'>{!bk.name}</button></td>
+<td><code><a el-list='bk in bks'>{!bk.name}</a></code>
+</td></tr> 
+</tbody>
+</table>
+</div> 
+
+</template>
+
+<script>
+var mod={
+	data:{
+		x:'1',
+		config:{},
+		arrayb:[],
+	}
+}
+
+mod.onstart=function(){
+	//console.log('parent.data.child',this.id,this.sid,this.__datafrom_parent)
+
+}
+
+mod.event={
+	'pvm.setdata':function(data){console.log('pvm.setdata',data)},
+	'pvm.adddata':function(data){console.log('pvm.adddata',data)},
+	'pvm.deldata':function(data){console.log('pvm.deldata',data)},
+}
+module.exports=mod;
+</script>

@@ -1,0 +1,83 @@
+
+<html>
+<h4>vm event</h4>
+
+
+<div vm-src='./vm.event.sub.html' id='sub' style='border:1px solid #eee' event-test2='event_test2'> </div>
+
+<br><br>
+<code>this is in pvm</code>
+<br>
+<br>
+
+
+<pre>
+<div vm-src='./vm.event.sub.html' id='sub' style='border:1px solid #eee' event-test2='event_test2'> </div>
+mod.event_test2=function(data,from,cb){}
+
+mod.event={
+  'child.test': function(data,from,cb){cb()}, when cvm.pubup (name,data,cb(data,from))
+
+  'pvm.test1':  function(data,from,cb){cb()}, when pvm.pubdown('cvmid'|'*',name,data,cb(data,from))
+  'cvmid.test': function(data,from,cb){cb()}, when cvm.pubup (name,data,cb(data,from))
+  'app.test1':  function(data,from,cb){cb()}, when xvm.pubapp(name,data,cb(data,from))
+  'app.test1':  function(data,from,cb){cb()}, when app.pub(   name,data,cb(data,from))
+
+  'cvmid.state':function({p,newv,oldv},from,cb){},when cvm.setState (name,v,cb)  
+
+  'app.setdata':function({p,oldv,newv}){},        when app.setData(vm,p,v)
+  'app.adddata':function({p,index,value}){},      when app.addData(vm,p,index,v)
+  'app.deldata':function({p,index,count}){},      when app.delData(vm,p,index,c)
+  'pvm.setdata':function({p,oldv,newv}){},        when pvm.setChildData(cvm,p,v)
+  'pvm.adddata':function({p,index,value}){},      when pvm.addChildData(cvm,p,index,v)
+  'pvm.deldata':function({p,index,count}){},      when pvm.delChildData(cvm,p,index,c)
+  'pvm.setoption':function({p,oldv,newv}){},      when pvm.setChildOption(cvm,p,v)
+}
+
+</pre>
+<button on-click="pubdown_ck">in pvm,pub down</button>
+<button on-click="pubapp_ck">in pvm,pub app</button>
+<button on-click="set_c_data">in pvm,set child data</button>
+
+</html>
+<script>
+
+var mod={};
+mod.pubdown_ck=function(){
+	this.pubdown('*','test1',{name:1},function(data,from){
+		console.log('i am main',this.id,'data=',data,'from.id=',from.id)
+	})
+}	
+mod.pubapp_ck=function(){
+	this.pubapp('test1',{name:1},function(data,from){
+		console.log('i am main',this.id,'data=',data,'from.id=',from.id)
+	})
+}	
+mod.event_test2=function(data,from,cb){
+	console.error('sub.test2,defined in html,i am main',this.id,'data=',data,'from=',from.id);
+	//cb('ok')
+}
+mod.event={
+	'sub.state':function(data,from,cb){
+		console.log('sub.state,i am main',this.id,'data=',data,'from=',from.id);
+	},
+	'sub.test':function(data,from,cb){
+		console.error('sub.test,i am main',this.id,'data=',data,'from=',from.id);
+		//cb('ok')
+	},
+	'child.test3':function(data,from,cb){
+		console.error('child.test3,i am main',this.id,'data=',data,'from=',from.id);
+		//cb('ok')
+	},
+	'app.test':function(data,from,cb){
+		console.log('app.test,i am main',this.id,'data=',data,'from=',from.id);
+		cb('ok')
+	}
+}
+mod.set_c_data=function(){
+	this.setChildData('sub','name',parseInt(Math.random()*100),function(res){
+		console.log('set from pvm,cvm.id=',',res=',res)
+	});
+}
+module.exports=mod;
+</script>

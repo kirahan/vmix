@@ -1,0 +1,127 @@
+
+<body>
+
+<div class="row">
+<div class="col-md-2">
+	<a class="btn  btn-default" href="#!/document/appjs">app.js</a><br>
+	<a class="btn  btn-default" href="#!/document/appextend">app.extend</a><br>
+</div>
+
+<div class="col-md-10">
+<div><pre>
+<script src="vmix.js" data-role='vmix' app-file="app.js" index-file='index123.html'></script>
+when vmix.js is load ,then load app-file and index-file,
+if no index-file,will load vm from document.body.childNodes
+app.indexvm.pel=document.body,
+app.indexvm.id='__index__',
+
+in your js code,app is a global object,has some function
+</pre></div>
+</div>
+
+
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/app.store">app.store</a><br>
+</div>
+<div class="col-md-10">	
+<div><pre>
+app.store={}
+
+app.setData(vm,path,value,cb)           
+app.addData(vm,path,index,v,cb)         
+app.delData(vm,path,index,c,cb)         
+</pre></div>
+</div>
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/app">app.hook</a><br>
+</div>
+<div class="col-md-10">	
+<div><pre>
+app.hookStart=function(cb){
+  var need=2;
+  app.store.init(function(){           need--;if(need==0)cb();});
+  app.loadfile('css','',function(d){   need--;if(need==0)cb();});
+}
+if you have a app.hookStart ,you must cb(),then auto start index.vm,normally you need it to app.store.init(cb)
+
+vm.hook:  vm.hook(when),vm.hookStart(cb){cb},vm.hookTemplate(),vm.hookStyle()
+el.hook:  <el-hook="abc" />
+</pre></div>
+</div>
+
+
+
+
+
+
+<!-- 
+config.global_app_alias='app'; confi.app={what_you_want}
+you can change "app" to what ever you like,it is yours,i have nothing with it.
+-->
+
+
+
+
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/app.route">app route</a><br>
+</div>
+<div class="col-md-10">
+<div><pre>
+app.route('#!/aaa/bbb',vm,cb);
+app.navigate('#!/aaa/bbb','title');
+this is defined in app.js,you can define your self
+</pre></div>
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/app.pubsub">app subpub</a><br>
+ </div>
+<div class="col-md-10">
+<div><pre>
+app.sub(channel,context,cb),
+app.subonce(channel,context,cb),
+app.unsub(channel,context,cb),
+app.pub(channel,data,context,cb),
+vm.event={
+  'app.name':function(data,from,cb)
+}
+</pre></div>
+</div>
+
+
+
+<div class="col-md-2">
+<button  class="btn  btn-default" on-click=loadfile>app.loadfile</button>
+</div>
+<div class="col-md-10">
+<div><pre>
+app.loadfile(type,'document/abc.js',function(err,mod,spec){	console.log(err,mod,spec)})
+type=lib|text|vm, used for preload
+</pre></div>
+</div>
+</div>
+
+</div>
+
+</body>
+
+
+<script>
+
+var mod={};
+
+mod.loadfile=function(){
+	app.loadfile('lib','document/abc.js',function(err,mod,spec){
+		console.log('app.loadfile after vm.start',err,mod)
+	})
+}
+mod.onstart=function(){
+	console.log('app',app)
+	console.log('app.constructor.prototype',app.constructor.prototype)
+}
+module.exports=mod;
+</script>

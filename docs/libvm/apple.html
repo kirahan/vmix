@@ -1,0 +1,33 @@
+<html>
+<body>
+<div style="border:1px red">
+
+<button  style='width:200px'>i am apple </button><br/>
+<table class="table" style="width:200px">
+<tbody>
+<tr><td style="color:{color}">color</td><td style='background-color:{bgcolor}'>{bgcolor}</td></tr>
+<tr><td>size</td><td> {size} </td></tr>
+</tbody>
+</table>
+</div> 
+<div inject-node='cb' />
+</body>
+</html>
+
+<script>
+var obj={
+	data:{
+		color:'',
+		size:'',
+		cbbtn:'',
+		bgcolor:''
+	}
+}
+obj.beforeinject=function(tag,value){
+	//console.log("beforeinject",tag,value);
+	if(tag=='bgcolor')this.data['bgcolor']=value;
+	return true;
+}
+module.exports=obj;
+
+</script>

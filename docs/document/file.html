@@ -1,0 +1,76 @@
+
+<body>
+
+
+<div class="row">
+
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/privateStyle">privateStyle</a>
+</div>
+<div class="col-md-10">	
+<div><pre>
+<style type="text/css">.abc{ }</style>
+<style src='./abc.css'></style>
+</pre></div>
+</div>
+</div>
+
+<div class="row">
+
+
+
+
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/vmimport">import vm</a><br>
+<a class="btn  btn-default" href="#!/document/vmextend">extend vm</a><br>
+<a class="btn  btn-default" href="#!/document/template.block">import block</a><br>
+<a class="btn  btn-default" href="#!/document/jsrequire">import js</a><br>
+<a class="btn  btn-default" href="#!/document/el.hook">el hook</a><br>
+<a class="btn  btn-default" href="#!/document/appcacheclean">cache clean</a><br>
+
+
+</div>
+<div class="col-md-10">	
+<div><pre>
+<import type="css" src='./abd.css'/>
+<import type='vm' src='abc.html' name='abc' >       <abc id=xyz ></abc>
+<import type="prototype" src="aaa.html" />          vm extend
+<import type='block' src="./abd.html" name="abd">   <abd />
+<import type="lib" src='./abd.js' name="abc"/>      var abc=require('abc' || 'abc.js');
+<import type="json" src='./abd.json' name="abc"/>   var abc=require('abc' || 'abc.json');
+
+<div el-hook=xxx />
+
+import css|lib|block need preload before vm.start,import vm loaded when it's start.
+every loaded file will be cached with a refCount,
+when all the vm need a file was removed,the cache of the file will be removed.
+</pre></div>
+</div>
+</div>
+
+<div class="row">
+
+
+<div class="col-md-2">
+	<a class="btn  btn-default" href="#!/debug/tagerror">tag error</a><br>
+</div>
+<div class="col-md-10">
+<div><pre>
+app.config.path.lib.abc="abc.js"      you can var abc=require('abc');
+app.config.path.vm.abc="abc.html"     you can <abc  />
+app.config.path.block.abc="abc.html"  you can <abc  />
+app.config.path.elhook.abc="abc.js"   you can <tag el- hook='abc' >
+
+you can write 4 type module|file
+....    viewmModule       block        elhook   jslib
+data    y                 half         n        n
+view    y                 y            n        n
+event   y                 half         y        n
+</pre></div>
+</div>
+
+</div>
+
+
+</body>
+

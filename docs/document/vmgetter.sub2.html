@@ -1,0 +1,11 @@
+<template>
+<div>
+
+<button  on-click='js:console.log("this is in child vm 2")' >child vm 2</button> 
+<button   >this.id={this.id}</button>
+<button  on-click='js:console.log("parent.id="+this.pvm.id)'>this.pvm|this.getParent()</button>
+<div>
+</template>
+<script>
+module.exports={};
+</script>

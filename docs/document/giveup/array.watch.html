@@ -1,0 +1,123 @@
+<template>
+<pre>
+array.length can not be watched
+watch-bookss-$add='newlen(add)'
+watch-bookss-$add-watch-bookss-$delat='newlen(add_or_del)'
+watch-books-0='xyz'
+watch-books-0-name='xyz'
+</pre>
+ 
+<div> 
+<button   style="width:120px" el-list="book in obj.books" >{!book.name}</button>
+</div> 
+
+<div>
+<button  on-click="obj_books_add(0)" style='width:120px'>add_book</button> 
+<button  watch-obj-books-$add='watchit()'   >watch-books-$add</button> 
+<button  watch-obj-books-$add='newlen(add)' watch-obj-books-$delat='newlen(del)'   >watch-books-length not work</button> 
+<button  watch-obj-books-$add='watchit()'   >watch-books-$add</button> <code>watch-obj-books-$add</code>
+</div>
+<div>
+<button  on-click="obj_books_del(0)"  style='width:120px'>del_book 0</button> 
+<button  watch-obj-books-$delat='watchit()'   >watch-books-$delat</button>  
+<button  watch-obj-books-$delat='watchit()'   >watch-books-$delat</button>  <code>watch-obj-books-$delat</code>
+</div>
+
+<div>
+<button  on-click="obj_books_mod(0)"  style='width:120px'>mod_book </button>
+<button  watch-obj-books-$itemchange='watchit()'   >watch-books-$itemchange</button>  
+<button  watch-obj-books-$itemchange='watchit()'   >watch-books-$itemchange</button>  <code>watch-obj-books-$itemchange</code>
+</div>
+<div>
+</div>
+<div>
+<button on-click=obj_books_splice    style='width:120px'>books_splice</button> 
+<button  watch-obj-books-$splice='watchit'>watch-books-$splice</button>  <code>watch-obj-books-$splice</code>
+</div> 
+
+<div>
+<button on-click="obj_books_update()"  style='width:120px'>mod_0_$update</button> 
+<button  watch-obj-books-$update='watchit'   >watch-books-$update</button> <code>watch-obj-books-$update</code>
+</div> 
+
+
+
+<div style='margin-top:5mm'>  
+<button style=''>not in list,not deep array ,only watch</button><br/>
+<button style='width:150px' watch-books-0='valueofzero1-toel-text'></button>
+<button watch-books-$add='newlen(add)'   disabled>add-len={books.length}</button> 
+<button watch-books-$add-watch-books-$delat='newlen(add_or_del)'  disabled >add_or_del-len={books.length}</button> 
+<button watch-books-$delat='newlen(del)'   disabled>del-len={books.length}</button> 
+<code>watch-books-$add, watch-books-$delat</code>
+<br/>
+<button on-click=books_add   >add</button>   
+<button on-click=books_delat(1)   >delat 1</button>  
+<button on-click=books_delat(0) >delat 0</button>  
+<button on-click=books_mod   >mod 0</button>
+<button   >{!books.0}</button>
+<code>delat 0 lost watch of books[0],Immediately</code>
+</div> 
+
+<div style='margin-top:5mm'> 
+
+<button style=''>not in list,deep array ,only watch</button><br/>
+<button style='width:150px' watch-bookss-0-name='valueofzero2()-toel-text'></button>
+<button watch-bookss-$add='newlen(add)'  disabled>add-len={bookss.length}</button> 
+<button watch-bookss-$add-watch-bookss-$delat='newlen(add_or_del)'   disabled>add_or_del-len={bookss.length}</button> 
+<button watch-bookss-$delat='newlen(del)' disabled>del-len={bookss.length}</button> 
+<code>watch-bookss-$add,watch-bookss-$delat</code>
+<div>  
+</div>  
+<button on-click=bookss_add   >add</button> 
+<button on-click=bookss_delat(1)   >delat 1</button>    
+<button on-click=bookss_delat(0)  >delat 0 </button>
+<button on-click=bookss_mod   >mod 0</button> 
+<code>delat 0 lost watch of bookss[0].name,Immediately</code>
+</div>  
+
+</template>
+
+<script>
+var newstr=function(){return parseInt(parseInt(Math.random()*100))};
+var color_change=function(el){
+	el.style.color='red';setTimeout(function(){el.style.color=''},500)
+}
+var obj={
+	data:{
+		name:'111',
+		books:[111,222,323],
+		bookss:[{name:110},{name:220},{name:330}],
+		obj:{books:[{name:110},{name:221}]},
+	},
+	method:{
+	},
+	filter:{},
+	domevent:{
+		obj_books_add:function(){		this.data.obj.books.$add({name:newstr()});},
+		obj_books_mod:function(e,id){	this.data.obj.books[0].name=newstr();},
+		obj_books_del:function(e,id){ 	this.data.obj.books.$delat(0,1)	},	
+		obj_books_splice:function(){	this.data.obj.books.$splice(1,1,{name:newstr()},{name:newstr()});		},
+		obj_books_update:function(){ 
+			this.data.obj.books[0].name=newstr();
+			this.data.obj.books.$update()
+		},
+
+		books_add:function(){		this.data.books.$add(newstr());},
+		books_mod:function(){		this.data.books[0]=newstr(); },
+		books_delat:function(e,id){	this.data.books.$delat(parseInt(id))},		
+		bookss_mod:function(){		this.data.bookss[0].name=newstr();},
+		bookss_delat:function(e,id){this.data.bookss.$delat(parseInt(id));},
+		bookss_add:function(){		this.data.bookss.$add({name:newstr()});},
+	},
+	dataevent:{
+		watchit:function(e){	color_change(e.el);	},//console.log(e.action);
+
+
+		newlen:function(e,type){ e.el.textContent= type+'-len='+e.array.length; color_change(e.el);},
+		valueofzero1:function(){return 'books[0]='+this.data.books[0]},
+		valueofzero2:function(){return 'bookss[0].name='+this.data.bookss[0].name}
+	}
+}
+module.exports=obj;
+
+</script>

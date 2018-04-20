@@ -1,0 +1,65 @@
+
+<html>
+
+<pre>
+you can extend a vm by pvm.inject.data or slot to extend it,
+or import a protype and extend it through auto deepmerge
+</pre>
+
+<h4>step 1,include the prototype vm</h4>
+<pre>
+<import type="prototype" src="aaa.html" />
+in your vmlib
+mod.extendTemplate=function(from,newtemplate){	return newv;}
+mod.extendStyle=function(from,newstyle){	    return newv;}
+</pre>
+
+
+<h4>step 2,extend it</h4>
+<h5>if newvm has the extendTemplate(oldt,newt) function,then template=return value</h5>
+<h5>else if new template, new template will replace the old,else, will use old template</h5>
+<h5>style same as template,vm.extendStyle(oldt,newt)</h5>
+<h5>jacode,rewrite it,auto merge</h5>
+
+<table >
+<tr><td> <h4>prototype vm file</h4> </td><td><h4>new vm file </h4></td></tr>
+
+<tr><td> 
+
+<pre id='oldvm'>
+</pre>
+</td>
+<td>
+
+<pre id='newvm'>
+</pre>
+
+</td></tr>
+
+
+<tr>
+<td>result </td>
+<td>result </td>
+</tr>
+<tr>
+<td><div vm-src='./vmextend.from.html'></div> </td>
+<td><div vm-src='./vmextend.after.html'></div>  </td>
+</tr>
+</table>
+
+
+</html>
+
+<script>
+var mod={}
+mod.onstart=function(){
+
+	app.pub('getvmsource','/document/vmextend.after.html',function(text){
+		this.getel('#newvm').textContent=text;
+	}.bind(this))
+	app.pub('getvmsource','/document/vmextend.from.html',function(text){
+		this.getel('#oldvm').textContent=text;
+	}.bind(this))
+}
+module.exports=mod;
+</script>

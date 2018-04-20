@@ -1,0 +1,14 @@
+<template>
+<div>
+
+<button  on-click='js:console.log("this is in child vm 1")' >child vm  1</button> 
+<button   >this.id={this.id}</button>  
+<button  on-click='js:console.log("parent.id="+this.pvm.id)'>this.pvm|this.getParent()</button>
+<vm id='sub11' src='./vmgetter.sub2.html' style='border:0px blue solid'> </div>
+
+</div>
+<br/>
+</template>
+<script>
+module.exports={};
+</script>

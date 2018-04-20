@@ -1,0 +1,76 @@
+<style type="text/css">
+ .@b{width:100px} 
+</style>
+<template>
+<div>
+<button class='@b'>this is  vm2 </button> 
+<button class='@b' on-click=vm2_vm1>pub to vm1</button> 
+<button class='@b' on-click=vm2_vm1_to>pubto vm1</button> 
+<button class='@b' on-click=testparent>pubup</button> 
+<input value='{!msg!}'  style='width:450px'></input> 
+</div> 
+
+</template>
+
+<script>
+var obj={
+	data:{
+		msg:''
+	},
+	domevent:{
+		testparent:function(){
+			this.pubup('test',{name:'test',num:321},function(result,receiver){
+				console.log("pubup callback",receiver.id,result);		
+			})
+		},
+		vm2_vm1:function(){
+			var slef=this;
+			app.pub('vm2_vm1',321,function(result,receiver){
+				console.log('pub vm2_vm1 has callback','slef.id='+slef.id,'this.id='+this.id,'receiver.id='+receiver.id,"result="+result);		
+			}.bind(this))
+		},
+		vm2_vm1_to:function(){
+			var slef=this;
+			this.pubto(this.pvm.children[0],'vm2_vm1_pubto',321,function(result,receiver){
+				console.log('pubto vm1 has callback','slef.id='+slef.id,'this.id='+this.id,'receiver.id='+receiver.id,"result="+result);		
+			})
+		},
+	},
+	message:{
+		"vm1_vm2":function(data,cb,sender){
+			//console.log('i get vm1_vm2 message',sender);//this,
+			this.data.msg='msg='+data+',time='+parseInt(Math.random()*100);
+			if(sender)this.data.msg+=",send="+sender.id;
+			cb("from vm1_vm2");
+		},
+		"vm1_vm2_pubto":function(data,cb,sender){
+			this.data.msg='msg='+data+',time='+parseInt(Math.random()*100);			
+			if(sender)this.data.msg+=",send="+sender.id;
+			cb("get_ vm1_vm2_pubto");
+		},
+		'parent@test':function(data,cb,sender){
+			console.log("get parent message",sender);
+			this.data.msg='sender='+sender.id+',msg='+JSON.stringify(data)+',time='+parseInt(Math.random()*100);
+			cb('vm2',123)
+		},
+		'test':function(data,cb,sender){
+			if(sender.id==this.pvm.id){				
+				console.log("get parent direct message",data);
+				this.data.msg='sender='+sender.id+',msg='+JSON.stringify(data)+',time='+parseInt(Math.random()*100);
+				cb('vm2',123)
+			}else {
+				console.log("get direct message",sender.id,data);
+				cb(123)
+			}
+		}
+	}
+}
+
+
+
+
+
+
+module.exports=obj;
+
+</script>

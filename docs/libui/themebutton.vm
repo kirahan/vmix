@@ -1,0 +1,27 @@
+
+<style type="text/css">
+.themebtn{
+	background:{app.theme.color.ccc}
+}
+</style>
+
+<body>
+<button type="button" text="{text}"  style="color:{app.theme.color.red};width:{this.option.width}" 
+watch-this-option-width=toel-style-width class='themebtn' />
+
+</body>
+
+
+<script>
+
+var mod={};
+mod.data={
+	name:100,
+}
+mod.config={
+	pelDisplayType:'inline',
+	appendto:'ppel'
+}
+
+module.exports=mod;
+</script>

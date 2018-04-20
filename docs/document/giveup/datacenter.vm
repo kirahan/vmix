@@ -1,0 +1,73 @@
+<html>
+<h4>every vm can setup a datacenter,service for it's child,  return "bubble" will bubble. </h4>
+
+<div vm-id='datacenter6' vm-src='./datacenter6.vm'  >	</div> 
+<div vm-id='datacenter3' vm-src='./datacenter3.vm'  >	</div> 
+
+<div vm-id='datacenter4' vm-src='./datacenter4.vm'  >	</div> 
+<div vm-id='datacenter5' vm-src='./datacenter5.vm'  >	</div> 
+<pre>
+vm.datacenter=function(type,vm,path,value,cb){}  type=start|get|put|post|delete
+when vm starting,auto excute xxx.datacenter('start',vm,'','',cb)
+
+vm.dataget(path,cb) call xxx.datacenter('get',vm,path,'',cb)
+vm.datapost(path,v,cb) call xxx.datacenter('post',vm,path,v,cb)
+vm.dataput(path,v,cb) call xxx.datacenter('put',vm,path,v,cb)
+vm.datadelete(path,cb)call xxx.datacenter('delete',vm,path,'',cb)
+
+vm.dataset(path,value) will direct deepset to data,usually used in datacenter 
+</pre>
+<h4>start is used to dispatch data to child vm,is automatic called by system</h4>
+<pre>
+if(type=='start'){
+	var data={	version:'sample.1' ,};
+	if(vm.id=='datacenter4'){	return data; }
+	else if(vm.id=='datacenter5'){	setTimeout(function(){cb(new Error('not found'));},100);	return 'wait';	}
+	else{	return 'bubble'}
+}
+
+if return 'bubble',will find data bubble.
+else if return 'wait', the childvm will start when download finish  and cb(error,data) is excuted,
+else if return !=null ,vm.data=returndata;
+then vm.ondata(err,data), then childvm will start.
+</pre>
+<h3>strong recommend</h3>
+<pre>
+vm.data belongto parent or datacenter,vm.state is owned by yourself,
+All the data operate should through the rest method,
+datacenter should response the rest,then do such as io,http,,,
+datacenter should directly set the vm.data and other relative vm
+datacenter can notify relative vm through ondatachange(path,value)
+</pre>
+</html>
+
+<script>
+
+var center={
+	start:function(vm,path,value,cb){
+		var data={
+			version:'sample.1' ,
+		};
+		if(vm.id=='datacenter4'){
+			return data; 
+		}else if(vm.id=='datacenter5'){
+			setTimeout(function(){cb(new Error('not found'));},100);
+			return 'wait';				 
+		}else if(vm.id=='datacenter6'){
+			setTimeout(function(){cb(null,data);},100);
+			return 'wait';				 
+		}else{
+			return 'bubble'
+		}
+	}
+}
+var obj={
+	datacenter:function(type,vm,path,cb,value){
+		if(center[type]) return center[type].call(this,vm,path,cb,value);
+		else return 'bubble'
+	}, 
+}
+
+module.exports=obj;
+
+</script>

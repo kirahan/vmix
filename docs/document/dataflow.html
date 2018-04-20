@@ -1,0 +1,119 @@
+<html>
+<h3>data flow</h3>
+
+<h4>3 data type(data,option,state) and 3 data source(store,parent,self)</h4>
+
+<div class="row">
+
+<div class="col-md-2">
+
+	<a class="btn  btn-default" href="#!/document/data.drive">data.drive</a><br>
+	<a class="btn  btn-default" href="#!/document/data.source">data.source</a><br>
+
+	<a class="btn  btn-default" href="#!/document/app.store">app.store</a><br>
+	<a class="btn  btn-default" href="#!/document/parent.data">parent.data</a><br>
+	<a class="btn  btn-default" href="#!/document/parent.option">parent.option</a><br>
+	<a class="btn  btn-default" href="#!/document/vmstate">vm state</a><br>
+
+ </div>
+
+<div class="col-md-10">
+<div>
+
+<pre>
+vm should like a htmlNode,has different types data
+vm      vs.htmlnode         used.for    source
+data    title,textContent   persistent  parent,self,store    app.store=    {get/set/add/del/vminit},
+option  style,attribute     color, etc  parent,self,         pvm.dataProxy={get/set/add/del}
+state   disabled,checked    status,etc  self,
+
+vm should has basic defualt json data,vm.data={a:,,b:,,c:,,},
+some of them can be replaced by store or pvm,this is called source.
+
+if store.vminit    gave data {a:,}, then a is from store,  pvm.setChildData(cvmid,"a.x") fail
+if pvm <data-b=''> gave data {,,,}, then b is from parent, app.setData     (cvmid,"b.x") fail
+
+in vm
+this.getData(path,cb),                  ->source.get(cvm,path,cb)             ->your code
+this.setData(path,value,cb),            ->source.set(cvm,path,value,cb)       ->if.cb(true)->change.data->update.el
+this.addData(path,index,value,cb),      ->source.add(cvm,path,index,value,cb) ->if.cb(true)->change.data->update.el
+this.delData(path,index,count,cb),      ->source.del(cvm,path,index,count,cb) ->if.cb(true)->change.data->update.el
+
+in store
+app.setData(vm,path,value,cb)           ->binded.el-update->vm.event['app.setdata']({path,oldv,newv})
+app.addData(vm,path,index,v,cb)         ->binded.el-update->vm.event['app.adddata']({path,index,value});
+app.delData(vm,path,index,c,cb)         ->binded.el-update->vm.event['app.deldata']({path,index,count});
+
+in pvm
+pvm.setChildData(cvmid,path,value,cb)   ->binded.el-update->cvm.event['pvm.setdata']({path,oldv,newv})
+pvm.addChildData(cvmid,path,index,v,cb) ->binded.el-update->cvm.event['pvm.adddata']({path,index,value})
+pvm.delChildData(cvmid,path,index,c,cb) ->binded.el-update->cvm.event['pvm.deldata']({path,index,count});
+pvm.setChildOption(cvmid,path,value)    ->binded.el-update->cvm.event['pvm.setoption']({path,newv,oldv})
+
+this.data.abc=yyy will not change anything,use this.setData(path,value,cb)
+
+store and pvm inject data to a vm directly to vm.data|option,vm can use it indirectly,
+like <input value='!this.mydata.xx!'> mydata is not exposured to outside,
+only need todo is data->mydata ,this should be done in vm.beforestart(){}
+</pre>
+
+</div>
+</div>
+
+<!-- pvm.setChildState(cvmid,path,value)     ->cvm.event['setstate']({path,newv,oldv})
+ -->
+
+
+
+
+<div class="col-md-2">
+	<a class="btn  btn-default" href="#!/document/data.expression">data.expression</a><br>
+	<a class="btn  btn-default" href="#!/document/data.bind">data bind</a><br>
+	<a class="btn  btn-default" href="#!/document/data.watch">data watch</a><br>
+
+</div>
+
+<div class="col-md-10">
+<div><pre>
+<button>{fn({xyz},{abc})}</button>
+
+<button>{！xx}</button><input value={!xx!} />
+
+<input watch-abc=funcname />
+</pre></div>
+</div>
+
+
+
+
+<div class="col-md-2">
+</div>
+
+<div class="col-md-10">
+<!-- <div><pre>
+data structure:
+imuttable data:复杂不便,取数据不方便,修改数据后返回新的immutable 啰嗦
+vdom: 需要diff.check
+proxy:改变了数据结构 还需要 深度proxy,需要在set函数注册,容易造成滥用
+plain json: data.a=abc 需要observe,容易滥用
+plain json: this.setData(k,v) 不太符合直观感受,you must know what your doing
+最佳:
+store的数据结构按照dbserver的table.recored,分发给page,page分发给下级vm,分发的过程全部deepclone
+数据操作全部用函数 setdata,adddata,禁用 data.a=b state.a=b option.a=b这样的直接赋值	
+
+</pre></div> -->
+</div>
+
+
+</div>
+</html>
+
+<script>
+
+module.exports={
+	data:{xx:1},
+	onstart:function(){
+	
+	}
+}
+</script>

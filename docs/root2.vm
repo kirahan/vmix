@@ -1,0 +1,12 @@
+<html>
+ <button   on-click="js:alert(111);">123</button>
+
+<wrapper  name='navbar'>your code1</wrapper>
+</html>
+<script>
+module.exports={
+	onstart:function(){
+		console.log(this)
+	}
+};
+</script>

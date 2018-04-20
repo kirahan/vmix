@@ -1,0 +1,60 @@
+
+<body>
+
+<h4>lifecyle</h4>
+<pre>
+this.appendChild({el,id,src,data,option,event}).start(cb)
+this.removeChild(cid|cvm);
+this.getChild(cid).start(cb);
+this.getChild(cid).restart({src:src,fresh:true},cb);
+this.getChild(cid).close();
+this.close();	this.hide();   this.show();
+</pre>
+<pre>
+html.template.parser-->newVM-->load-->define-->start-->run-->domevent|dataevent
+pvm.appendChild({ })-->newVM-->load-->define-->start-->run-->domevent|dataevent
+
+pvm.beforechildstart(cvm),slef.beforestart(),slef.onstart(),pvm.onchildstart(cvm),
+pvm.beforechildclose(cvm),slef.beforeclose(),slef.onclose(),pvm.onchildclose(cvm),
+</pre>
+
+
+<pre>
+in html parser,start is auto,unless like this :<tag autostart=false />
+
+you can vm.hookStart=function(cb){cb()}
+when vm.start,if vm.hookStart==fn,will call vm.hookStart(cb),you must call cb()
+
+you can vm.onstart=function(){} or vm.hook=function(when,cvm){}
+if has vm.onstart,then call vm.onstart ,else if has vm.hook ,call vm.hook('onstart',cvm)
+
+when onstart called,maybe there are some child is loading,
+app.config.strategy.append_to_pel_wait_loading_child_vm=true;you can change it
+
+</pre>
+<div>
+
+<button on-click='js:this.getChild("123").start()'>start ppel themebutton</button>
+<button on-click='js:this.getChild("123").close()'>close ppel themebutton</button>
+<themebutton data-text='www' on-click=clicktest id='123' option-width='300px' autostart=false/>
+</div>
+<div>
+<button on-click='js:this.getChild("vmlifecyle.subvm").start()'>start vm.appendto=pel</button>
+<button on-click='js:this.getChild("vmlifecyle.subvm").close()'>close vm.appendto=pel</button>
+<vm autostart=false id='vmlifecyle.subvm' src='./vmlifecyle.subvm.html' style='display:inline-block;background-Color:#ddd;'></vm> 
+</div>
+
+
+
+</body>
+
+<script>
+var mod={};
+mod.hookStart=function(cb){
+	console.error('hookStart,will wait for 10ms')
+	setTimeout(function(){
+		cb();
+	},0)
+}
+module.exports=mod;
+</script>

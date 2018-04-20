@@ -1,0 +1,31 @@
+<html>
+ <body>
+ <button>name={!name}</button><br/>
+
+ 
+<br/>
+ <button watch-name='js:console.log("inlinejs,watch data changed",e)'>watch-data.name</button>
+ <code>watch-name='js:console.log("inlinejs,watch data changed",e)'</code>
+ <br/>
+<br/>
+
+  <button on-click='js:this.setData("name",parseInt(Math.random()*100))'>mod data.name</button> 
+  <code>on-click='js:this.data.name=parseInt(Math.random()*100)'</code>
+  <br/>
+<br/>
+ <button on-click='js:console.log("inlinejs ,on click")'>on-click</button> <code>on-click='js:console.log("inlinejs ,on click")'</code>
+ <br/>
+ <br/>
+<pre>
+you can use 'js:,,,' "js:,,, " `js:,,, `
+can not use {abc},{this.state.x} as expression to calculate,
+because you may use {a:1} as a new object
+</pre>
+ </body>
+</html>
+<script>
+module.exports={
+	data:{name :1}
+}
+
+</script>

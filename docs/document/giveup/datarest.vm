@@ -1,0 +1,68 @@
+<html>
+
+<div>
+
+<input value='{!this.mydata.msg}'   style='width:450px'></input> <br>
+<button  on-click='dataget' >get</button> 
+<button  on-click='dataput' >put</button> 
+<button  on-click='datapost' >post</button> 
+<button  on-click='datadelete' >delete</button> 
+</div>
+<pre>
+source:
+var self=this;
+var res=this.dataget("name");
+self.mydata.msg=JSON.stringify(res);
+this.datadelete("name",function(a){self.mydata.msg=JSON.stringify(a);})
+this.dataput("xy","xy",function(a){self.mydata.msg=JSON.stringify(a);})
+this.datapost("xy","x",function(a){self.mydata.msg=JSON.stringify(a);})
+</pre>
+<pre>
+vm.datacenter=function(type,vm,path,cb,value){
+	if(type=='get')return 'define in this vm,other will buuble'
+	else return 'bubble'
+};
+</pre>
+</html>
+
+<script>
+
+var vm={
+	mydata:{msg:''},
+	domevent:{
+		dataget:function(){			
+			var res=this.dataget("name");
+			this.mydata.msg=JSON.stringify(res);
+		},
+		datadelete:function(){
+			var self=this;this.datadelete("name",function(res){self.mydata.msg=JSON.stringify(res);})
+		}, 
+		dataput:function(){
+			var self=this;this.dataput("name","222",function(res){self.mydata.msg=JSON.stringify(res);})
+		},
+		datapost:function(){
+			var self=this;this.datapost("name","222",function(res){self.mydata.msg=JSON.stringify(res);})
+		},
+	}, 
+}
+var center={
+	get:function(vm,path,value,cb){
+		return 'define in this vm,other will buuble'
+	}
+}
+vm.datacenter=function(type,vm,path,cb,value){
+	if(center[type]) return center[type](vm,path,cb,value);
+	else return 'bubble'
+};
+
+
+vm.ondatachange=function(path,value){
+	console.log("ondatachange",path,value);
+	if(path=='name')this.data.name=value;
+}
+vm.beforestart=function(){
+	console.log("beforestart",this,this.data);
+}
+module.exports=vm;
+
+</script>

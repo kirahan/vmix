@@ -1,0 +1,76 @@
+
+<html>
+
+<h4>vm.state belongto vm self,like vmdata,vm.state can two-way bind to dom</h4>
+
+<div>
+<button>name= {!this.state.name}</button>
+<code><button >name= {!this.state.name}</button></code><br><br>
+
+<button>name={!this.state.name}</button>
+<code><button >name={!this.state.name}</button></code><br><br>
+
+<button watch-this-state-name="toel-text">{this.state.name}</button>
+<code><button watch-this-state-name="toel-text">{this.state.name}</button>
+</code><br><br>
+
+
+<input type='text' value="{!this.state.name!}" />
+<code><input type='text' value="{!this.state.name!}" />
+</code><br><br>
+
+
+<input type='text' value="{!this.state.name}" on-change="js:this.setState('name',e.target.value);" />
+<code><input type='text' value="{!this.state.name}" on-change="js:this.setState('name',e.target.value);" />
+</code><br><br>
+
+<button on-click="js:this.setState('name',parseInt(Math.random()*100))">set state</button>
+<code>this.setState('name',parseInt(Math.random()*100))</code>
+<div>
+
+
+<h4>child.setState, will auto pubup('state')</h4>
+
+<pre>
+this.setState(name,value)           ->this.pubup('state',{path,newv,oldv},cb)
+main:
+<div vm-src='./vmstate.sub.html' id='sub' event-state='xyz'></div>
+mod.xyz=function(e,from,cb){
+	console.log('got child,state.change',e,from.id)
+	cb(123)
+}
+event-state='xyz'  ---> mod.xyz
+
+if not define event-state,will call pvm.event['cvmid.state'||'child.state']
+mod.event={
+	'sub.state':function(e,from,cb){}
+}
+</pre>
+
+<div vm-src='./vmstate.sub.html' id='sub' event-state='xyz'></div>
+
+</html>
+
+<script>
+
+
+
+var mod=this;
+mod.state={
+	name:'000'
+}
+mod.xyz=function(e,from,cb){
+	console.log('defined in html,got child,state.change',e,from.id)
+	cb(123)
+}
+mod.event={
+	'sub.state':function(e,from,cb){		
+		console.log('defined in event,got child,state.change',e,from.id)
+		cb(123)
+	}
+}
+this.onstart=function(){
+	console.log('vmstate.onstart')
+}
+//module.exports=mod;
+</script>

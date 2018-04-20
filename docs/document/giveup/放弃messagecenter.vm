@@ -1,0 +1,54 @@
+<html>
+<h4>messagecenter, you can control vm-vm-vm message-flow</h4>
+
+<pre> 
+
+rootvm.messagecenter=function(type,channel,subber,pubber,data,res){return true}
+type=sub||pub||pubto||pubok
+id=subber_id || pubber_id
+
+取消
+pvm.messagecenter={
+	"allowall":true | false,
+	'channel_a':{sender:[vmid_a],receiver:'*'},
+	'channel_b':{sender:,'*',receiver:[vmid_b]},
+	'channel_c':'*',
+}
+
+every vm can define a messagecenter,manage child vm message.
+vmid_a	should==	vma.fullid.replace(pvm.fullid,'')
+vmid_b	should==	vmb.fullid.replace(pvm.fullid,'')
+取消
+</pre> 
+<pre> 
+rootvm.messagecenter['allowall'] can be true or false,
+othervm.messagecenter['allowall'] will be ignored,it means bubble.
+if rootvm.messagecenter['allowall']==true ,every channel can be dispatched.
+if rootvm.messagecenter['allowall']==false ,onle the defined channel can be dispatched.
+</pre> 
+
+<h4>subscribe</h4>
+<pre>
+vma.message['abc']=function(sender,message,cb){}
+
+when vma start,vma.message['abc'] will be auto subscribed to a parent messagecenter who defined the channel 'abc',
+if channel 'abc' is not defined by any parent vm, 
+if and rootvm.messagecenter['allowall']==true, it will be subscribed to rootvm.messagecenter
+if and rootvm.messagecenter['allowall']!=true, it can not be subscribed.
+</pre>
+
+<h4>publishe</h4>
+<pre>
+vmb.pub('abc',message,function(receiver,result){})
+
+serach from vmb.pvm bubble to rootvm to find who defined 'abc',then got the receiver and callback it.
+</pre>
+<h3>WHY</h3>
+<pre>
+1, in a big application,many developer is cooperating,perhaps you do not know all the exatly el.id,
+2, 取消so,the document.getElementById should be used carefully, and selector ,and the vm.getvm(fullid) should be used carefully.
+3, so,the interaction should use event message broadcast pattern,
+4, you pub a message,the vm who should reponse will respone.
+</pre>
+</html>
+

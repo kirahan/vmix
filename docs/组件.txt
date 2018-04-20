@@ -1,0 +1,135 @@
+/*
+http://nej.netease.com/course/component/index.html
+网易的组件
+suggest - 建议提示控件
+	用户在input控件里输入字符，把字符拼接成完整的邮箱地址，方便用户快速选择输入，此控件是util控件,需要在参数里传入相应的html结构，在用法上和ui的suggest的区别就是ui suggest的html结构是控件生成，util的suggest控件是需要传入html结构body参数传入,再设置提示列表
+tab - 标签切换控件
+	用于页面上同一组标点击切换时，改变选中状态，触发切换后的事件回调
+selector - 选中控件
+	该控件是用来选中一个列表中的列表项，和桌面操作系统上的ctl 和shift一起合用，来选中一些需要的项，selector可以的选择框可以自定义样式
+slider - 滑块控件
+	滑块控件是进度条控件，可以用来音量调节，播放器进度条等由鼠标移动触的值改变的控件，可以是横向变值，也可以纵向变值
+resize - 调整大小控件
+	对一个节点需要进行鼠标大小调整，可以用这个控件来实现，但ui上的结构需要传给resize控件，四周的8个节点需要在结构上进行传入
+region - 地区选择控件
+	缓存里已经把中国的省份，城市，地区的数据缓存在cache里，可以直接应用_$$RegionCacheZH,把相关的数据取出来
+dragger - 拖动控件
+	一个节点需要由鼠标拖动改变位置
+event - 控件基类
+	所有的控件都继承于event类，ui控件，util控件都继承于此，他的核心是管理事件，在添加完事件后，可以用_$dispatchEvent('eventtype')，来触发eventtype的回调事件，控件需要和个界进行通信，都是在reset时把事件添加，要通信时dispatchEvent触发事件回调，以达到模块外部的逻辑改变
+dispatcher - 模块调度器控件
+	当hash改变时，按需要载入一个模块并展示在网页上，模块调度器，可以根据hash的umi调度出相应的模块
+card - 卡片控件
+	卡片控件是一类生成后，在任文档的任何地方有点周时，卡片都会被隐藏，如在allocate时传的参数是destroyable为true，在隐藏时卡片回收了制作卡片类需要的步骤是
+datepick - 日期选择控件
+	日历控件，用户选择时期时的控件,此控件是ui控件，已经生成了相关的html结构，只要传相关的clazz样式，对clazz下的样式进行调整就可以应用自己的样式需求
+editor - 富文本编辑器控件
+	富文本编辑器是一种可内嵌于浏览器，所见即所得的文本编辑器，类似于word编辑器
+item - 列表项控件
+	item列表项结构，是一个项的结构，如果要做一个列表，先把列表的项的结构取出来，从item项里继承过来
+loading - Loading动画生成器
+	Loading控件,此控件是ui控件，已经生成了相关的html结构 ，为css3实现，只要传入父节点会生效
+loadmore - 加载更多控件
+	loadmore控件,此控件是ui控件，已经生成了相关的html结构，只要传相关的clazz样式，对clazz下的样式进行调整就可以应用自己的样式需求
+mask - 遮罩控件
+	mask控件,此控件是ui控件，已经生成了相关的html结构，你需要将其添加到dom中的任何位置，当遮罩开启时会并在content中
+page - 分页器控件
+	pager控件,此控件是Util功能脚本，封装分页逻辑实现，你需要定义自己的样式和html节点，并且传入实现分页器逻辑所需的dom节点
+Pager - 分页器控件
+	pager控件，此控件是ui控件，已经生成了相关的html结构，你需要将其添加到dom中的任何位置，pager将自动生效，传入clazz参数来定制你的分页器
+range - 范围选择控件
+	range控件，此控件是ui控件，只需要传入父节点即可生效。可以在父节点内选择一个矩形范围。
+slider - 滑动条控件
+	slider控件，此控件是util控件，需要指定滑动节点，滑动轨道节点和位置变化触发事件就能实现滑动条的功能。控件不提供样式，需要额外编写。
+suggest - 建议提示控件
+	用户在input控件里输入字符，把字符拼接成完整的邮箱地址，方便用户快速选择输入,此控件是ui控件，已经生成了相关的html结构，只要传相关的clazz样式，对clazz下的样式进行调整就可以应用自己的样式需求
+template - 模版控件
+	NEJ模板系统功能强大，提供了7大模板，包含基本模板(Text模板、Node、Item模板、JST模板)和扩展模板(CSS模板、JS模板、HTML模板)。基本模板提供了通用的结构模板功能，扩展模板提供了延迟加载各种客户端资源(CSS、JS、HTML)的功能。Text、Node模板只提供了基本的缓存功能，开发人员一般也不会直接使用。在使用结构模板的时候一般会选用JST模板或者Item模板。
+window - 窗体控件
+	网页上都会跳出一个对话窗体让用户进行确认，输入交互等，这时用window控件是最完美的，可在以allocate　窗体时加一个遮罩，使用户不能点击窗体以外的东西窗体制作步骤是
+animation - 动画控件
+	这是一个动画基类，动画过程的逻辑需要从这个基类继承过去重写__doAnimationFrame的方法，这在个方法可以自己定义每一帧动罗的位置逻辑，库里定义了贝塞尔曲线， 弹跳，减速，easein,easeinout,easeout,linear这些动画方式
+cache - 缓存管理基类控件
+	是util里缓存管理的基类，对外提供事件注册，分发事件，提供从localStorage里存取，清除数据,从cache里存取删除数据。
+customEvent - 自定义事件
+	这是个Util脚本，你可以以事件驱动的方式来书写你的ui控件，对于简单事件可以直接通过nej.p("nej.v") 来执行绑定，你也可以通过Util.<em>$$CustomEvent.</em>$allocate(opts)来在绑定自定义事件前对此类型的自定义事件进行个性化定制来满足更复杂的需求
+cycler - 循环播放控件
+	根据传入的图片地址列表，图片容器，图片翻页容器，有播页时的回调事件，通过改变图片的透明度来使图
+*/
+Carousel 图片轮播
+Collapse
+Dropdown
+Modal
+Tab
+Tooltip
+
+http://amazeui.org/widgets/intro
+官方组件
+折叠面板 Accordion
+分割线 Divider
+单张图片 Figure
+页脚 Footer
+图片画廊 Gallery
+回顶部Gotop
+页头 Header
+简介 Intro
+内容列表List
+菜单Menu
+工具栏 Navbar
+分页Pagination
+段落 Paragraph
+图片轮播 Slider
+选项卡Tabs
+标题栏 Titlebar
+
+App Bar
+Auto Complete
+Avatar
+Badge
+Bottom Navigation
+
+Buttons
+Card
+Chip
+Date Picker
+Dialog
+Divider
+Drawer
+Grid List
+
+Icons
+List
+
+Menus
+Paper
+Popover
+
+Progress
+Select Field
+Slider
+
+Switches
+Snackbar
+Stepper
+Subheader
+Table
+Tabs
+Text Field
+Time Picker
+Toolbar
+
+	/*
+	过渡效果
+	模态框
+	下拉菜单
+	滚动监听
+	标签页
+	工具提示
+	弹出框
+	警告框
+	按钮
+	Collapse
+	Carousel
+	Affix
+	返回顶部
+	*/

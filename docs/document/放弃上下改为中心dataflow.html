@@ -1,0 +1,84 @@
+
+<body>
+<h4>dataflow happens between pvm and childvm</h4>
+<h4>control-able is most import</h4>
+  <!-- 
+<pre>
+first,pvm inject some data to a child vm ,suchas
+<data objx="{this.data.obja}" />,objx should not has '.'
+</pre>
+<pre>
+when data changed, you can excute "this.pubdata(path,opt)" mannuly,
+or through vm.dataflow_auto_pubdata=[patha,pathb],autopubdata will be fired when:
+1. you mannuly this.data.xxx=123 
+2. <tag on-change='todata-xxx'/> user change it, 
+3. <input value={!xxx!}/> user change it,
+</pre>
+<pre>
+when pubdata is called,system will search the path,
+if it inject from pvm,will call pvm.onChildDataChange,
+if it inject to child,will call cvm.onParentDataChange,
+if not inject from and not inject to,will do nothing and stop bubble.
+bubble is up and down,until not inject
+
+when pvm.data['obja']['x'] change,excute pvm.pubdata('obja.x'),newvalue auto find
+when cvm.data['objx']['x'] change,excute cvm.pubdata('objx.x'),newvalue auto find
+when vm.array[index].x change,    excute vm.pubdata('array.index.x'), newvalue auto find
+when vm.array add|del|splice ,    excute vm.pubdata('path.a.b',['add',pos,newvalue]),the pvm|cvm need know what it means 
+</pre> -->
+<pre>
+vm.onParentDataChange=function(obj){
+	obj=cpath,newv,opt
+	return 'auto'
+}
+vm.onChildDataChange=function(obj){
+	obj=cpath,ppath,newv,opt
+	return 'auto'
+}
+return 'auto' will auto change vm.data[path] deeply, and bubble
+return 'auto.stop' will auto change vm.data[path] deeply, and stop bubble
+return 'stop' will stop,
+return other will try to find predefined strategy
+</pre>
+<pre>
+vm.dataflow_default_child={
+	cpath#ppath#newv:'auto',
+	ppath#newv:'auto',
+
+	'*':'auto'
+}
+vm.dataflow_default_parent={
+	cpath#newv:'auto'
+	cpath:'auto.stop'
+	'*':'auto'
+}
+这里的顺序需要安排
+not find predefined strategy,will not setData and keep bubble;
+</pre>
+<button on-click='js:app.navigate("#!/document/inject")'>inject sample</button>
+<br>
+<input type=text value="{!x!}" />
+
+<vm src='./dataflow.sub.html' >
+<data dx={this.data.x}>
+</vm>
+
+</body>
+<script>
+
+var mod={};
+mod.data={x:1};
+mod.dataflow_auto_pubdata=['x'];
+
+
+mod.dataflow_default_child={
+	'dx#x#newv':'auto',
+	'*':'auto'
+}
+mod.onChildDataChange=function(obj){
+	//obj=cpath,ppath,newv,opt
+	console.log('onChildDataChange=',obj)
+	//return 'auto'
+}
+module.exports=mod;
+</script>

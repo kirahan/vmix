@@ -1,0 +1,45 @@
+
+<body>
+<label_default text='qwer' /><br>
+<label_primary text='qwer' /><br>
+<label_success text='qwer' /><br>
+<label_info text='qwer' /><br>
+<label_warning text='qwer' /><br>
+<label_danger text='qwer' /><br>
+<button_badge button=hehe badge=123 click="clicktest({name})" /><br>
+<badge badge={name} /><br>
+
+<button on-click="modname">mod name will not change block</button>
+
+
+<alert_success	text='qwer' style="width:50%" />
+<alert_success2	text='qwer' click=close1(1) id=1 style="width:50%"/>
+<alert_info2	text='qwer' click=close1 style="width:50%"/>
+<alert_warning2	text='qwer' click=close1 style="width:50%"/>
+<alert_danger2	text='qwer' click=close1 style="width:50%"/>
+<progressbar value=10 />
+</body>
+
+
+<script>
+
+var mod={};
+mod.data={
+	name:100,
+}
+mod.close1=function(e,id){
+	if(id){
+		var el=this.getel(id);
+	}else{
+		var el=e.target.parentNode.parentNode;
+	}
+	el.parentNode.removeChild(el)
+}
+mod.modname=function(e,p){
+	this.setData('name',parseInt(Math.random()*100))
+}
+mod.clicktest=function(e,p){
+	console.log('clicktest',p)
+}
+module.exports=mod;
+</script>

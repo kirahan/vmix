@@ -1,0 +1,97 @@
+<template>
+<h4>data event,auto watch data change and callback some fn</h4>
+ 
+<h4>define cb</h4>
+<pre>
+vm.abc=function(e,para){}
+e={el:el,path:data_path,oldv:value,newv:value};
+</pre>
+
+<h4>watch a node</h4>
+<pre>
+watch-age=fn 
+watch-x-y=fn(para), data.x.y
+watch-x-watch-y=fn, data.x & data.y
+watch-x="toel-text"
+watch-x="toel-style-width"
+</pre>
+
+<div>
+<button on-click="js:this.setData('age',this.data.age+1)">mod data.age</button><code>this.setData('age',this.data.age+1)</code>
+<br>
+<button watch-age="abc">{!age}</button> <code><button watch-age="abc">{!age}</button></code><br>
+<button watch-age="abc(2)">{!age}</button> <code><button watch-age="abc(2)">{!age}</button></code><br>
+<button watch-age="abc({width})">{!age}</button> <code><button watch-age="abc({width})">{!age}</button></code><br>
+<br>
+
+<button on-click="modname">mod data.name</button><code>this.setData('name',parseInt(Math.random()*100));</code><br>
+<input  watch-name="toel-value"/> <code><input watch-name="toel-value"/></code><br>
+<button watch-name="toel-text">{name}</button><code><button watch-name="toel-text">{name}</button></code><br>
+<button watch-name="namechange-toel-text">{name}</button>
+<code><button watch-name="namechange-toel-text">{name}</button></code>
+<br>namechange is a fn,return value will set to text
+
+<br>
+<button>name={!name},obj.age={!obj.age}</button><code><button>name={!name},obj.age={!obj.age}</button></code>
+<br>
+<br>
+<button on-click="modage">mod data.obj.age</button> 
+<button watch-obj-age="toel-text">{name}</button> <code><button watch-obj-age="toel-text">{name}</button></code>
+
+<br><br>
+
+<button on-click="modwidth">mod data.width</button> 
+<button watch-width="toel-style-width">{!width}</button>
+<code><button watch-width="toel-style-width">{!width}</button></code>
+<br>
+
+<button on-click="js:this.setData('bks.0.name',this.data.bks[0].name+1);">mod bks[0].name</button> 
+<button watch-bks-0-name="toel-text" style='color:red'>{bks.0.name}</button>
+<code><button watch-bks-0-name="toel-text">{bks.0.name}</button></code>
+<br>
+
+
+<button on-click="js:this.setData('x',this.data.x+1)">mod data.x</button>
+<button on-click="js:this.setData('y',this.data.y+1)">mod data.y</button>
+<button watch-x-watch-y="abd" style='color:red'>x={!x},y={!y}</button> 
+<code><button watch-x-watch-y="abd">x={!x},y={!y}</button></code><br>
+
+
+
+</div>
+<div>
+</div>
+<div>
+
+
+</div>
+
+</template>
+
+<script>
+
+var mod={};
+mod.data={
+	age:10,
+	name:0,
+	x:0,y:0,
+	width:'100px',
+	bks:[{name:0}],	
+	obj:{age:11}
+}
+mod.state={
+	x:1
+}
+mod.dataevent={
+	namechange:function(e,para){		if(e.newv!=e.oldv)return e.newv+'_1';	},
+	abc:function(e,para){console.log("abc变了",e,para);	},
+	abd:function(e,para){console.log("abd变了",e,para);	},
+};
+mod.domevent={
+	modname:function(){this.setData('name',parseInt(Math.random()*100));},
+	modage:function(){this.setData('obj.age',parseInt(parseInt(Math.random()*100))+100);	},
+	modwidth:function(){this.setData('width',(parseInt(parseInt(Math.random()*100))+100)+'px');	},
+}
+
+module.exports=mod;
+</script>

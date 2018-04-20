@@ -1,0 +1,87 @@
+<template>
+
+<div>
+ <button >1级属性 ={a.b.c.2.d} </button> 
+ <button >1级属性 ={!obj.name} </button> 
+<button >1级方法 ={test1(13)} </button>  
+ 
+</div>
+
+<div el-list="group in groups" style="top:10px;bottom:10px;">
+	<div style='height:20px'></div>
+	<div>
+	 <button >2级调用1级属性 ={!obj.name} </button>    
+	
+	 <button >2级调用2级属性 ={!group.title } </button> 
+	<button >2级方法 ={test2(3)} </button>   
+	</div>
+	<div el-list="btn in group.btns">
+		  <button >3级 btn={!btn},</button>
+		<button >2级 group.title={!group.title},</button>  
+		<button >1级 name={!obj.name} </button> 
+		<button >3级方法 ={test3(3)} </button>  
+	</div>
+	
+	<div el-list="tobj in group.objs">
+		<button >3级 tobj.name={!tobj.name},</button>
+		<button >3级 tobj.a.b={!tobj.a.b},</button> 
+		<button >2级 group.title={!group.title},</button>  
+		<button >1级 name={!obj.name} </button>
+		<button >4级 方法 ={test4(3)} </button>  
+	</div>
+
+
+</div> <!-- -->
+ <div style='height:20px'></div>
+<div>
+<button on-click=mod_3_groups_0_objs_0_name   >3级 mod groups[-1].objs[1].name </button> 
+<button on-click=mod_3_groups_0_objs_0_ab   >3级 mod groups[-1].objs[1].a.b </button> 
+<button on-click=mod_groups_0_btns_1   >3级 mod groups[0].btns[1] </button> 
+<button on-click=mod_groups_0_title   >2级 mod groups[1].title</button> 
+<button on-click=mod_vm_data_name   >1级 mod_vm_data_name</button> 
+</div>
+<div>
+
+<button on-click=add   >add data.groups</button> 
+<button on-click=del   >del data.groups</button> 
+</div> 
+</template>
+
+<script>
+var newstr=function(){return (new Date().getTime().toString()).substr(8)}
+var mod={};
+mod.method={
+	test1:function(a,b){		return '1级 value='+a 	},
+	test2:function(a,b){		return '2级 value='+a.title+',index='+b	},
+	test3:function(a,b){		return '3级 value='+a+',index='+b	},
+	test4:function(a,b){		return '4级 value='+a.name+',index='+b	}
+};
+mod.data={
+	a:{b:{c:[{d:11},{d:'12'},{d:true}]},
+	obj:{name:'000'},
+	books:[{name:11,a:{b:11},{name:12,a:{b:12}],
+	title:'111',
+	groups:[
+		{title:'title1',btns:[11 ,12],objs:[{name:11,a:{b:11},{name:12,a:{b:12}]},
+		{title:'title2',btns:[21,22],objs:[{name:21,a:{b:21},{name:22,a:{b:22}]}
+	],
+	cb:''
+}
+mod.domevent={
+	mod_groups_0_title:function(){		this.data.groups[this.data.groups.length-1].title=newstr();},
+	mod_groups_0_btns_1:function(){		this.data.groups[this.data.groups.length-1].btns[1]=newstr();},
+
+	mod_3_groups_0_objs_0_name:function(){this.data.groups[this.data.groups.length-1].objs[1].name=newstr();},
+	mod_3_groups_0_objs_0_ab:function(){this.data.groups[this.data.groups.length-1].objs[1].a.b=newstr();},
+
+	mod_vm_data_name:function(){	this.data.obj.name=newstr();	},
+	add:function(){
+		this.data.groups.$add({title:'title2',btns:[21,22],objs:[{name:21,a:{b:21},{name:22,a:{b:22}]})
+	},
+	del:function(){	this.data.groups.$delat(0,1) ;	}
+}
+mod.dataevent={};
+
+
+module.exports=mod;
+</script>

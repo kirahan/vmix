@@ -1,0 +1,13 @@
+
+ <body style="width:100%">
+  <div class="test" style=''>test.subvm</div>  
+ </body>
+
+<script type="text/javascript">
+var vm={};
+
+vm.hook=function(when,cvm){
+	console.log('child.hook',when)
+}
+module.exports=vm
+</script>

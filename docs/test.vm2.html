@@ -1,0 +1,38 @@
+
+<html lang="en">
+ <body>
+ <div>
+  <button  > {name}</button>
+  
+  <button on-click='add'> add</button>
+  <button on-click='js:this.data.menus.$delat(0)'> del</button>
+  <a class='btn' href="#!/view/action/qqq/www1/" >route1</a>
+  <a class='btn' href="#!/view/action/qqq/www2/" >route2</a>
+  <a class='btn' href="#" >index</a>
+  <div>
+  <button el-list="a in menus" on-click='onclick1({a})'> {a}</button>
+  </div>
+  </div>
+ </body>
+</html>
+
+<script type="text/javascript">
+var vm={};
+vm.data={
+	menus:[0,1,2],
+	name:'liyong'
+}
+vm.hookStart=function(next){
+	console.log('get data ing,,,,,,I will callback after 1000ms');
+	setTimeout(function(){next()},1000)
+
+}
+vm.add=function(){
+	this.data.menus.$add(this.data.menus.length )
+}
+vm.onclick1=function(e,para){
+	console.log('onclick1',e,para);
+	this.prototypetest();
+}
+module.exports=vm
+</script>

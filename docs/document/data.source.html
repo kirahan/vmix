@@ -1,0 +1,73 @@
+
+<body>
+<h4>three data source</h4>
+<pre>
+vm should has some basic data,if pvm donot set,use the default,
+before vm stated,will call store.vminit,if callback with data,will clone and deepmerge to vm.data,
+parent inject data to child,will clone and deepmerge to vm.data
+</pre>
+
+<pre>
+<div id='sub1' vm-src='./data.source.sub1.html'></div>
+<div id='sub2' vm-src='./data.source.sub2.html' data-name='sub2' data-inp="s2" data-s="[5,6]"></div>
+<div id='sub3' vm-src='./data.source.sub3.html' ></div>
+</pre>
+<div class="row">
+
+<div class="col-md-8">
+
+<div id='sub1' vm-src='./data.source.sub1.html'></div><br>
+<div id='sub2' vm-src='./data.source.sub2.html' data-name='sub2' data-inp="s2" data-s="[5,6]"></div><br>
+<div id='sub3' vm-src='./data.source.sub3.html' ></div>
+
+</div>
+<div class="col-md-4">
+<button on-click="appsetData(sub1)">from app,set sub1 data ok</button><br><br>
+<button on-click="my_set_childData(sub1,name)">from pvm,set sub1 data fail</button><br><br>
+
+<br>
+<button on-click="appsetData(sub2)">from app,set sub2 data fail</button><br><br>
+<button on-click="my_set_childData(sub2,name)">from pvm,set sub2 data work</button><br><br>
+
+<button on-click="appsetData(sub3)">from app,set sub3 data fail</button><br><br>
+<button on-click="my_set_childData(sub3,name)">from pvm,set sub3 data fail</button><br>
+
+</div>
+</div>
+
+</body>
+
+<script>
+
+var mod={
+	data:{name:0},
+	appsetData:function(e,id){
+		var cvm=this.getChild(id);
+		app.setData(cvm,'name',parseInt(Math.random()*100),function(res){
+			console.log('set from app,cvm.id='+id+',path=name,res=',res)
+		});
+	},
+	my_set_childData:function(e,id,where){
+		var cvm=this.getChild(id);
+		this.setChildData(cvm,where,parseInt(Math.random()*100),function(res){
+			console.log('set from pvm,cvm.id='+id+',path='+where+',res=',res)
+		});
+	},
+	dataProxy:{
+		set:function(cvm,p,v,cb){
+			console.log('dataProxy.set',cvm.id,p,v)
+			cb(true)
+		},
+		add:function(cvm,p,index,v,cb){
+			console.log('dataProxy.add',cvm.id,p,v)
+			cb(true);
+		},
+		del:function(cvm,p,index,count,cb){
+			console.log('dataProxy.del',cvm.id,p,index,count)
+			cb(true);
+		}
+	}
+
+};
+module.exports=mod;
+</script>

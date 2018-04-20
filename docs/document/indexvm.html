@@ -1,0 +1,32 @@
+
+<body>
+<pre>
+<script src="webvm.js" data-role='webvm' app-file="app.js" index-file='index123.html'></script>
+</pre>
+<h4>index vm is the first vm,has it's own template,js,style</h4>
+
+<h4>there is some special</h4>
+<pre>
+vm.pel=document.body,
+vm.id='__index__'
+
+</pre>
+
+
+<!-- 
+vm.onload=function(url,xhr,opt){},
+replace config.onload,here you can modify the load text,such as scss-to-css
+vm.onerror=function(type,where,error){},
+replace config.onerror,where error happens,callback to here
+
+
+normaly,index vm should has a store for data dispatcher,
+normaly store should load some data before app start,
+vm.store.init=function(cb){
+	cb()
+}
+if vm.store.init,will be called first,then start indexvm,
+if not,the indexvm start immediately.
+<button on-click='js:app.navigate("#!/document/app.store")'>indexvm should has a data store</button>
+ -->
+</body>

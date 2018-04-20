@@ -1,0 +1,68 @@
+
+<html lang="en">
+
+
+
+<h4>elhook when selfCreated,childrenCreated,attached,used as custom directive</h4>
+<pre>
+<div el-hook='this.myhook' data-x=123 style='width:50%'><button>el hook =this.myhook</button></div>
+<div el-hook='hehe' data-x=123 style='width:50%'><button>el hook in app.use('elhook') </button></div>
+<div el-hook='hookinpath' data-x=123 style='width:50%'><button>el hook in config.path.elhook </button></div>
+<div el- hook='./el.hooktest.js' data-x=123 style='width:50%'><button>el hook in js file,color=red data-x=123</button></div>
+<div el- hook='./el.hooktest.js' data-x=124 style='width:50%'><button>el hook in js file,color!=red,data-x=124</button></div>
+</pre>
+
+ <div el-hook='this.myhook' data-x=123 style='width:50%'><button>el hook =this.myhook</button></div>
+<div el-hook='hehe' data-x=123  style='width:50%'><button>el hook in app.use('elhook',hehe) </button></div>
+
+<div el-hook='hookinpath' data-x=123 style='width:50%'><button>el hook in config.path.elhook </button></div>
+<div el-hook='./el.hooktest.js' data-x=123 style='width:50%'><button>el hook in js file,color=red data-x=123</button></div>
+<div el-hook='./el.hooktest.js' data-x=124 style='width:50%'><button>el hook in js file,color!=red,data-x=124</button></div>
+
+<h4>this.myhook source</h4>
+
+<pre>
+vm.myhook=function(vm,el,when){
+	if(when=='childrenCreated'){
+		el.style.background='#eee';
+		el.childNodes[0].style.color='orange';
+	}
+}
+</pre>
+<h4>app.use.elhook. source</h4>
+<pre>
+app.use('elhook','hehe',function(vm,el,when,node){
+	if(el)el.style.color='blue';
+})
+</pre>
+<h4>config.path.elhook</h4>
+<pre>
+config.path.elhook.hookinpath='document/el.hookinpath.js'
+</pre>
+<h4>elhooktest.js source</h4>
+<pre>
+module.exports=function(vm,el,when){
+	if(el.dataset['x']!=123)return;
+	if(when=='childrenCreated'){
+		el.style.background='#eee';
+		el.childNodes[0].style.color='red';
+	}
+}
+</pre>
+
+</html>
+<script>
+module.exports={
+	data:{
+		name:1
+	},
+	myhook:function(vm,el,when){
+		//console.log('myhook',el,when);
+		if(when=='childrenCreated'){
+			el.style.background='#eee';
+			el.childNodes[0].style.color='orange';
+
+		}
+	}
+}
+</script>

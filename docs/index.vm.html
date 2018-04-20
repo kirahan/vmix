@@ -1,0 +1,285 @@
+<html>
+<style>
+.bs-docs-footer {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  margin-top: 100px;
+  color: #99979c;
+  text-align: center;
+  background-color: #2a2730;
+}
+.bs-docs-footer a {
+  color: #fff;
+}
+.bs-docs-footer-links {
+  padding-left: 0;
+  margin-bottom: 20px;
+}
+.bs-docs-footer-links li {
+  display: inline-block;
+}
+.bs-docs-footer-links li + li {
+  margin-left: 15px;
+}
+@media (min-width: 768px) {
+  .bs-docs-footer {
+    text-align: left;
+  }
+  .bs-docs-footer p {
+    margin-bottom: 0;
+  }
+}
+
+</style>
+<body>
+
+<!-- node.clone parent要单独,动态注入内容
+ 加入 config.if_auto_clone_store_data
+-->
+<header class="bs-docs-nav navbar-static-top">
+    <div class="container-fluid">
+    <div style='position:relative;'>
+	<div style='position:absolute;left:0;top:0;width:110px;height:110px;'>
+	 <!-- vmix<br>webCompontent
+ -->	
+     <img src="./logo.png.png" style="width:100px;height:80px"/>
+ 
+	</div>
+	<div style='margin-left:110px;'><collapsnav  id='collapsnav' data-menus="this.data.dirs" /></div>
+    </div>
+    </div>
+
+</header>
+
+
+<div class="container-fluid ">
+   <div style='position:relative;'>
+	<div style='position:absolute;left:0;top:0;width:110px;'>				
+		<div   watch-this-state-showing="ifshow(document)" >
+			<div  el-list='doc in documents' style='padding-top:5px'>
+			<a type="button" class="btn btn-default" href='#!/document/{doc}' style='width:100px'>{doc}</a>
+			 </div>
+		</div>	
+		<div  watch-this-state-showing="ifshow(example)">
+			<div  el-list='doc in examples' style='padding-top:5px'>
+			<a type="button" class="btn btn-default" href='#!/example/{doc}' style='width:100px'>{doc}</a>
+			 </div>
+		</div>
+		<div  watch-this-state-showing="ifshow(exampleui)" >
+			<div  el-list='doc in exampleui' style='padding-top:5px'>
+			<a type="button" class="btn btn-default" href='#!/exampleui/{doc}' style='width:100px'>{doc}</a>
+			 </div>
+		</div>
+	</div>
+	<div  style='margin-left:110px;'>
+		<vm   id='vm_switch' autostart=false style='display:block;min-height:600px'></vm> 
+	</div>
+</div>
+</div>
+
+<footer class="bs-docs-footer">
+    <div class="container">
+      <ul class="bs-docs-footer-links">
+        <li><a href="#">GitHub</a></li>
+        <li><a href="#">Twitter</a></li>
+        <li><a href="#">Examples</a></li>
+        <li><a href="#">About</a>
+        </li>
+      </ul>
+      <p>web component is the future</p>
+
+      <p>Code licensed <a href="https://github.com/twbs/bootstrap/blob/master/LICENSE" target="_blank" rel="license">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="license">CC BY 3.0</a>.</p>
+    </div>
+</footer>
+</body>
+
+</html>
+
+
+<!--<div class="row">
+	<div class="col-md-6">
+		<div class="list-group" el-list='xtype in alltypes' watch-show='ifshow({xtype})-toel-style.display'>
+		   <a type="button" class="list-group-item" el-list='filea in {xtype}' href='#!/{pscope.$value}/{filea}' onx-click=file_swicth>{filea}</a> 
+		</div>		 
+	</div>
+	<div class="col-md-6">
+		<div   id='vm_switch' ></div> 
+	</div> 
+	<div class="col-md-3">
+	<div   id='vmcode'  style='border:1px solid #eee;width:100%;height:auto' class="agate"></div>
+	</div> 
+
+</div>-->
+
+<script>
+
+var vm={};
+
+vm.state={
+	showing:'document',
+}
+vm.filter={
+	test:function(value){
+		return value.replace('document/','')
+	}
+}
+vm.ifshow=function(e,name){
+	//console.log("ifshow",name,this.state.showing,name==this.state.showing);
+	//return true;
+	//return 
+	e.el.style.display= (name==this.state.showing) ?'block':'none'
+	
+}
+vm.data={
+	x:1,y:1,
+	'alltypes':['document/base','document/viewmodel','document/reuse'],//,'exampleui'
+	exampleui:['nav','buttongroup', 'dropdown', 'ulli', 'tab','modal',
+	'scrollspy','tooltip','popover','alert','collapse','carousel','affix'],
+	show:'document/base',//'document/base',
+	dirs:[{name:'document'},{name:'exampleui'},{name:'example'}],
+
+	documents:['bootstrap','vmdemo','vmapi','element','app','interact','dataflow','file'],
+	examples:[1,2,3,4],
+	exampleui:['block','collapsmenu','nav','tab','modal','buttongroup',	'dropdownbtn','dropdownbar','breadcrumb',
+	'pager','tooltip','popover','progressbar',
+	],
+	name:'name0'
+};
+
+/*
+
+
+	slider,card,datepick,editor,loading,loadmore,mask,Pager,range,
+	Divider,Figure
+	
+
+app层面
+App Bar,Toolbar,Subheader,Bottom Navigation,Snackbar,Menus,
+Header,Footer,Intro,Titlebar
+
+单个控件
+Select Field,Text Field,Progress,Slider,Switches,
+Avatar,Badge,Buttons,Divider,
+Icons,
+
+容器控件
+Tabs,Table,Grid List,List,
+
+组合控件
+Date Picker,Time Picker,
+Carousel,图片轮播 Slider,垂直collaps,Accordion,
+效果
+Auto Complete,suggest,rator,resize,dragger,
+
+Card,Chip,
+Stepper,
+Dialog,
+Drawer,Paper,
+Popover,
+*/
+/*
+折叠面板 Accordion
+分割线 Divider
+单张图片 Figure
+页脚 Footer
+图片画廊 Gallery
+回顶部Gotop
+页头 Header
+简介 Intro
+内容列表List
+菜单Menu
+工具栏 Navbar
+分页Pagination
+段落 Paragraph
+图片轮播 Slider
+选项卡Tabs
+标题栏 Titlebar
+*/
+
+var showcode=function(showing,name){
+	console.log("addvm完成",'/webapp/'+showing+'/'+name+'.vm');
+}
+vm.beforestart=function(){	
+	app.route('#!/document/:file',this,function(file){
+		this.getChild('vm_switch').restart({src:'document/'+file+'.html', fresh:true},function(){
+			//console.log('又打开了',this.id,this.sid,this.__datafrom_parent)
+		})
+	})
+	app.route('#!/document',this,function(file){
+		this.setState('showing','document');
+		app.navigate('#!/document/bootstrap');
+	})	
+	app.route('#!/example',this,function(file){
+		this.setState('showing','example');
+		app.navigate('#!/example/index');
+	})
+	app.route('#!/exampleui',this,function(file){
+		this.setState('showing','exampleui');
+		app.navigate('#!/exampleui/pager');
+	})	
+	app.route('#!/exampleui/:file',this,function(file){
+		this.getChild('vm_switch').restart({src:'exampleui/'+file+'.html', fresh:true});
+	})
+	app.route('#!/debug/:file',this,function(file){
+		this.getChild('vm_switch').restart({src:'debug/'+file+'.html', fresh:true});
+	})
+}
+
+vm.onstart=function(){
+	
+	app.navigate(window.location.hash,'',true);
+	//console.log(Object.keys(this.constructor.prototype))
+	
+}
+vm.test=function(){
+	console.log('indexvm.onclick')
+}
+vm.toptest=function(){
+	console.log('indexvm.toptest')
+}
+vm.hook=function(when,cvm){
+	//console.log('index.vm.hook',when)
+}
+module.exports=vm;
+
+
+
+//module.exports.configfile='app.js';
+//module.exports.wrapperfile='appwrap.js';
+
+	/*docs:[{type:'start',files:['bootstrap','vmdemo',]},	
+
+	//{type:'vm',files:['start','getter']},
+	//{type:'element',files:['getter','html']},
+	//{type:'databind',files:['expression','watch']},
+	//{type:'dataflow',files:['store','attr','state']},
+	//{type:'inside',files:['directive',]},
+
+	//{type:'template',files:['block','filter','elfilter',]},
+	{type:'array',files:['array','array.page']},
+	{type:'interact',files:['slot',]},//'route','event',
+	//{type:'file',files:['import','privateStyle',]},//,'customElement'
+
+	//{type:'js',files:['jsrequire','jsinline']},
+	{type:'config',files:['config','index']},
+	{type:'extend',files:['vm']},//,'elhook'
+	//{type:'custom',files:['elementName','directive']},
+		]*/
+/*
+vm.getfile=function(type,file){
+	//console.log('getfile='+type,file)
+	if(type=='vm')return 'vm'+file;
+	if(type=='template')return 'template.'+file;
+	
+	if(type=='extend')return 'extend.'+file;
+	if(type=='element')return 'el.'+file;
+	if(type=='dataflow')return 'data.'+file;
+	if(type=='config'){
+		if(file=='config')return 'config.file';
+		if(file=='index')return 'config.index';
+	}
+
+	else return file;
+}
+*/
+</script>

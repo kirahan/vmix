@@ -1,0 +1,96 @@
+<style>
+.b{width:150px}
+</style>
+<template>
+<h4>data-bindto-dom one-way,two-way</h4>
+<div> 
+
+<div style="width:50%;display:inline-block">
+
+<button class='b' >1.{name}.{ifcheck}</button><code><btn>1.{name}</btn></code><br/> 
+<button class='b' >2.{!name}.{!ifcheck}</button><code><btn>2.{!name} {!ifcheck}</btn></code><br/> 
+<button class='b' >3.{name!}</button><code><btn>3.{name!}</btn></code><br/> 
+
+<input class='b' type=text value="{!name}"></input> <code>value="{!name}"</code><br/> 
+<input class='b' type=text value="{name!}"></input> <code>value="{name!}"</code><br/> 
+<input class='b' type=text value="{!name!}"></input> <code>value="{!name!}"</code> <br/> 
+<button class='b' on-click='js:this.setData("name",parseInt(Math.random()*100))' style='color:red'>click modify name</button> <br/>
+</div> 
+
+<div style="width:50%;display:inline-block">
+
+<input type="checkbox"   checked='{ifcheck}'  /> <code> checked='{ifcheck}'</code><br/>  
+<input type="checkbox"   checked='{!ifcheck!}'/> <code> checked='{!ifcheck!}'</code><br/> 
+<input type="checkbox"   checked='{ifcheck!}' /> <code> checked='{ifcheck!}'</code><br/> 
+<input type="checkbox"   checked='{!ifcheck}' /> <code> checked='{!ifcheck}'</code><br/> 
+ 
+<input type=text    value="{ifcheck}"  class='b'></input><code> value='{ifcheck}'</code><br/> 
+<input type=text    value="{!ifcheck!}" class='b'></input><code> value='{!ifcheck!}'</code><br/>  
+<input type=text    value="{!ifcheck}"  class='b'></input><code> value='{!ifcheck}'</code><br/> 
+<input type=text    value="{ifcheck!}"  class='b'></input><code> value='{ifcheck!}'</code><br/>  
+
+ 
+
+<button class='b' on-click="js:this.setData('ifcheck',!this.data.ifcheck);"   style='color:red'>click change ifcheck</button> 
+</div> 
+<div>
+
+<button text={!x} /><code><button text={!x} /></code>
+<button>{!y}</button><code><button>{!y}</button></code><br>
+<button >x={!x},y={!y}</button><code><button >x={!x},y={!y}</button></code><br>
+<button text="x={!x},y={!y}" /><code><button text="x={!x},y={!y}" /></code><br>
+<span >x={!x},y={!y}</span><code><span >x={!x},y={!y}</span></code><br>
+<div style='display:inline'>x={!x},y={!y}</div><code><div >x={!x},y={!y}</div></code><br>
+<button text="x={fn2({fn1({x})},y={!y})}" /><code><button text="x={fn2({fn1({x})},y={!y})}" /></code><br>
+<br>
+<button on-click="js:this.setData('x',parseInt(Math.random()*100))" text=modx/>
+<button on-click="js:this.setData('y',parseInt(Math.random()*100))" text=mody/>
+</div>
+<pre>
+{ name } display
+{!name } auto bind change data->dom
+{ name!} auto bind change dom->data
+{!name!} auto bind change dom<==>data
+<button>{!name!}</button> will fail because 2nd can not as content,
+only attribute value='{!xxx!}' or valuesome='{!xxx!}' can auto bind dom-2-data
+
+</pre>
+<!-- 
+
+only simple expression can auto bind ,such as {!xxx},
+value="xx {!xx}" can not
+value="{x} {y}" can not
+value="fn({x})" can not
+value="{x} | fn" can not
+value="ifcheck ?{x}:{y}" can not
+-->
+<a class="btn  btn-default" href="#!/document/data.watch">more powerfull data-bind,see data watch</a><br>
+
+<pre>
+why?
+some other framework can use {abc} data->dom,why you can not?
+because we donot use dirty-check or virtual-dom,
+when data.aaa changed,only the {!aaa} element change auto. 
+</pre>
+
+</div>
+</template>
+
+<script>
+
+var mod={};
+mod.data={
+	x:1,y:1,
+	a:'da',
+	b:'db',
+	name:'000',
+	ifcheck:true,
+}
+mod.state={
+	a:'s1'
+}
+mod.fn1=function(para){return 'm1_'+para};
+mod.fn2=function(a,b){return a+'_$$_'+b};
+
+module.exports=mod;
+</script>

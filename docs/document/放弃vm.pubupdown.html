@@ -1,0 +1,64 @@
+
+<html lang="en">
+<h4>vm.pubto vm.pubup vm.pubdown</h4>
+<pre>
+this.pubto(vm,channel,data,function(res){})
+this.pubup(channel,data,function(res,from){})
+this.pubdown(cvmid|*,channel,data,function(res,from){})
+
+vm.onpubto=function(vm,channel,data,cb){cb();}
+vm.onpubup=function(cvm,channel,data,cb){cb();}
+vm.onpubdown=function(pvm,channel,data,cb){cb(); return 'stop'}
+return stop will stop bubble up or down
+
+app.config.strategy.onpubupdown_bubble=false;can disable bubble
+app.config.strategy['onpubupdown_return_value_to_stop_bubble']='stop',you can change it
+</pre>
+<div>
+<button text=pub_down.test_to_allchild on-click=test_to_allchild/>
+<button text=pub_down.test_to_s1 on-click=test_to_s1/>
+<button text=pub_to.s1 on-click=pub_to_s1/>
+</div>
+
+ 
+<vm style="display:block;padding-top:20px;background-color:#eee" src='./vm.pubupdown.child.html'   id='s1'>
+</vm>
+<pre>
+main
+</pre>
+<pre>
+child
+</pre>
+ 
+</html>
+
+<script type="text/javascript">
+
+ 
+var vm={};
+vm.onpubup=function(cvm,channel,obj,cb){
+	console.log('onpubup,'+channel+","+JSON.stringify(obj));
+	cb({message:'i got you'});
+}
+vm.test_to_allchild=function(){
+	this.pubdown('*','test',{name:123},function(res,from){
+		console.log('i am:'+this.id,'*:test.callback','from='+from.id,res)
+	})
+}
+vm.test_to_s1=function(){
+	this.pubdown('s1','test',{name:123},function(res,from){
+		console.log('i am:'+this.id,'s1:test.callback','from='+from.id,res)
+	})
+}
+vm.pub_to_s1=function(){
+	this.pubto(this.getChild('s1'),'abc',{cba:1},function(res){
+		console.log('pubtoget',res)
+	})
+}
+
+vm.onpubto=function(sender,channel,data,cb){
+	console.log('onpubto',sender.id,channel,data);
+	cb({message:'i am pvm'})
+}
+module.exports=vm;
+</script>

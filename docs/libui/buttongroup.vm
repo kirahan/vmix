@@ -1,0 +1,29 @@
+<template>
+<div class="btn-toolbar {this.option.otherclass}" role="toolbar">
+<div class="btn-group" el-list='group in groups' >
+  <button type="button" class="btn {group.otherclass}" el-list='btn in group.btns' on-click='cb({$index},{pscope.$index})'>{btn}</button>
+</div>
+</div>
+</template>
+
+<script>
+
+var obj={
+	data:{
+		otherclass:'btn-default btn-group-justified',//
+		titles:[],
+		groups:[
+		{otherclass:'btn-default',btns:[]},
+		{otherclass:'btn-default',btns:[]}
+		],
+		cb:function(){},
+	},
+
+	domevent:{
+		cb:function(e,index,pindex){
+			this.pubup('btnclick',{index:index,pindex:pindex,e:e})
+		}
+	},
+}
+module.exports=obj;
+</script>

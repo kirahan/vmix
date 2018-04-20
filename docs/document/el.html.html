@@ -1,0 +1,40 @@
+
+<html>
+
+<h4>sample</h4>
+
+<button on-click='test(1)'>set html</button> <code>this.sethtml(id|el,html);</code><br>
+<button on-click='test(2)'>add html</button> <code>this.addhtml(id|el,html);</code><br>
+
+<pre>
+html just like vm.tenplate ,has all ,
+1.expression ......<tag a="{b}" /> <tag>{abc}</tag> 
+2.domevent ........<tag on-abc='www' />   
+3.dataevent .......<tag watch-cba='xxx' />  
+4.el filter .......<tag el-filter='if:yyy' />
+5.el getter .......<tag id='abc'  class='cba'/>
+6.custome .........<tag el- hook='xyz.js' data-x=123/>
+7.array ...........<tag el-list='book in books'/>
+</pre>
+
+click and see the console.log<br>
+<div id='cont' style="background-Color:#eee;">
+</div>
+</html>
+<script>
+var mod={};
+mod.test2=function(e,a,b){
+	console.log('test2',a,b)
+}
+mod.test=function(e,p){
+	var html='<div><button on-click="js:console.log(123)">'+new Date().getTime()+'. {name}</button>';
+	html+="<button el-list='a in s' on-click='test2({a},{s.0})'>{a}</button></div>"
+	if(p==1)this.sethtml('cont',html);
+	else this.addhtml(this.getel('cont'),html);
+}
+mod.data={
+	name:1,
+	s:[1,2,3]
+}
+module.exports=mod;
+</script>

@@ -1,0 +1,26 @@
+<style>
+
+
+</style>
+<html>
+<view layout=v >
+<button text="i am in child pub.gtest2" on-click=pub_gtest2/>
+</view>
+</html>
+<script type="text/javascript">
+var vm={};
+
+vm.event={
+	'app.gtest':function(data,from,cb){
+		console.log('i am:'+this.id,from.id,'get gtest:',data)
+		cb('gtest')
+	}	
+}
+
+vm.pub_gtest2=function(){
+	app.pub('gtest2',{name:123},this,function(res,from){
+		console.log('i am:'+this.id,'gtest2.callback','from:'+from.id,res)
+	})
+}
+module.exports=vm;
+</script>

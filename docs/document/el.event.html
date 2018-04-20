@@ -1,0 +1,68 @@
+<template>
+
+<h4>dom event</h4>
+
+<h4>define and use</h4>
+<pre>
+<button on-click=a(123)>xxx</button>     ==>mod.a=function(e,para){};
+<button on-click=auto id=abc>xxx</button>==>mod['abc.click']=function(e){} 
+</pre>
+<h4>how</h4>
+<pre>
+1.All the event will be bind to vm.pel,It will search your callback from event.target.
+2.If event.target  hasAttribute 'on-'+event.type ||  'on-'+event.type+'-self', will execute the callback .
+3.Else,It will bubble to parentNode,until find a element has hasAttribute 'on-'+event.type,not the 'on-click-self'.	
+4.If not found, will be bubbled to vm.pel to find 'on-'+event.type,if found,excute it,but in pvm,
+5.event will never exceed vm.pel,if find callback && execute ,the event will stop.
+when execute,this===vm
+</pre>
+<h4>sample</h4>
+<div>  
+<button on-click=auto id='abc'>abc.click=auto</button>
+<button on-click=a>no parameter</button> 
+<button on-click=a(1)>with parameter</button> 
+<button on-click='js:console.log(123);'>js sample</button>
+<input type="checkbox"   on-change='todata-datax'  /> 
+<input type="checkbox"   on-click='todata-datax' />  
+<button on-click="js:console.log(this.data)">check data if click checkbox</button>
+
+</div> 
+<pre>
+on-click=a 
+on-click=a(1) 
+on-click="js:console.log(123)"
+on-change='todata-datax'
+on-click='todata-datax'  
+on-click="js:console.log(this.data)"
+</pre>
+<h4>on-click-self will not capture children's event</h4>
+
+<div on-click='js:console.log(123);' style='background:#eee'><button >click here will callback </button></div> 
+<div on-click-self='js:console.log("on-click-self")' style='background:#aaa'>
+<button >on-click-self,click here not callback,click right color area</button>
+</div> 
+
+<pre>
+on-click-self='js:console.log("on-click-self")'
+</pre>
+</template>
+
+<script>
+
+var mod={};
+mod.data={datax:true};
+mod.domevent={}
+mod.domevent.a=function(e,para){
+	console.log('domevent.a',this,e,para)
+}
+mod.domevent.b=function(e,para){
+	console.log('domevent.b',this,e,para);
+	if(para==1)return true;
+	else return false;
+}
+mod['abc.click']=function(){
+	console.log('abc.click.auto')
+}
+
+module.exports=mod;
+</script>

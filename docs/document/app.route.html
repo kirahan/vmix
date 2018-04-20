@@ -1,0 +1,39 @@
+<template>
+ 
+
+<h4>route is in app level,defined your route in app.js</h4>
+<pre>
+ 
+app.route('#!/view/:action',this,function(para){
+	console.log('hash 2 changed',para);
+})
+app.navigate('#!/xxx/yyy/zzz')
+</pre>
+
+<h4>app.js</h4>
+<pre>
+var route=require('./applibroute.js');
+route.setup(window.location.href,0);
+app.route=function(path,vm,cb){
+	route.bind(path,vm,cb);
+}
+app.navigate=function(hash,title,force){
+	route.navigate(hash,title,force);
+}
+
+</pre>
+<h4>sample</h4>
+<ul class="pagination">
+
+<li><a class=button href="#!/document/el.hook"> href=#!/document/el.hook </a> </li>
+
+<li><a class=button href="#!/document/vmimport"> href=#!/document/vmimport</a></li>
+<li><a class=button href="#!/debugfile"> href=#!/debugfile</a></li>
+
+
+</ul>
+<div>
+
+<button on-click='js:app.navigate("#!/document/el.hook")'>navigate to el.hook</button>
+</div>
+</template>

@@ -1,0 +1,23 @@
+<div class="alert alert-danger alert-dismissible" >
+<button type="button" class="close" aria-label="Close" on-click="close">
+<span aria-hidden="true">&times;</span>
+</button>
+{this.data.text}
+</div>
+
+
+
+<script>
+
+var mod={};
+mod.data={
+	name:100,
+}
+mod.closeme=function(e,p){
+	console.log('close.this.id',this.id)
+	this.close()
+}
+mod.config={pelDisplayType:'inline'};
+
+module.exports=mod;
+</script>

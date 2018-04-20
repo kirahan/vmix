@@ -1,0 +1,33 @@
+<template>
+<breadcrumb event-click=cb>
+	<data menus="this.data.menus" activesn=0 />
+</breadcrumb> 
+<pre>
+<breadcrumb event-click=cb>
+	<data menus="this.data.menus" activesn=0 />
+</breadcrumb> 
+</pre>
+
+
+<h4>breadcrumb.vm source</h4>
+<pre id='source'></pre>
+
+</template>
+
+<script>
+var mod={};
+mod.data={
+	menus:[111,222,333]
+}
+mod.cb=function(index,e){
+		console.log("cb.cb",'index='+index,e);
+}
+mod.hook=function(when,cvm){
+	if(when=='onstart'){
+		app.pub('getvmsource','/libui/breadcrumb.vm',function(text){
+			this.getel('#source').textContent=text;
+		}.bind(this))	
+	}
+}
+module.exports=mod;
+</script>

@@ -1,0 +1,25 @@
+
+<html>
+<h4>this is calculate before htmltojson</h4>
+
+<h4>define in config</h4>
+
+<pre>
+config.template.wrapper['navbar']='something @content@ something'; 
+@content@ will be replaceed by your code
+</pre>
+<h4>use in template</h4>
+
+<pre>
+{ %  wrapper name=test % }your code{ %endwrapper% }
+this is calculate before htmltojson
+</pre>
+<h4>sample</h4>
+{%  wrapper name=test %}your new code{%endwrapper%}
+
+
+<h4>config.wrapper lazy load</h4>
+{%  wrapper name="wrapperlazytest" %}your new code{%endwrapper%}
+
+
+</html>

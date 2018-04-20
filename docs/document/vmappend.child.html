@@ -1,0 +1,19 @@
+ <body>
+  <div class="alert alert-success alert-dismissible" style="display:inline-block;">
+  <button type="button" class="close" aria-label="Close" on-click="closeme">
+  <span aria-hidden="true">&times;</span></button>{text}</div>
+ </body>
+
+<script>
+var mod={};
+
+mod.closeme=function(e){
+	//console.log('closeme',this.id,this.sid,e.target)
+	this.close();
+	this.pubup('close',this.id)
+}
+mod.onstart=function(){
+	//console.log('child',this.data,this.__datafrom_parent)
+}
+module.exports=mod;
+</script>

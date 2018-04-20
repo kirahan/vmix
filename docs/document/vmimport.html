@@ -1,0 +1,57 @@
+
+
+<html>
+<h3>vm import</h3>
+<h4>direct use</h4>
+<div vm-src='./file/abc.html' id='3' ><data name='direct'/></div>
+<pre>
+<div vm-src='./file/abc.html' id='3' ><data name='direct'/></div>
+vm-src is default vmsrc atrribute,change it in config.alias
+</pre>
+
+<h4>defualt tagName vm</h4>
+<vm src='./file/abc.html' id='2' ><data name='vm'/></vm>
+<pre>
+<vm src='./file/abc.html' id='2' ><data name='vm'/></vm>
+vm is default vm tag,you can change in config.alias
+</pre>
+ 
+<h4>tagname  import>use>path </h4>
+<h4>import,use as customElement</h4>
+<import type='vm' src='./file/abc.html' name='xyz' />
+<xyz id='1' ><data name='import'/></xyz>
+<pre>
+<import type='vm' src='file/abc.html' name='xyz' />
+<xyz id='1' ><data name='import'/></xyz>
+</pre> 
+
+<h4>app.use('vm' ,tagName)</h4>
+<testvm />
+<pre>
+<testvm />
+</pre>
+
+
+<h4>defined in config.path.vm,use as customElement</h4>
+<abc ><data name='config'/></abc>
+<pre>
+config.path.vm.abc="abc.html"
+<abc ><data name='config'/></abc>
+</pre>
+
+<h4>abc.html source</h4>
+
+<pre id='abcsource' />
+</html>
+
+<script>
+
+
+var mod={}
+mod.onstart=function(){
+	app.pub('getvmsource','/document/abc.html',function(text){
+		this.getel('#abcsource').textContent=text;
+	}.bind(this))
+}
+module.exports=mod;
+</script>

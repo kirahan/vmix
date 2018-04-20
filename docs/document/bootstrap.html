@@ -1,0 +1,60 @@
+<html>
+
+<h4>vmix is a Declarative viewModule(web component) system</h4>
+<pre>
+with loader,parser,binder,watcher,dataflow-control,extend,private-style,custome-element,slot
+</pre> 
+
+<br>
+<h4>step.1 include vmix.js</h4>
+<pre>
+<script src="vmix.js" data-role='vmix' app-file="app.js" index-file='index.vm.html'></script>
+</pre>
+
+
+<h4>step.2 write a vm with filename=abc.html</h4>
+<pre>
+<style>...</style>
+<body>...</body>
+<script>this.abc=xyz;</script>
+mix your template-style-data-event,
+</pre>
+
+<h4>step.3 import abc.html</h4>
+<pre>
+<vm  id='xyz' src='./abc.html' />                 use default tag name,and define a src,
+<div id='xyz' vm -src='./abc.html'/>              use any     tag name,and define a vm-src 
+<abc id='xyz'/>
+
+<import type="vm" src="./abc.html" name='abc'/>   import,then custome tag name <abc id='xyz'/>
+app.config.path.vm.abc='abc.html'                 define,then custome tag name <abc id='xyz'/>
+app.use('vm','abc',{template,style,lib}           app.use                      <abc id='yxz'/>
+</pre>
+<h4>specific</h4>
+<pre>
+code style: node style js module exports,
+viewModule: plain js define,need not create,no relation with el and core engine,  
+file:       auto load-parse-cache file,js inline,js require
+data-el:    one-way two-way data-bind,
+dataflow:   3 data type,3 data source with permission,transparent controllable dataflow,
+interact:   up-down through defined data-option-state-event
+custom Element name,private style,dom slot,
+</pre>
+<h4>others</h4>
+<pre>
+I'd like to use the simple word vm,means viewModule,similar with webComponent,
+a vm should implement ui-data-event interact in own internal,
+a vm is a self-controlled module,other vm should not try to controll through function,
+a vm can interact with parent and child through data-event,
+
+there will not be a gobal object,window.vmix=undefined,
+</pre>
+</html>
+<script>
+var mod={};
+mod.onstart=function(){
+	//console.log("this is the global object");
+	
+}
+module.exports=mod;
+</script>

@@ -1,0 +1,54 @@
+
+<template>
+
+<button on-click="pubup_ck">in child,pubup test</button>
+<button on-click="pubup_ck2">in child,pubup test2</button>
+<button on-click="pubup_ck3">in child,pubup test3</button>
+<button on-click="pubapp_ck">in child,pubapp</button>
+<button on-click="state_ck">in child,state</button>
+
+</template>
+
+<script>
+var mod={}
+mod.state={a:1};
+mod.state_ck=function(){
+	this.setState('a',this.state.a+1);
+}
+mod.pubup_ck=function(){
+	this.pubup('test',{hehe:1},function(res,from){
+		console.log('i am sub',this.id,'res=',res,'from=',from.id)
+	})
+}
+mod.pubup_ck2=function(){
+	this.pubup('test2',{hehe:1},function(res,from){
+		console.log('i am sub',this.id,'res=',res,'from=',from.id)
+	})
+}
+mod.pubup_ck3=function(){
+	this.pubup('test3',{hehe:1},function(res,from){
+		console.log('i am sub',this.id,'res=',res,'from=',from.id)
+	})
+}
+mod.pubapp_ck=function(){
+	this.pubapp('test',{hehe:1},function(res,from){
+		console.log('i am sub',this.id,'res=',res,'from=',from.id)
+	})
+}	
+mod.data={
+	name:'0',inp:'1',
+	s:[]
+}
+mod.event={
+	'pvm.test1':function(data,from,cb){
+		console.log('pvm.test1,i am sub',this.id,'data=',data,'from=',from.id);
+		cb('ok')
+	},
+	'app.test1':function(data,from,cb){
+		console.log('app.test1,i am sub',this.id,'data=',data,'from=',from.id);
+		cb('ok')
+	},
+
+}
+module.exports=mod;
+</script>

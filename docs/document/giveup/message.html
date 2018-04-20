@@ -1,0 +1,45 @@
+<template>
+
+
+<h5>sub</h5>
+<pre>
+vma.message={}
+
+parent.message['child@channel']=function(data,cb,sender){} ;return 'stopbubble' will stop bubble up;
+child.message['parent@channel']=function(data,cb,sender){} return 'stopbubble' will stop bubble down.
+
+parent.message['child@statechange']=function(data,cb,sender){} ;return 'stopbubble' will stop bubble up;
+child.message['parent@statechange']=function(data,cb,sender){} return 'stopbubble' will stop bubble down.
+'statechange' is auto excute when vm.setState(name,value) data={name:name,value:value}
+
+vma.message['channel']=function(data,cb,sender){}......will auto subscribe
+
+</pre>
+<h5>pub</h5>
+<pre>
+child.pubup('channel',data,function(result,receiver){});
+parent.pubdown('channel',data,function(result,receiver){}); 
+vmb.pubto(vma,'channel',data,function(result,receiver){})
+vmb.pub('channel',data,function(result,receiver){})
+</pre>
+
+
+
+<h5>config.message </h5>
+<pre>
+config.message.permission=function(when,channel,subber,pubber,data,res){
+	when=sub/pub/pubto/pubok
+	return false will abort execute .
+}
+pubup,pubdown is always allowed
+config.message.cb_sender_as_para=true; ......(data,cb,sender)
+config.message.cb_receiver_as_para=true;.....(result,receiver)
+</pre>
+
+</template>
+
+<script>
+
+var mod={};
+module.exports=mod;
+</script>

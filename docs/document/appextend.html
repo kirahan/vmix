@@ -1,0 +1,65 @@
+<html>
+
+
+<pre>
+<script src="vmix.js" data-role='vmix' app-file="app.js" index-file='index123.html'></script>
+</pre>
+
+<pre>
+<script>
+in app.js
+
+app.use('filter',     'abc', function(v){   return v})      {{x.y} | abc}
+app.use('method',     'abc', function(v){   return v})      {abc({x.y})}
+app.use('operator',   " || ",function(v){   return v})      {{x.y} || 1}
+
+app.use('domevent',   'abc', function(e,para){})            <tag on-click=abc
+app.use('dataevent',  'abc', function(el,newv,wopt,path){}) <tag watch-datax=toel-abc
+normally watch-datax=toel-value|text,you can extend el property|attribute
+
+app.use('vmprototype','abc', function(){})                  js:this.abc()
+
+app.use('elhook',     'abc', function(vm,el,when,node){})   <tag el-hook=abc
+app.use('block',      'abc', "string"|json)                 <abc />
+app.use('lib',        'abc', fn|obj)                        js:var some=require('abc')
+app.use('vm',         'testvm',{
+	template:"<button on-click='testme' class='test'>testvm with template,style,lib,
+	you can packed your vm like this</button>",
+	style:".test{color:red}",
+	lib:{testme:function(){console.log('testme')}},
+})
+
+with above,you can pack a real app,
+or lazyload your file by: app.config.path={lib:{},elhook:{},vm:{},block:{},}
+</script>
+</pre>
+<h4>extend sample</h4>
+
+<button   >{name | testfilter}</button>
+<button   >{testmethod(name)}</button><br>
+<br>
+<button on-click='testdomevent(123)' >click test domevent</button>
+<button on-click='js:this.setData("name",parseInt(Math.random()*100))' >click test dataevent</button>
+<button watch-name="toel-abc" style='color:red'>{name}</button>
+<code>watch-name="toel-abc"</code>
+<br>
+<button on-click='js:this.proto_extend_test()' >click test vmprototype</button>
+<br>
+
+<button  el-hook='hehe'>clor blue by elhook hehe</button>
+
+<bolcktest />
+ 
+ <testvm />
+</html>
+
+
+<script>
+
+var mod={};
+mod.data={
+	name:'0'
+}
+module.exports=mod;
+</script>
+

@@ -1,0 +1,90 @@
+
+<body>
+
+<h4>vm appendChild then start</h4>
+
+<div style='height:50px;vertical-align:middle'>
+<button on-click="restartdvm" style='height:100%'>close,setChildData,restart</button>
+<button on-click='js:this.getChild("dvm").close()' style='height:100%'>close</button>
+<button on-click='js:this.removeChild("dvm")' style='height:100%'>remove child ,then can not start again</button>
+<vm src='./vmappend.child.html' data-text="1111" on-close="dvm_closed" id='dvm' autostart=false style='display:inline-block;'/>
+</div>
+
+<p></p>
+<div style='height:50px;vertical-align:middle'>
+<button on-click="appenddvm" style='height:100%'>append new vm to a same element</button>
+<div id=dvm2 style='display:inline-block;'/>
+</div>
+
+<code>this.appendChild({id:'newdvm'+rand(),data:{text:333},src:'./vmappend.child.html'}).start()</code>
+<p></p>
+
+<div style='height:50px;vertical-align:middle'>
+<button on-click="appenddvm_3" style='height:100%'>append new vm ,app.use</button>
+<button on-click='removedvm_3' style='height:100%'>removeChild</button>
+<div id=dvm3 style='display:inline-block;'/>
+</div>
+<code>this.appendChild({id:'dvm3',tagname:'testvm'}).start()</code>
+<p></p>
+
+<div style='height:50px;vertical-align:middle'>
+<button on-click="appenddvm_4" style='height:100%'>append new vm defined in app.config.path.vm</button>
+<button on-click='js:this.removeChild("dvm4")' style='height:100%'>removeChild</button>
+<div id=dvm4 style='display:inline-block;'/>
+</div>
+<code>this.appendChild({id:'dvm4',path:'abc'}).start()</code>
+  <code>this.removeChild("dvm4")</code>
+<p></p>
+
+</body>
+
+<script>
+var mod={};
+
+mod.restartdvm=function(){
+	var vm=this.getChild('dvm');
+	vm.close();
+	this.setChildData('dvm','text',parseInt(Math.random()*100))
+	vm.start();
+}
+mod.appenddvm=function(){
+	var id=parseInt(Math.random()*100);
+	var el=this.getel('dvm2');
+	var len=el.childNodes.length+1;
+	this.appendChild({
+		el:el,
+		id:'dvm2'+len,
+		src:'./vmappend.child.html',
+		data:{text:id},
+		event:{'close':function(cvmid){
+			console.log('childed closed,cvmid=',cvmid,this.id);
+			this.removeChild(cvmid);
+		}},
+	}).start()
+}
+mod.dvm_closed=function(){console.log('dvm_closed')}
+mod.removedvm_3=function(){
+	this.removeChild("dvm3")
+}
+mod.appenddvm_3=function(){
+	var el=this.getel('dvm3');
+	console.log('appenddvm_3',el)
+	this.appendChild({
+		el:el,
+		id:'dvm3',
+		tagname:'testvm',
+	}).start()
+}
+mod.appenddvm_4=function(){
+	var el=this.getel('dvm4');
+	this.appendChild({
+		el:el,
+		id:'dvm4',
+		path:'abc',
+	}).start()
+}
+mod.removedvm=function(){
+	this.removeChild('dvm2')
+}
+module.exports=mod;
+</script>

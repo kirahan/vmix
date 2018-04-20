@@ -1,0 +1,71 @@
+<pre>
+
+web 组件 Web Components 标准 https://github.com/w3c/webcomponents
+Custom Elements
+document.registerElement('x-foo', {
+  prototype: Object.create(HTMLElement.prototype, {
+    createdCallback: {value: function(){}},自定义元素注册后，在实例化之后会调用，通常多用于做元素的初始化，如插入子元素，绑定事件等。
+    attachedCallback: {value: function(){}},元素插入到 document 时触发
+    detachedCallback {value: function(){}},元素从 document 中移除时触发，可能会用于做类似 destroy 之类的事情。
+    attributeChangedCallback {value: function(){}},元素属性变化时触发，可以用于从外到内的通信。外部通过修改元素的属性来让内部获取相关的数据并且执行对应的操作
+  })
+})
+一个自定义元素会经历以下这些生命周期：
+注册前创建
+注册自定义元素定义
+在注册后创建元素实例
+元素插入到 document 中
+元素从 document 中移除
+元素的属性变化时
+
+HTML Imports
+<link rel="import" href="/components/header.html">
+阻塞式
+我们要知道的是，默认的 link 加载是阻塞式的，除非你给他添加一个 async 标识。
+如果我们要获取 import 的 HTML 的 document 的话，得这么来：
+const d = document.currentScript.ownerDocument
+
+HTML Templates
+<template id="template">...</template>
+template 元素有一个只读的属性 content，用于返回这个 template 里边的内容，返回的结果是一个 DocumentFragment。
+
+Shadow DOM
+Shadow DOM 好像提出好久了，最本质的需求是需要一个隔离组件代码作用域的东西，
+例如我组件代码的 CSS 不能影响其他组件之类的，而 iframe 又太重并且可能有各种奇怪问题。
+可以这么说，Shadow DOM 旨在提供一种更好地组织页面元素的方式，来为日趋复杂的页面应用提供强大支持，避免代码间的相互影响。
+slot 是Shadow DOM的一部分
+slot 提供了在使用自定义标签的时候可以传递子模板给到内部使用的能力，
+
+然后，是最新标准中的 slot 使用方式，直接上例子代码：
+<!-- component input-toggle template -->
+<input type="checkbox"></input>
+<slot name="text"></slot>
+在自定义的元素标签是这么使用 slot 的：
+
+<input-toggle name="hello">
+  <input type="checkbox"></input>
+  <span class="span" slot="text">test</span>
+</input-toggle>
+通过 slot="text" 的属性来让元素内部的 slot 占位符可以引用到这个元素，多个元素使用这个属性也是可以的。这样子我们便拥有了使用标签是从外部传 template 给到自定义元素的内部去使用，而且具备指定放在那里的能力。
+
+
+组件(Component)和模块(Module)又是一对容易混淆的名词，也常常被用来相互替换。
+两者是否有差异往往取决专业背景、所在领域、以及视角。
+个人总结，从设计上来看，组件强调复用，模块强调职责(内聚、分离)，或者说组件是达到可复用要求的模块。
+
+Module, 中文为模块或模组。它的核心意义是分离职责，属于代码级模块化的产出。
+本身是一组具有一定内聚性代码的组合，职责明确。
+对外的接口可以是松散的，也可以是集中的。
+SEI的定义如下:  An implementation unit of software that provides a coherent set of responsibilities.
+它以问题分解的形式，来解决软件设计问题。
+它更强调一个内聚的概念，形式上可以是Java中的包，也可以是一个源代码目录。
+
+Component，中文称为组件，或者构件。使用非常比较广泛，它的核心意义在于复用，相对模块，对于依赖性有更高的要求。
+我大概整理了一下，两个定义 (参考Component based software programming):
+可以复用的模块，概念上与模块基本等同，只是明显有依赖性的要求。（最早提出时概念）。
+Component-Based Software Development中提倡的组件定义如下(Component Software):
+
+除了完成某个特定功能外，还要具备如下条件的代码组合:
+符合特定的接口要求（交互的要求）。
+具有明确的上下文依赖 （复用的要求）。
+</pre>

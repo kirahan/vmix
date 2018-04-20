@@ -1,0 +1,40 @@
+<style type="text/css">
+ .a1{ color:red}
+ .a2{ color:blue}
+</style>
+<import type="css" src='./abd.css'/>
+<style src='./abc.css'></style>
+<html>
+<button class='a1'>a1 private</button>
+<button class='a2'>a2private</button>
+<button class='a3'>a3 src from css file</button>
+<button class='a4'>a4 import from css file</button>
+
+<pre>
+<style type="text/css">
+ .a1{ color:red}
+ .a2{ color:blue}
+</style>
+<import type="css" src='./abd.css'/>
+<style src='./abc.css'></style>
+</pre>
+<pre>
+<button class='a1'>a1 private</button>
+<button class='a2'>a2private</button>
+<button class='a3'>a3 src from css file</button>
+<button class='a4'>a4 import from css file</button>
+
+when you change el.classList,you should use vm.getClassName(youe_class_name) to get a private name.
+
+when a vm start,if style.text,will 
+var curStyle=document.createElement('style');curStyle.id="_privatestyle_"+id;
+when a vm close,
+var curStyle=document.getElementById("_privatestyle_"+vm.sid);
+if found,then remove it.
+
+vm.hookStyle=function(style_text){,,, return new_style_text}
+you can define this function,to replace something.
+</pre>
+css method,css argument will implement later
+you can change css text at indexvm.onload
+</html>

@@ -1,0 +1,53 @@
+
+<body>
+<nav aria-label="Page navigation">
+  <ul class="pagination" id='pageul' watch-activesn=activesn_changed>
+    <li>
+      <a href="#" aria-label="Previous" on-click="pagercb(last)">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li el-list="num in pages"><a href="#" style="{ifactive({$index})}" on-click=pagercb({$index})>{!num}</a></li>
+    <li>
+      <a href="#" aria-label="Next"  on-click="pagercb(next)">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+</body>
+<script>
+var obj={
+	data:{
+		menus:[],
+		activesn:0,
+	},
+	ifactive:function(index){
+		return index==this.data.activesn ?'color:red':''
+	},
+	activesn_changed:function(e){		
+		var els=e.el.childNodes;
+		var vm=this;
+		for(var i=0;i<els.length;i++){
+			els[i].childNodes[0].style.color= (i-1===e.newv) ?'red':''
+		}
+	},	
+	pagercb:function(e,para){
+			if(para=='last' || para=='next'){
+				return 	this.pubup('page',para);
+			}
+			para=parseInt(para);
+
+			var els=this.getel('#pageul').childNodes;
+			var vm=this;
+			for(var i=0;i<els.length;i++){
+				els[i].childNodes[0].style.color= (i-1===para) ?'red':''
+			}
+			this.data.activesn=para;
+			//console.log('activesn='+this.data.activesn)
+			this.pubup('page',para);
+		}
+}
+
+module.exports=obj;
+</script>

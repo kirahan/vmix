@@ -1,0 +1,31 @@
+
+<body>
+<ol class="breadcrumb">
+  <li el-list="menu in menus"  >
+		<a href="#" style="{ifactive({$index})}"  on-click="cb({$index})" >{menu}</a>
+  </li>
+</ol>
+</body>
+<script>
+var obj={
+	data:{
+		menus:[],
+		activesn:0,
+	},
+	ifactive:function(index){
+		return index==this.data.activesn ?'color:red':''
+	},
+	domevent:{		
+		cb:function(e,para){
+			var els=e.target.parentNode.parentNode.childNodes;
+			var vm=this;
+			els.forEach(function(el,k){
+				el.childNodes[0].style.color= (k==para) ?'red':''
+			})
+			this.pubup('click',para);
+		}
+	}
+}
+
+module.exports=obj;
+</script>

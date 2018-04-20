@@ -1,0 +1,71 @@
+<style type="text/css">
+ .@b{width:100px} 
+</style>
+<template>
+<div >
+
+<button class='@b'>this is  vm1 </button> 
+<button class='@b' on-click=vm1_vm2>pub to vm2</button> 
+<button class='@b' on-click=vm1_vm2_to>pubto vm2</button> 
+<button class='@b' on-click=testparent>pubup</button> 
+<input value='{!msg!}'   style='width:450px'></input> 
+
+</div> 
+
+</template>
+
+<script>
+var obj={
+	data:{
+		msg:'',
+	},
+	domevent:{
+		testparent:function(){
+			this.pubup('test',{name:'test',num:321},function(result,receiver){
+				console.log("pubup callback",result,receiver.id);		
+			})
+		},
+		vm1_vm2:function(){
+			var slef=this;
+			app.pub('vm1_vm2',123,function(result,receiver){
+				console.log('pub vm1_vm2 has callback','slef.id='+slef.id,'this.id='+this.id,'receiver.id='+receiver.id,"result="+result);	
+			}.bind(this))
+		},
+		vm1_vm2_to:function(){
+			var slef=this;
+			this.pubto(this.pvm.children[1],'vm1_vm2_pubto',123,function(result,receiver){
+				console.log('pubto vm2 has callback','slef.id='+slef.id,'this.id='+this.id,'receiver.id='+receiver.id,"result="+result);	
+			})
+		}
+	},
+	message:{
+		"vm2_vm1":function(data,cb,sender){
+			this.data.msg='msg='+data+',time='+parseInt(Math.random()*100);			
+			if(sender)this.data.msg+=",send="+sender.id;
+			cb("from vm2_vm1");
+		},
+		"vm2_vm1_pubto":function(data,cb,sender){
+			this.data.msg='msg='+data+',time='+parseInt(Math.random()*100);			
+			if(sender)this.data.msg+=",send="+sender.id;
+			cb("get_ vm2_vm1_pubto");
+		},
+		'parent@test':function(data,cb,sender){
+			console.log("get parent message",sender);
+			this.data.msg='sender='+sender.id+',msg='+JSON.stringify(data)+',time='+parseInt(Math.random()*100);
+			cb('vm1',123)
+		},
+		'test':function(data,cb,sender){
+			if(sender.id==this.pvm.id){
+				this.data.msg='sender='+sender.id+',msg='+JSON.stringify(data)+',time='+parseInt(Math.random()*100);
+				cb('vm1',123)
+			}else {
+				console.log("get direct message",sender.id,data);
+				cb(123)
+			}
+		}
+	}
+}
+
+module.exports=obj;
+
+</script>

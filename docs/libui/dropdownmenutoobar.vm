@@ -1,0 +1,70 @@
+<template>
+<nav  class="navbar navbar-default navbar-static">
+  <div class="container-fluid">
+  <button class="navbar-toggle collapsed" type="button" on-click='sitchcollaps'>
+	<span class="sr-only">{title}</span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+  </button>
+	<div class="collapse navbar-collapse bs-example-js-navbar-collapse" id='js-navbar-collapse-{this.sid}'>
+
+	  <ul class="nav navbar-nav" el-list='group in groups'>
+		<li class="dropdown" role="ingroupx">
+		  <a  href="#" class="dropdown-toggle" on-click="toggle({$index})">
+			{group.title}
+			<span class="caret"></span>
+		  </a>
+
+		  <ul class="dropdown-menu" >
+			<li el-list='btn in group.btns'  class="{ifblank($index,$value)?divider:''}">
+			<a href="#" on-click='itemclick({$index},{pscope.$index})' >{btn}</a>
+			</li>
+		  </ul>
+
+		</li>
+
+	  </ul>
+	</div>
+  </div>
+</nav>
+</template>
+
+<script>
+var mod={};
+
+mod.data={
+	title:'',
+	groups:[{title:'',btns:[ ]},],
+}
+mod.state={
+	elid:'js-navbar-collapse-'
+};
+mod.method={};
+mod.method.ifblank=function(k,v ){
+	return (v=='')?true:false;
+}
+mod.domevent={};
+mod.domevent.itemclick=function(e,index,pindex){
+	e.target.parentNode.parentNode.parentNode.className="dropdown";
+	this.pubup('click',{index:index,pindex:pindex,e:e});
+}
+mod.domevent.sitchcollaps=function(){
+	var el=this.getel('#'+this.state.elid+this.sid);
+	if(!el)return;
+	el.classList.toggle('in'); 
+}
+mod.domevent.toggle=function(e,para){
+	var els=this.getel("$ingroupx");
+	if(els){
+		for(var k in els){
+			if(k==parseInt(para)){
+				els[k].classList.toggle('open'); 
+			}else{
+				els[k].className="dropdown";			
+			}
+		}
+	}
+}
+module.exports=mod;
+</script>

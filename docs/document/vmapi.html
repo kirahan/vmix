@@ -1,0 +1,127 @@
+<html>
+<h4>vm.prototype api</h4>
+
+
+<div class="row">
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/vmgetter">vm getter</a><br>
+<a class="btn  btn-default" href="#!/document/vmappend">vm append</a><br>
+</div>
+<div class="col-md-10">
+
+<div><pre>
+this.getParent();
+this.hasChild(id);	
+this.getChild(id);	
+this.appendChild({el,id,src|path|tagname,data,option,event}).start(cb)
+this.removeChild(cid|cvm);
+</pre></div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/vmlifecyle">vm lifecyle</a><br>
+</div>
+<div class="col-md-10">
+<div><pre>
+this.getChild(cid).start(cb)
+this.getChild(cid).restart({src:src,fresh:true},cb)
+this.getChild(cid).close();
+this.close();	
+this.clean(); clean resource	
+this.hide();   
+this.show();
+</pre></div>
+</div>
+
+</div>
+
+<div class="row">
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/el.getter">el getter</a><br><br>
+<a class="btn  btn-default" href="#!/document/el.html">el html</a><br>
+
+</div>
+<div class="col-md-10">
+
+<div><pre>
+this.getel()    ->all element  
+this.getel('#x')-><el id='x'/> 
+this.getel('.x')-><el class='x'/>
+this.getel('$x')-><el role='x'/>
+this.delel('.|#|$abc')
+this.addhtml(id|el,html);	
+this.sethtml(id|el,html);
+</pre></div>
+</div>
+</div>
+
+
+<div class="row">
+
+
+
+
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/dataflow">dataflow</a><br>
+
+</div>
+<div class="col-md-10">
+<div><pre>
+this.setState(name,value),
+this.getData(path,cb),
+this.setData(path,value,cb),
+this.addData(path,index,value,cb),
+this.delData(path,index,cb)
+pvm.setChildData(cvmid,path,value,cb)
+pvm.addChildData(cvmid,path,index,value,cb),
+pvm.delChildData(cvmid,path,index,count,cb)
+pvm.setChildOption(cvmid,path,value)
+</pre></div>
+</div>
+
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/vm.event">vm event</a><br>
+</div>
+<div class="col-md-10">
+<div><pre>
+this.pubapp(channel,data,function(res){})
+this.pubup(channel,data,function(res,from){})
+this.pubdown(cvmid|*,channel,data,function(res,from){})
+
+</pre></div>
+</div>
+
+
+<div class="col-md-2">
+
+</div>
+<div class="col-md-10">
+<div><pre>
+vm.getClassName(youe_class_name) return a global.className,such as priv_1
+
+this.batchdom(fn) 
+this.cleanList()
+this.rebuildList()
+this.hasSlot(name);               
+</pre></div>
+</div>
+
+
+
+</div>
+
+</html>
+
+<script>
+
+module.exports={
+	data:{x:1,y:2},
+	onstart:function(){	
+		//console.log(Object.keys(this.constructor.prototype))
+		console.log(Object.keys(this).sort());
+		//console.log(Object.keys(this.__getrandobj()).sort())
+	}
+}
+</script>

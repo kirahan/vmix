@@ -1,0 +1,60 @@
+<template>
+
+ 
+<div>
+<button>before</button> 
+<input style='width:50px' type=text el-list="book1 in books" value="{!book1.name}"></input>
+<button>after</button>
+</div>
+
+
+<pre>
+<div>
+<button>before</button> 
+<input style='width:50px' type=text el-list="book in books" value="{!book.name}"></input>
+<button>after</button>
+</div>
+</pre>
+
+<div>
+<button  on-click="gotopage(0)" >page 0</button> 
+<button  on-click="gotopage(1)" >page 1</button> 
+<button  on-click="gotopage(2)" >page 2</button> 
+<button  on-click="gotopage(3)" >page 3</button> 
+<button  on-click="gotopage(4)" >page 4</button> 
+<button  on-click="gotopage(5)" >page 5</button> 
+<button  on-click="gotopage(6)" >page 6</button> 
+<button  on-click="js:this.setData('books.0.name',(new Date().getTime()).toString().substr(10));" >set 0</button> 
+<button  on-click="js:this.delData('books',0,1);" >del 0</button> 
+<button  on-click="js:this.addData('books',0,{name:(new Date().getTime()).toString().substr(10)});" >add</button> 
+</div>
+<pre>
+this.getData('books',function(data){
+	if(Array.isArray(data)){
+		this.cleanList('books');
+		this.data.books=data;
+		this.rebuildList('books');
+	}
+}.bind(this))
+</pre>
+</template>
+
+<script>
+var vm={}
+vm.data={
+	books:[]}
+	
+vm.gotopage=function(e,id){
+	this.getData('books',function(data){
+		if(Array.isArray(data)){
+			this.cleanList('books');
+			this.data.books=data;
+			this.rebuildList('books');
+		}
+	}.bind(this))
+}
+	
+
+module.exports=vm;
+
+</script>

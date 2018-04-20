@@ -1,0 +1,54 @@
+<html>
+
+
+<pre>
+<script src="vmix.js" data-role='vmix' app-file="app.js" index-file='index123.html'></script>
+</pre>
+
+<pre>
+<script>
+var config={};
+config.isdev=true;
+config.precode=['pre','code'];//auto htmlesape
+config.vmtag='vm';  <vm src='' /> <div vm-src='' /> will be act as a vm
+
+config.strategy={
+	not_document_getelbyid:true,
+	auto_deepclone_store_data:true,
+	force_close_error_close_tag:true,
+	force_close_not_match_close_tag:true,
+	append_to_pel_wait_loading_child_vm:true,
+}
+
+config.path={
+	lib:{},	elhook:{},	vm:{},	block:{},
+}
+
+config.route={
+	before:function(path,args){},
+	after:function(path,args){},
+}
+app.config=config;
+
+app.onstart=function(){}
+app.onerror=function(type,where,e){}
+app.onload=function(url,xhr,opt){}
+app.store={your store}
+app.startTime=new Date();
+app.yourcode={}
+app.use(where,name,fn)
+where=vm,block,method,filter,domevent,dataevent,watchdata-toelxx,filter,elhook,vmprototype,
+vm:{template,style,lib}
+</script>
+</pre>
+
+
+</html>
+
+
+<script>
+var mod={};
+
+module.exports=mod;
+</script>
+

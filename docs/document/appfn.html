@@ -1,0 +1,55 @@
+<html lang="en">
+ 
+ <body>
+ <h4>app function </h4>
+ 
+in your js code,app is a global object,has some function
+<br>
+<button on-click=loadfile>loadfile test</button>
+
+<button on-click=apppub>app.pub test</button>
+
+<button on-click="js:app.navigate('#!/document/bootstrap');">navigate bootstrap</button>
+
+<pre>
+app.loadfile(type,'document/abc.js',function(err,mod,spec){
+	console.log(err,mod,spec)
+})
+type=lib|text|vm
+
+
+app.sub('datachange',function(data,from,cb){})
+app.pub('datachange',{name:1},function(res,from){}.bind(this))
+every vm.pub('abc') can goto app.sub('abc')
+</pre>
+<pre>
+app.setData(vm,p,v,cb)
+app.addData(vm,p,index,v,cb)
+app.delData(vm,p,index,count,cb)
+</pre>
+</body>
+</html>
+
+<script>
+
+var mod={};
+
+mod.loadfile=function(){
+	app.loadfile('lib','document/abc.js',function(err,mod,spec){
+		console.log('app.loadfile after vm.start',err,mod)
+	})
+}
+
+mod.apppub=function(){
+	app.pub('datachange:1',{name:parseInt(Math.random()*100)},function(res,from){
+		//console.log('datachange.cb','res=',res,'from.id='+from.id)
+	})
+}
+
+mod.onstart=function(){
+	app.sub('datachange:1',this,function(data,from,cb){
+		console.log('test get datachange',data)
+	}.bind(this))
+}
+module.exports=mod;
+</script>

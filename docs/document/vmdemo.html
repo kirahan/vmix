@@ -1,0 +1,162 @@
+<html>
+
+<h4>vm demo</h4>
+
+<div class="row">
+
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/privateStyle">privateStyle</a>
+</div>
+<div class="col-md-10">	
+<div><pre>
+<style type="text/css">.abc{ }</style>
+<style src='./abc.css'></style>
+</pre></div>
+</div>
+
+</div>
+<div class="row">
+<div class="col-md-2">
+	<a class="btn  btn-default" href="#!/document/template.filter">template.filter</a><br>
+	<a class="btn  btn-default" href="#!/document/data.expression">data.expression</a><br>
+	<a class="btn  btn-default" href="#!/document/data.bind">data bind</a><br>
+	<a class="btn  btn-default" href="#!/document/data.watch">data watch</a><br>
+	<a class="btn  btn-default" href="#!/document/el.event">el event</a><br>
+	<a class="btn  btn-default" href="#!/document/el.hook">el hook</a><br>
+</div>
+<div class="col-md-10">	
+<div><pre>
+<body> 
+{ % if inta > 99 % }<button>big than 99</button>{% endif %}
+<button el-filter="if:aaa">if_a 1</button>
+<button el-hook=abc />
+<button el-list=abc />
+<tag attra={!xx!} attrb={xyz(1,2,3)}/>
+<tag watch-abc=funcname />
+<tag on-abc='xyz' />
+</body>
+start-tag:   body>html>template, template is used for native listview template
+element-tag: [a-zA-Z]
+attribute:   [a-zA-Z0-9-_]
+</pre></div>
+</div>
+</div>
+<div class="row">
+
+<div class="col-md-2">
+	<a class="btn btn-default" href="#!/document/array">array</a><br>
+	<a class="btn btn-default" href="#!/document/array.page">array page</a><br>
+
+	<a class="btn  btn-default" href="#!/document/jsrequire">js require</a><br>
+	<a class="btn  btn-default" href="#!/document/jsinline">js inline</a><br>
+</div>
+<div class="col-md-10">
+<div><pre>
+<script>
+this.data={}
+this.xyz=,,,
+
+or you can:
+module.exports={
+	data:{},option:{},state:{},
+	event:{abc:function(){}},           pvm.pubdown(cvm,abc) down to this,
+	method:{abc:function(){}},          in expression {abc()}
+	filter:{abc:function(){}},          in expression {string |abc}
+	domevent:{abc:function(e,para){}},  <el on-click=abc/>, search domevent  first
+	dataevent:{abc:function(e,para){}}, <el wtach-xx=abc/>, search dataevent first
+	config:{}
+};
+all the function can write at top,such as vm.abc=function(){},except vm.event
+</script>
+for your code,app is a global object,but there is not window.app,
+your js code is excute in a new function(require,module,exports,app){ your_code } 
+exports should be a plain object,can not has a htmlNode,it need can be deepclone.
+module.exports={} is ok,exports.abc=yyy is ok,exports=abc is not ok.
+</pre>
+</div>
+</div>
+
+
+<div class="col-md-2">
+basic
+</div>
+<div class="col-md-10">
+<div><pre>
+these basic property is defined by parent,<vm id='a' src='./abc.html'></vm>
+vm.id :   used for parent get child,this.getChild(id),
+vm.src:   pvm define,relative path,
+vm.absrc: real src  ,absolute path,
+vm.pvm:   parent vm,
+vm.pel:   htmlNode attach to,
+</pre></div>
+</div>
+
+
+
+<div class="col-md-2">
+interface
+</div>
+<div class="col-md-10">
+<div><pre>
+pvm should know cvm's interface,cvm can hide something
+vm.data=   {,,}
+vm.option= {,,}
+vm.state=  {,,}
+vm.event=  {,,}
+</pre></div>
+</div>
+
+
+<div class="col-md-2">
+hook
+</div>
+<div class="col-md-10">
+<div><pre>
+vm.hook         =function(when,cvm){}       if !vm[on|before[child]-start|close] then vm.hook(when,cvm)
+vm.hookStart    =function(cb){cb()}         must cb()
+vm.hookTemplate =function(template_text){}  return new_template_text
+vm.hookStyle    =function(style_text   ){}  return new_style_text
+</pre></div>
+</div>
+
+<div class="col-md-2">
+config
+</div>
+<div class="col-md-10">
+<div><pre>
+vm.config.cacheClasses    =['c','d'];     default=[]      you can use this.getel('.c' | '.d' | '.c.d')
+vm.config.pelDisplayType  ='block|inline';default=''      <tag style='display:block'> will replace it,
+vm.config.appendto        ='pel|ppel';    default='pel',  <tag appendto='xx'> will replace it
+
+if vm.config.appendto=='ppel' and only one top node,mod.ppel=pel.parentNode,
+when start,mod.pel will not append to ppel,when close,mod.pel will append to ppel as a placeholer,
+
+</pre></div>
+</div>
+
+
+</div>
+<!-- 
+
+<pre>
+why not like this: 
+var moda=new VM({});moda.attach(el);moda.render();
+because: 
+1.this is more simple,less api,more power.
+2.every vm will be cached/cloned/cleaned,should not binded with a htmlNode
+3.upgrade core code,will not infect your code
+</pre>
+
+-->
+
+</html>
+
+<script>
+module.exports={
+	data:{xx:1},
+	onstart:function(){
+		console.log('vm',this)
+		console.log('vm.constructor.prototype',this.constructor.prototype)
+	}
+}
+</script>

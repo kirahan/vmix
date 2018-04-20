@@ -1,0 +1,82 @@
+<style>
+.b{width:150px}
+</style>
+<template>
+<h4>expression used for data-dom</h4>
+<h4>default serach path is vm.data,you can use this.xx,this.state.x</h4>
+<div> 
+<div style="width:50%;display:inline-block">
+
+<button class='b'>{this.data.a}</button> <code>{this.data.a}</code><br/>
+<button class='b'>{this.state.a}</button> <code>{this.state.a}</code><br/>
+<button class='b'>a={a}</button> <code>a={a}</code><br/>
+<button class='b' >{a | f1}</button> <code>{a | f1}</code>mod.filter.f1 <br/> 
+<button class='b' >{{a} | f1}</button> <code>{{a} | f1}</code> <br/> 
+<button class='b' >{'aa' | f1}</button> <code>{'aa' | f1}</code>   <br/> 
+<button class='b' >{{c} || {d}}</button> <code>{  {c} || {d}}</code><br/> 
+<button class='b' >{{c} && {d}}</button> <code>{  {c} && {d}}</code><br/> 
+
+</div>
+
+<div style="width:50%;display:inline-block">
+
+<button class='b' >{m1()}</button><code>{m1()}</code>mod.method.m1() <br/> 
+<button class='b' >{m1(123)}</button><code>{m1(123)}</code>  <br/> 
+<button class='b' >{m1('a')}</button> <code>{m1('a')}</code> <br/> 
+<button class='b' >{m1({a})}</button>  <code>{m1({a})}</code> <br/>
+<button class='b' >{m1(a) | f1}</button> <code>{m1(a) | f1}</code>  <br/> 
+<button class='b' >{{ifok(2)} ? a : b }</button> <code>{ {ifok(2)} ? a : b}</code><br/> 
+<button class='b' >{{ifok(2)} ? {a} : {b}}</button> <code>{ {ifok(2)} ? {a} : {b}}</code><br/> 
+<button class='b' >{{a} || xyz}</button> <code>{  {a} || xyz}</code><br/> 
+<button class='b' >{{a} && xyz}</button> <code>{  {a} && xyz}</code><br/> 
+</div>
+
+<div html={htmlstr}/><code><div html={htmlstr}/> htmlstr='a&nbsp;b&amp;c&quot;'</code>
+
+<!-- 取消这个条件
+<button class='b' >{ 'a' : ifok(1)}</button>  <code>{'a' : ifok(1)}</code> with quota<br/>
+<button class='b' >{ a : ifok(1)}</button>  <code>{ a : ifok(1)}</code> without quota<br/><br/> -->
+<pre>
+mod.data={a:'da',b:'db',name:'000',ifcheck:true,}
+mod.state={a:'s1'}
+mod.method.m1=function(p){return 'm1_'+para};
+mod.method.ifok=function(a){return a==1?true:false};
+mod.filter.f1=function(v){	return 'f1_'+v}
+in all function,"this" is the vm
+</pre>
+
+</div>
+<pre>
+all the {xx} will compile to string,almost everywhere you can use
+unless before =,such as xx=yy, xx can not use {}
+
+<eltag attr="aa {xx}" 
+on-click="xx({yy},{$index},{pscope.$index}) {xdisabled}"
+el-filter='if:ss({yy},{$index})'>{xx}<eltag>
+</pre>
+</template>
+
+<script>
+
+var mod={};
+mod.data={
+	a:'da',
+	b:'db',
+	c:false,
+	d:'dd',
+	name:'000',
+	ifcheck:true,
+	htmlstr:"a&nbsp;b&amp;c&quot;"
+}
+mod.state={
+	a:'s1'
+}
+mod.method={
+	'm1':function(para){return 'm1_'+para},
+	ifok:function(a){return a==1?true:false},
+}
+mod.filter={
+	'f1':function(v){	return 'f1_'+v}
+}
+module.exports=mod;
+</script>

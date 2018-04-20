@@ -1,0 +1,92 @@
+
+<html>
+<h4>multi node filter</h4>
+<h4>this is calculate before htmltojson</h4>
+
+<br/>
+<div>
+{% if {inta} > 99 %}<button>big than 99</button>
+{% elseif {check()} %}<button>big than 90</button>
+{% elseif {check2(10)}>101 %}<button>big than 70</button><button>big than 70</button>
+{% elseif {inta} >=60 %}<button>big than 60</button>
+{% elseif {inta} <60 %}<button>small than 60</button>
+{% else %}<button>else </button> 
+{% endif %}
+</div>
+<pre>
+{ % if {inta} > 99 %}<button>big than 99</button>
+{ % elseif {check()} %}<button>big than 90</button>
+{ % elseif {check2(10)}>101 %}<button>big than 70</button><button>big than 70</button>
+{ % elseif {inta} >=60 %}<button>big than 60</button>
+{ % elseif {inta} <60 %}<button>small than 60</button>
+{ % else %}<button>else </button> 
+{ % endif %}
+</pre> 
+
+<pre>
+support "==" ">=" "<=" "<" ">"
+this filter happens before htmltojson
+</pre>
+
+
+<h4>element filter sample</h4>
+<h4>this is calculate after htmltojson</h4>
+
+<button el-filter="if:{aaa}">if_a 1</button> 
+<button el-filter="elseif:{bbb}">if_b</button>
+<button el-filter="elseif:{if_c({fff},1,2,3)}">if_c</button> 
+<button el-filter="else">if_d</button> 
+<button >no if will end this loop</button> 
+<button el-filter="if:{if_a(2)}">if_a 2</button> 
+<button el-filter="elseif:{if_b()}">if_b</button> 
+<button el-filter="elseif:{if_c()}">if_c</button> 
+<button el-filter="else">if_d</button>
+<h4>source</h4>
+<pre>
+<button el-filter="if:{aaa}">if_a 1</button> 
+<button el-filter="elseif:{bbb}">if_b</button>
+<button el-filter="elseif:{if_c({fff},1,2,3)}">if_c</button> 
+<button el-filter="else">if_d</button> 
+<button >no if will end this loop</button> 
+<button el-filter="if:{if_a(2)}">if_a 2</button> 
+<button el-filter="elseif:{if_b()}">if_b</button> 
+<button el-filter="elseif:{if_c()}">if_c</button> 
+<button el-filter="else">if_d</button>
+</pre> 
+<h4>Explanation</h4>
+<pre>
+all children in same parent,you can use multi if-elseif-else. 
+not same as "show" or "display",if the computed result!==true,will not generate the element.
+
+el-filter="{aaa}" ......... without (),will search under vm.data["aaa"],if undefined,then call vm.method["aaa"]()  
+el-filter="{if_a()}" ...... will call vm.method["if_a"]()  
+el-filter="{if_a(2)}" ..... not in a list,will call vm.method["if_a"](2)
+el-filter="{if_a(2)}" ..... in a list,will call vm.method["if_a"](value,index,2)
+
+if the target method not found,the result will be false.
+</pre>
+</html>
+<script>
+var mod={};
+mod.data={
+	inta:51,
+	aaa:false,
+	bbb:true,
+	fff:true	 
+}
+mod.method={
+	check:function(){
+		console.error('check')
+		return false;
+	},
+	check2:function(a){
+		console.error('check2')
+		return parseInt(a)+100;
+	},
+	if_a:function(a ){	 return (a==1) 	},
+	if_b:function(a,b,c){	return false;	},
+	if_c:function(a,b,c){	return true;	},
+}
+
+module.exports=mod;
+</script>

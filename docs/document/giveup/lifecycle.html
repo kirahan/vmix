@@ -1,0 +1,118 @@
+<template>
+
+<div   style='border:1px blue solid'>
+<span >parent</span> 
+
+
+<div vm-id='child' vm-src='./lifecycle.child.vm' style='border:1px red solid'></div> 
+<span >look at console.log</span> 
+</div> 
+<pre>
+2,mod.beforestart=function(){}
+3,mod.beforechildstart=function(childvm){}
+4,mod.beforeinject=function(){}
+5,mod.onstart=function(){}
+6,mod.onchildstart=function(childvm){}
+
+1,mod.beforeclose=function(){}
+2,mod.onclose=function(){}
+3,mod.onchildclose=function(childvm){}
+
+增加 用作统计功能
+
+
+
+vue 1.0+	vue 2.0	Description
+init	beforeCreate	组件实例刚被创建，组件属性计算之前，如 data 属性等
+created	created	组件实例创建完成，属性已绑定，但 DOM 还未生成，$el 属性还不存在
+beforeCompile	beforeMount	模板编译/挂载之前
+compiled	mounted	模板编译/挂载之后
+ready	mounted	模板编译/挂载之后（不保证组件已在 document 中）
+-	beforeUpdate	组件更新之前
+-	updated	组件更新之后
+-	activated	for keep-alive，组件被激活时调用
+-	deactivated	for keep-alive，组件被移除时调用
+attached	-	不用了还说啥哪...
+detached	-	那就不说了吧...
+beforeDestory	beforeDestory	组件销毁前调用
+destoryed	destoryed	组件销毁后调用
+
+
+
+开发插件
+
+插件通常会为Vue添加全局功能。插件的范围没有限制——一般有下面几种：
+
+添加全局方法或者属性，如: vue-element
+
+添加全局资源：指令/过滤器/过渡等，如 vue-touch
+
+通过全局 mixin方法添加一些组件选项，如: vuex
+
+添加 Vue 实例方法，通过把它们添加到 Vue.prototype 上实现。
+
+一个库，提供自己的 API，同时提供上面提到的一个或多个功能，如 vue-router
+
+Vue.js 的插件应当有一个公开方法 install 。这个方法的第一个参数是 Vue 构造器 , 第二个参数是一个可选的选项对象:
+
+MyPlugin.install = function (Vue, option) {
+  // 1. 添加全局方法或属性
+  Vue.myGlobalMethod = function () {
+    // 逻辑...
+  }
+  // 2. 添加全局资源
+  Vue.directive('my-directive', {
+    bind (el, binding, vnode, oldVnode) {
+      // 逻辑...
+    }
+    ...
+  })
+  // 3. 注入组件
+  Vue.mixin({
+    created: function () {
+      // 逻辑...
+    }
+    ...
+  })
+  // 4. 添加事例方法
+  Vue.prototype.$myMethod = function (option) {
+    // 逻辑...
+  }
+}
+使用插件
+
+通过全局方法 Vue.use() 使用插件:
+
+// 调用 `MyPlugin.install(Vue)`
+Vue.use(MyPlugin)
+也可以传入一个选项对象:
+
+Vue.use(MyPlugin, { someOption: true })
+Vue.use 会自动阻止注册相同插件多次，届时只会注册一次该插件。
+
+一些插件，如 vue-router 如果 Vue 是全局变量则自动调用 Vue.use() 。不过在模块环境中应当始终显式调用 Vue.use() :
+
+// 通过 Browserify 或 Webpack 使用 CommonJS 兼容模块
+var Vue = require('vue')
+var VueRouter = require('vue-router')
+// 不要忘了调用此方法
+Vue.use(VueRouter)
+</pre>
+
+</template>
+
+<script>
+
+var mod={};
+
+/*mod.beforeclose=function(){
+	console.error('event beforeclose,this.id='+this.id)
+}
+mod.onclose=function(){
+	console.error('event onclose,this.id='+this.id)
+}
+mod.onchildstart=function(childvm){
+	console.error('event onchildstart,this.id='+this.id,'childvm.id='+childvm.id)
+}*/
+module.exports=mod;
+</script>

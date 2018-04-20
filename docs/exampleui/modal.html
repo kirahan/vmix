@@ -1,0 +1,54 @@
+<template>
+<button type="button" class="btn btn-primary"    on-click="js:this.getChild('m1').start()">launch modal</button>
+<code>this.getChild('m1').start()</code><br><br>
+<input type=text value="{!name!}"></input>
+<button on-click='js:console.log(this.data.name)'>check thid data</button>
+
+<gmodal id='m1' autostart=false event-close=closebackto>
+<data titleq="12345" />
+<button slot='title'>12345</button>
+<div>
+	<input type=text value="{!name!}" id='modal_data_test'></input>
+	<button on-click='backto(3)'>call back22</button>
+</div>
+</gmodal>
+
+<pre>
+<gmodal id='m2' autostart=false event-close=closebackto >
+<data titleq="12345" />
+<button slot='title'>12345</button>
+<div>
+	<input type=text value="{!name!}" id='modal_data_test'></input>
+	<button on-click='backto(3)'>call back22</button>
+</div>
+</gmodal>
+</pre>
+
+
+<h4>modal.vm source</h4>
+<pre id='source'></pre>
+</template>
+
+
+<script>
+var mod={};
+mod.data={
+	name:'123'
+}
+
+mod.closebackto=function(para){
+	console.log('closed,method='+para);
+}
+mod.backto=function(action,para,e){
+	console.log("check,this.id="+this.id,para,this.data.name,this.getel('#modal_data_test').value);
+}
+mod.hook=function(when,cvm){
+	//console.error('madal.html hook',when,this.id)
+	if(when=='onchildstart'){
+		app.pub('getvmsource','/libui/modal.vm',function(text){
+			this.getel('#source').textContent=text;
+		}.bind(this))	
+	}
+}
+module.exports=mod;
+</script>

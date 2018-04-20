@@ -1,0 +1,70 @@
+<template>
+ 
+
+<table class="table table-striped table-bordered " el-list='group in groups' >
+<tbody>
+<tr><td>group.title={group.title},$index={$index}</td> 
+<td el-list='btn in group.btns' >alias=btn={btn},$value={$value},$index={$index},pscope.$index={pscope.$index},group.title={group.title}
+<button on-click='test({$index},{pscope.$index},a999)'>test</button>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre>
+<table class="table table-striped table-bordered " el-list='group in groups' >
+<tbody>
+<tr>
+<td>group.title={group.title},$index={$index}</td> 
+<td el-list='btn in group.btns' >alias=btn={btn},$value={$value},$index={$index},pscope.$index={pscope.$index},group.title={group.title}
+<button on-click='test({$index},{pscope.$index},a999)'>test</button>
+</td>
+</tr>
+</tbody>
+</table>
+</pre>
+
+<pre>
+a list has a scope,scope={pscope:,alias:,listdata:,$index:}
+you can use {$index},{$value},{alias},{alias.xxx},{alias.xxx.yyy},{pscope.$index}
+
+el-list='group in groups' ,  scope.alias=group,scope.listdata=this.data['groups']
+{group.title},{$index}
+
+el-list='btn in group.btns', scope.alias=btn, scope.listdata=pscope.listdata[pscope.$index].btns
+{group.title},{pscope.$index},{btn}=={$value}
+</pre>
+
+<pre>
+this.data.groups=[
+	{title:'title1',btns:[11,22 ]},
+	{title:'title2',btns:[21,22 ]},
+	{title:'title3',btns:[31,32 ]}
+]
+</pre>
+</template>
+
+<script>
+var mod={};
+
+mod.onstart=function(){
+	
+}
+mod.data={
+	title:'',
+	groups:[
+	{title:'title1',btns:[11,22 ]},
+	{title:'title2',btns:[21,22 ]},
+	{title:'title3',btns:[31,32 ]}
+	],
+}
+
+mod.domevent={};
+mod.domevent.test=function(e,index,pindex,para){
+	console.log("test",e,index,pindex,para);
+}
+
+
+
+module.exports=mod;
+</script>

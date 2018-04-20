@@ -1,0 +1,43 @@
+<style>
+.b{width:150px}
+</style>
+<template>
+<h4>data-drive</h4>
+<h5>setData(path,value) then el changed<h5>
+<pre>
+{!a.b.c} only setData('a.b.c',newv),if allowed ,el will change
+
+<button text="{!a}" />				 when a changed,      ->el.text=newv
+<input value="{!a.b.c}" />           when a.b.c changed,  ->el.value=newv
+<div>{!a} {!b}</div>                 when a|b changed,    ->el.textContent=cal("{a} {b}")
+<input class="{!a} some {!c}" />     when a|c changed,    -> el.className=cal("{a} some {c}")
+<input watch-a="toel-style-width" /> when a changed,      -> el.style.width=newv
+<input watch-a="toel-data-width" />  when a changed,      -> el.data.width=newv
+<input watch-a="toel-attr-width" />  when a changed,      -> el.setAttribute("width",newv)
+<input watch-a="fn-toel-class" />    when a changed,      -> el.className=fn()
+<input watch-a-watch-b="fn(xx)" />   when a|b|c changed,  -> fn.call(vm,event,xx) event={el,path,oldv,newv}
+</pre>
+
+
+
+<pre>
+<input value={!xx!} />
+if first ! ,when setData('xx',newv), will auto change all el binded {!xx}
+if last  ! ,when input.value change, will auto call setData('xx',newv)
+
+source    data->el {!xx}                   
+store     app.setData(vm,p,v)     
+parent    pvm.setChildData(id,p,v) 
+self      this.setData(p,v)       
+
+source    el->data {xx!}         
+store     this.setData(p,v)->auto.call->store.set(vm,p,v,cb)         ->if.cb(true)->change data
+parent    this.setData(p,v)->auto.call->pvm.dataProxy.set(vm,p,v,cb) ->if.cb(true)->change data
+self      this.setData(p,v)                                                       ->change data
+</pre>
+
+</template>
+
+<script>
+
+</script>

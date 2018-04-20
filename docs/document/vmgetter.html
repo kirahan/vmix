@@ -1,0 +1,51 @@
+<html>
+<!-- 
+
+vm.getChild(a)
+vm.getChild(a.b.c)
+-->
+<pre>
+pvm.getChild(id)
+</pre>
+
+<h4>in this file,has two child</h4>
+<pre>
+<vm id='sub1' src='./vmgetter.sub1.html'> </vm>
+<vm id='sub2' src='./vmgetter.sub2.html'> </vm>
+</pre>
+<h4>in vmgetter.sub1.html ,has one child</h4>
+<pre>
+<vm id='sub11' src='./vmgetter.sub2.html'> </vm>
+</pre>
+
+<h4>render result in here</h4>
+<div style='border:1px red solid'>
+
+<vm id='sub1' src='./vmgetter.sub1.html'> </vm>
+<vm id='sub2' src='./vmgetter.sub2.html'> </vm>
+</div>
+<div>
+
+
+<h4>test in this file</h4>  
+<button  on-click='mychild(sub1)'   >sub1 </button> 
+<button  on-click='mychild(sub2)'   >sub2</button> 
+<button  on-click='mychild(sub1.sub11)'  >sub1.sub11</button>  
+
+</div>
+
+</html>
+ 
+<script>
+//console.log(scope);
+module.exports={
+		mychild:function(e,para){
+			if(para=='sub1.sub11')console.log("child.id="+this.getChild('sub1').getChild('sub11').id)
+			else
+			console.log("child.id="+this.getChild(para).id)
+		},
+		test:function(){
+			console.log('test')
+		}
+};
+</script>

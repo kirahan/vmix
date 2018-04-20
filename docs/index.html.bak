@@ -14,14 +14,11 @@
     
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+<!-- Place favicon.ico in the root directory -->
 
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<!-- <link rel="stylesheet" href="css/bootstrap-4.0.0-beta/dist/css/bootstrap.min.css">
- -->
 <link rel="stylesheet" href="css/bootstrap.min337.css">
-
- <script src="vmix.js" data-role='vmix' app-file="app.js" index-file='index.vm.html'></script>  
+<script src="webvm.js" config-file="config.js" index-file='index.vm.html'></script>  
 <!-- index-file='index.vm' -->
 <!-- <script src="jQuery-v1.11.3.js"></script>
 <script src="bootstrap.js"></script> 
@@ -30,43 +27,35 @@
 <script src="highlight.pack.js"></script> 
 <link rel="stylesheet" href="highlight.agate.css">
  -->
-<style>
-
-</style>
 </head>
 
 <body> 
 <!-- 如果有 index-file load后加到body 接管整个body 没有就检查body下的vm,apple--><!-- 
-<apple><data bgcolor='#888' color='red' size="100"/></apple>
+<apple><injectdata bgcolor='#888' color='red' size="100"/></apple>
 
 
+<vm  id='test'   src='test.vm.html' style="width:100%"></vm> 
 <vm  id='test2'   src='test.vm2.html'></vm>    -->
 
 <!-- <vm  id='globalmodal'   src='./ui/modal.vm'></vm>  -->
 
-<vm  id='test'   src='index.vm.html' style="width:100%"></vm> 
+
 </body>
 
 <script>
 //document.body.addEventListener('click', function(e){	console.log('document.body') })
 
 //hljs.initHighlightingOnLoad();
-//console.log(app);
+//console.log(vmix);
 window.onerror = function(msg, url, line, column, err) {
-	console.error('onerror',arguments);
+	//console.error('onerror',arguments);
 };
-function test(){
-	console.log('body.click')
-}
+
 //_start_root_vm_({});
 
 
 
 //console.log('index.html.js');
-/*
-promise.aiax <s cript src="https://unpkg.com/axios/dist/axios.min.js"/>
-
-*/
 </script>
 </html>
 

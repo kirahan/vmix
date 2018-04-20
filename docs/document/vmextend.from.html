@@ -1,0 +1,26 @@
+
+<style type="text/css">
+.test1{border:1px blue solid;}
+
+.test2{border:1px blue solid;}
+</style>
+
+<html>
+
+<button class="test1">will replace</button>
+<button class="test2" on-click="test">not replace</button>
+
+</html>
+<script>
+var mod={};
+
+mod.data={
+	name:'old name',
+}
+
+mod.test=function(){
+	console.log("test in old");	
+}
+
+module.exports=mod;
+</script>

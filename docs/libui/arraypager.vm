@@ -1,0 +1,109 @@
+
+<body>
+
+
+<pager id='realpager' event-page=pagercb>
+	<data pages="this.data.menus" activesn=0 />
+</pager> 
+
+</body>
+<script>
+var obj={
+	data:{
+		menus:[],
+		activesn:0,
+		itemcount:0,
+		perpage:10,
+		displaynums:9,//奇数
+		area_mid_count:5,
+		area_mid_num_quge:2,
+		leftright:1,//两边各有一个间隔符..
+		leftpos:-1,
+		rightpos:-1,
+		pagecount:0,
+		nowpage:1,
+	},
+	hook:function(when,cvm){
+		//console.log('array.pager',when,cvm?cvm.id:'')
+		if(when=='beforestart'){
+			
+			var $=this.data;
+			if($.displaynums%2==0)$.displaynums++;
+
+			$.area_mid_count=$.displaynums-4;//两边各1个加一个分割
+			$.area_mid_num_quge=($.area_mid_count-1)/2;
+			
+			var itemcount=$.itemcount;
+			var perpage=$.perpage;
+			$.pagecount=parseInt(itemcount/perpage);
+			if(itemcount%perpage>0)$.pagecount++;
+
+
+			for(var i=0;i<$.displaynums-$.leftright-$.leftright;i++){
+				$.menus.push(i+1);
+			}
+			$.menus.push('..');
+
+			//$.menus.push(this.data.pagecount-1);
+			$.menus.push(this.data.pagecount);
+			$.rightpos=$.displaynums-2;
+			$.leftpos=1;
+			$.min_mid=parseInt($.displaynums/2)+1;
+			$.max_mid=$.pagecount-parseInt($.displaynums/2);
+
+			//console.log('中位数min='+$.min_mid,'max'+$.max_mid)
+			//console.log('$.leftpos='+$.leftpos,'$.rightpos='+$.rightpos)
+		}
+	},		
+	pagercb:function(index){
+		var pagenum_str,user_click_pagenumber;
+		var $=this.data;
+		if(index=='next' ){
+			pagenum_str=$.nowpage+1;
+			user_click_pagenumber=pagenum_str;
+			if(pagenum_str>$.pagecount){
+				return;				}
+		}else if(index=='last'){				
+			pagenum_str=$.nowpage-1;
+			user_click_pagenumber=pagenum_str;				
+			if(pagenum_str<1){					
+				return;				}
+		}else {			
+			index=parseInt(index);
+			pagenum_str=$.menus[index];
+			user_click_pagenumber=pagenum_str;					
+			while(pagenum_str=='..'){
+				index=index-1;
+				pagenum_str=$.menus[index];
+				user_click_pagenumber=pagenum_str;
+			}
+		}
+		$.nowpage=user_click_pagenumber;
+
+
+		if(pagenum_str<$.min_mid)pagenum_str=$.min_mid;
+		if(pagenum_str>$.max_mid)pagenum_str=$.max_mid;
+
+		$.menus[$.leftpos]=pagenum_str==$.min_mid?2:'..';
+		this.setChildData('realpager','pages.'+$.leftpos,$.menus[$.leftpos]);
+		$.menus[$.rightpos]=pagenum_str==$.max_mid?$.pagecount-1:'..';
+		this.setChildData('realpager','pages.'+$.rightpos,$.menus[$.rightpos]);
+	
+		for(var i=0;i<$.area_mid_count;i++){//中间的5个,7个
+			var num;
+			num=pagenum_str-$.area_mid_num_quge+i;//页码 区隔是5,7的一半取整=2,3
+			if(num>this.data.pagecount-1)num='..';
+			$.menus[i+2]=num;//i+2 是因为左边两个
+			this.setChildData('realpager','pages.'+(i+2),$.menus[i+2]);					
+		}
+		var nowpage_index=$.menus.indexOf(user_click_pagenumber)||0;
+
+		console.log('nowpage='+$.nowpage,'user_click_pagenumber='+user_click_pagenumber)
+		this.setChildData('realpager','activesn',nowpage_index);//第0个
+		
+		this.pubup('page',user_click_pagenumber);
+	}
+}
+
+module.exports=obj;
+</script>

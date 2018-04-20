@@ -1,0 +1,82 @@
+<template>
+
+<mynav id='nav1'  event-tabclick=navcb >
+<data navs="this.data.navs"   activeindex=0 />
+<option usebar=false type='tabs' otherclass='nav-justified-xx'/>
+</mynav>
+
+
+<pre>
+<mynav id='nav1'   event-tabclick=navcb>
+<data navs="this.data.navs"  activeindex=0 />
+<option usebar=false type='tabs' otherclass='nav-justified-xx' />
+</mynav>
+this.data.navs=[
+{hash:'#nav1',title:'nav1',name:'nav1'},
+{hash:'#nav2',title:'nav2',name:'nav2'},
+{hash:'#nav3',title:'nav3',name:'nav3'}
+]
+</pre>
+<button on-click='js:this.addChildData("nav1","navs",-1,123)'>add nav1</button>
+<button on-click='js:this.delChildData("nav1","navs",1,123)'>delat 1</button>
+<button on-click='js:this.setChildOption("nav1","type","pills")'>set pills when usebar=false</button>
+<button on-click='js:this.setChildOption("nav1","type","tabs")'>set tabs when usebar=false</button>
+
+<pre>
+<button on-click='js:this.addChildData("nav1","navs",-1,123)'>add nav1</button>
+</pre>
+
+
+<mynav id='nav2'  event-tabclick=navcb >
+<data navs="['11','22','33','44']"  activeindex=0 />
+<option type='pills' otherclass='nav-stacked' />
+</mynav>
+<pre>
+<mynav id='nav2'  event-tabclick=navcb >
+<data navs="['11','22','33','44']"  activeindex=0 />
+<option  type='pills' otherclass='nav-stacked'/>
+</mynav>
+</pre>
+
+
+<mynav id='nav3'  event-tabclick=navcb >
+<data navs="['11','22','33','44']"  activeindex=0 />
+<option  type='tabs' otherclass='nav-justified'/>
+</mynav>
+
+
+<pre>
+<mynav id='nav3'  event-tabclick=navcb >
+<data navs="['11','22','33','44']"  activeindex=0 />
+<option type='pills' otherclass='nav-justified' />
+</mynav>
+</pre>
+
+<h4>nav.vm source</h4>
+<pre id='source'></pre>
+</template>
+
+
+<script>
+var mod={};
+mod.data={
+	name:'123',
+	navs:[{hash:'#nav1',title:'nav1',name:'nav1'},
+	{hash:'#nav2',title:'nav2',name:'nav2'},
+	{hash:'#nav3',title:'nav3',name:'nav3'}]
+}
+
+mod.navcb=function(index){
+	console.log("nav.cb","index=",index);
+};
+mod.hook=function(when,cvm){
+	//console.error('main.hook',when,this.id)
+	if(when=='onstart'){
+		app.pub('getvmsource','/libui/nav.vm',function(text){
+			console.log('this.id='+this.id,this.getel('#source'))
+			//this.getel('#source').textContent=text||'';
+		}.bind(this))	
+	}
+}
+module.exports=mod;
+</script>

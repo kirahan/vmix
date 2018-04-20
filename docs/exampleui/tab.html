@@ -1,0 +1,77 @@
+<template>
+<h4>tab</h4>
+<pre>
+tab interface
+data:    {titles:[@string],}
+state:   {activesn:0@int}
+option:  {height:'',background:'',activeindex:0,}
+event: {},
+pubup:{	switch:[index@int]},
+</pre>
+<tab  id='tab3' event-switch='onswitch'>
+	<data titles="['t1','t2','t3','t4']" />  
+	<option height=100px background='#eee' activeindex=1/>
+
+	<div slot=title0  style='height:100%;'> 
+	<a class='btn btn-success' on-click='ck_title0'>title0 with slot</a>
+	</div>
+
+	<div slot=tab0> 
+	<button on-click="fncb">m1</button>
+	<button on-click="fncb">{!name}</button>
+	</div>
+	<div slot=tab1> 
+	<button on-click="fncb">m3</button>
+	<button on-click="fncb">{!name}</button>
+	</div>
+	<div slot=tab2 vm-src='../document/abc.html'> 
+	</div>
+</tab>
+
+<button on-click=modname   >modname</button> 
+<button on-click=modtitle   >modtitle</button> 
+<button watch-name="js:e.el.innerText='this.data.name='+e.newv;"   >watch-name</button> 
+
+<button on-click=mypubdown   >pubdown switchto to vm.tab3</button> 
+
+<h4>tab.vm source</h4>
+<pre id='source'></pre>
+</template>
+
+<script>
+var mod={};
+mod.mypubdown=function(){
+	this.pubdown('tab3','switchto',2,function(data){
+		console.log('child.back',data)
+	})
+}
+mod.ck_title0=function(e){
+	this.pubdown('tab3','switchto',0,function(data){
+		console.log('child.back',data)
+	})
+}
+mod.data={
+	name:'000',
+	books:[2,3],
+}
+mod.onswitch=function(index){
+	console.log('onswitch',index)
+}
+mod.fncb=function(){
+	console.log('fncb','this.id='+this.id)
+}
+mod.domevent={
+	modtitle:function(){this.setChildData('tab3','titles.1',parseInt(Math.random()*100));},
+	//有slot0,1会到2 因为classid寻找时到了第二个
+	modname:function(){this.setData('name',parseInt(Math.random()*100));},
+}
+mod.hook=function(when,cvm){
+	//console.error('main.hook',when,this.id)
+	if(when=='onstart'){
+		app.pub('getvmsource','/libui/tab.vm',function(text){
+			this.getel('#source').textContent=text;
+		}.bind(this))	
+	}
+}
+module.exports=mod;
+</script>

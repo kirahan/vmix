@@ -1,0 +1,56 @@
+<style>
+
+
+</style>
+<html>
+<view layout=v >
+<button on-click="pub_up_test" text="pub.up.test" />
+<button on-click="pub_up_test2" text="pub.up.test2" />
+<button on-click="pub_to_pvm" text="pub.to.pvm" />
+</view>
+</html>
+<script type="text/javascript">
+var vm={};
+
+vm.pub_up_test=function(){
+	this.pubup('test',{name:123},function(res,pvm){
+		console.log('i am:'+this.id,'test callback,',res,pvm.id)
+	})
+}
+vm.pub_up_test2=function(){
+	this.pubup('test2',{name:123},function(res,pvm){
+		console.log('i am:'+this.id,'test2 callback',res,pvm.id)
+	})
+}
+vm.pub_to_pvm=function(){
+	this.pubto(this.pvm,'test',{test:1},function(res){
+		console.log('pubto cb',res)
+	})
+}
+vm.onpubdown=function(pvm,channel,obj,cb){
+	console.log('onpubdown,pvm.id='+pvm.id,',channel='+channel,obj);
+	cb(123)
+	return false;
+}
+vm.onpubto=function(sender,channel,data,cb){
+	console.log('onpubto',sender.id,channel,data);
+	cb({message:'i am cvm'})
+}
+vm.onstart=function(){
+	/*this.sub('parent:test',function(data,from,cb){
+		console.log('i am:'+this.id,'get parent.test:'+from.id,data);
+		cb('test')
+	})
+	this.sub('parent:test2',function(data,from,cb){
+		console.log('i am:'+this.id,'get parent.test2:'+from.id,data)
+		cb('test2')
+	})
+	this.sub('gtest',function(data,from,cb){
+		console.log('i am:'+this.id,'get gtest:'+from.id,data)
+		cb('gtest')
+	})*/
+}
+
+
+module.exports=vm;
+</script>

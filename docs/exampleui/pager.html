@@ -1,0 +1,42 @@
+<template>
+<pager event-page=pagercb>
+	<data pages="this.data.menus" activesn=0 />
+</pager> 
+<pre>
+<pager event-page=pagercb>
+	<data pages="this.data.menus" activesn=0 />
+</pager> 
+</pre>
+
+
+<arraypager event-page=cbarrypager>
+	<data itemcount=500 displaynums=11 perpage=18 />
+</arraypager> 
+
+<h4>pager.vm source</h4>
+<pre id='source'></pre>
+
+</template>
+
+<script>
+var mod={};
+mod.data={
+	menus:[1,2,3,4,5,6]
+}
+mod.pagercb=function(index){
+	console.log("pager.cb",'index='+index);
+}
+mod.cbarrypager=function(pagenumber){
+	console.log("cbarrypager.cb",'pagenumber='+pagenumber);
+}
+
+mod.hook=function(when,cvm){
+	//console.log('page.html hook',when)
+	if(when=='onstart'){
+		app.pub('getvmsource','/libui/pager.vm',function(text){
+			if(text && text.length>0)this.getel('#source').textContent=text;
+		}.bind(this))	
+	}
+}
+module.exports=mod;
+</script>

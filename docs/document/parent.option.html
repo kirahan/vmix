@@ -1,0 +1,73 @@
+
+<html>
+<h4>option from parent,just like data,but simple,no list</h4>
+
+<table><tr><td>
+<div vm-src='./parent.option.sub.html' id='sub'  option-abc=1 option-color=blue > 
+<option  
+stringa="some"
+boola=false
+floata=2.234
+obj="{a:1,b:1}"	
+arrayb='this.data.arrayb'
+/>
+</div>
+
+</td><td>
+<div>
+<table class="table table-striped table-bordered "  style='padding:0px;height:100%'>
+<tbody>
+<tr><td>this in main</td></tr>
+<tr><td ><button on-click="set_Child_Option(abc)">cvm.option.abc autobind</button>
+</td></tr>
+<tr><td><button on-click="set_Child_Option(stringa)">cvm.option.stringa autobind</button></td></tr>
+
+<tr><td><button on-click="set_Child_Option(arrayb.1)">cvm.option.arrayb.1 autobind</button></td></tr>
+<tr><td><button on-click="set_Child_Option_color">set_Child_Option_color</button></td></tr>
+</tbody>
+
+</table>
+</div>
+</td></tr></table>
+<pre>
+<div vm-src='./parent.option.sub.html' id='sub'   data-y=11 option-abc=22> 
+<option
+stringa="some"	boola=false  floata=2.234	
+obj="{a:1,b:1}"	arrayb='this.data.arrayb' />
+<data />
+</div>
+
+pvm.setChildOption(cvmid,path,value);
+</pre>
+
+<pre>
+in cvm
+{this.option.abc},auto watch,not need {!this.option.abc},can not {this.option.abc!}
+cvm should define the structure for special type.
+vm.option={	
+	obj:{},arrayb:[],
+}
+cvm.event['pvm.setoption']=function(data){
+	console.log('pvm.setoption',data)
+}
+</pre>
+
+</html>
+<script>
+
+var mod={};
+mod.data={
+	arrayb:['b1','b2'],
+}
+mod.set_Child_Option=function(e,p){
+	console.log('set_Child_Option',p)
+	this.setChildOption('sub',p,parseInt(Math.random()*100))
+}
+mod.set_Child_Option_color=function(e,p){
+	this.setChildOption('sub','color',"#ff"+parseInt(Math.random()*10000))
+}
+mod.onstart=function(){
+	console.log('ms=',new Date().getTime()-app.startTime)
+}
+module.exports=mod;
+</script>

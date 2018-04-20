@@ -1,0 +1,44 @@
+<html>
+
+<button>this is datarel</button>
+<div>
+<button >name={!name}</button>
+<button on-click='js:this.data.name=parseInt(Math.random()*100)'>this.data.name=xx,datarel2 name will not change</button><br>
+<button >name={!name}</button>
+<button on-click='js:this.dataput("name",parseInt(Math.random()*100))'>dataput,datacenter,onchange</button><br>
+<button >obj.name={!obj.name}</button>
+<button on-click='js:this.data.obj.name=parseInt(Math.random()*100)'>mod obj.name, is the same object with datarel2</button><br>
+
+</div>
+<div vm-src='./datarel2.vm' vm-id='datarel2'/>
+<pre>
+datacenter return same value
+{
+	version:data.version,
+	name:data.name,
+	obj:data.obj,
+	books:[{name:1},{name:2},{name:3}]
+}
+vm.data.name is string,is 复制
+vm.data.obj is object,is 引用
+datacenter should do such thing:
+when vm1.dataput(name,value),then notify vm2.ondatachange(name,value)
+</pre>
+</html>
+
+<script>
+
+var vm={
+	domevent:{
+	}, 
+}
+vm.ondatachange=function(path,value){
+	console.log("ondatachange",path,value);
+	if(path=='name')this.data.name=value;
+}
+vm.beforestart=function(){
+	console.log("beforestart",this,this.data);
+}
+module.exports=vm;
+
+</script>

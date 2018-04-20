@@ -1,0 +1,111 @@
+<html>
+<h4>parent and child interact by 4 itnerface(data,option,state,event)</h4>
+<div><pre>
+direction   data  option state event
+down        y     y      n     y
+up          y     n      y     y
+
+data    :down  pvm.setChildData(cid,p,v)       ->cvm.event['pvm.setdata'}({path,oldv,newv})
+               pvm.addChildData(cid,p,index,v) ->cvm.event['pvm.adddata']({path,index,value})
+               pvm.delChildData(cid,p,index,n) ->cvm.event['pvm.deldata']({path,index,count})
+data    :up    cvm.setData(p,v)                ->[data.source].set(vm,p,v,cb)      ->if.cb(true)->set
+               cvm.addData(p,index,v)          ->[data.source].add(vm,p,index,v,cb)->if.cb(true)->add
+               cvm.delData(p,index,n)          ->[data.source].del(vm,p,index,n,cb)->if.cb(true)->del
+
+option  :down  pvm.setChildOption(cid,p,v)     ->cvm.event['pvm.setoption']({path,newv,oldv})
+option  :up    no-way
+
+event   :down  pvm.pubdown(cvm,name,data,cb)   ->cvm.event['pvm.'+name](data,cb)
+event   :up    cvm.pubup(name,data,cb)         -><tag event-abc="xyz">->pvm.xyz(data,cvm,cb)
+
+state   :down  no-way
+state   :up    cvm.setState(k,v,cb)            ->cvm.pubup('state',{path,newv,oldv},cb)
+                                               ->pvm.event[cvmid+'.'+name](data,cvm,cb)
+</pre></div>
+<!-- state   :down  pvm.setChildState(cid,p,v)      ->cvm.event['setstate']({path,newv,oldv})
+ -->
+
+<div class="row">
+<div class="col-md-2">
+	<a class="btn  btn-default" href="#!/document/parent.data">parent.data</a><br>
+	<a class="btn  btn-default" href="#!/document/parent.option">parent.option</a><br>
+</div>
+<div class="col-md-10">
+<div><pre>
+<div vm-src='' id='sub' data-abc=1><data stringa="some"></data></div>
+<div vm-src='' id='sub' option-x='123'><option a="red" b='100px'/></div>
+
+</pre></div>
+</div>
+</div>
+
+ <div class="row">
+<div class="col-md-2">
+	<a class="btn  btn-default" href="#!/document/vmstate">vm state</a><br>
+
+	<a class="btn  btn-default" href="#!/document/vm.event">vm event</a><br>
+</div>
+<div class="col-md-10">
+<div><pre>
+
+<vm event-state="" />
+<div vm-src='' id='sub' event-abc="yyy" ></div> child.pubup('abc',data,cb)
+</pre></div>
+</div>
+</div>
+
+
+
+
+
+<div class="row">
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/parent.onevent">parent.on-event</a><br>
+</div>
+<div class="col-md-10">
+<div><pre>
+<div vm-src='' id='sub' on-click="xyz" ></div> if click not handled by cvm,then call pvm.xyz
+</pre>
+
+</div>
+</div>
+</div>
+
+
+<div class="row">
+
+<div class="col-md-2">
+	<a class="btn  btn-default" href="#!/document/vmextend">prototype</a><br>
+</div>
+<div class="col-md-10">
+<div><pre>
+<import type="prototype" src="aaa.html" />
+</pre></div>
+</div>
+</div>
+
+<div class="row">
+
+<div class="col-md-2">
+	<a class="btn  btn-default" href="#!/document/parent.slot">parent.slot</a><br>
+</div>
+<div class="col-md-10">
+<div><pre>
+<div vm-src='' id='sub'> <div slot="some"></div></div> slot belongto pvm,el-data-event
+</pre></div>
+</div>
+</div>
+
+</html>
+
+<script>
+/*
+["cleanList", "rebuildList",  ]
+*/
+module.exports={
+	data:{xx:1},
+	onstart:function(){
+	
+	}
+}
+</script>

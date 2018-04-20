@@ -1,0 +1,44 @@
+
+<body>
+<h4>store is the database server for webapp</h4>
+
+<h4>app store</h4>
+<pre>
+app has only a store,if not,will fake one;
+app.store={
+	init:function(cb){
+		load data,normally need cb,this should be called at app.hookStart by yourself,
+		normally in app.hookStart(cb){store.init(),,,,cb()}
+		cb()
+	},
+	vminit:function(cvm,cb){
+		cb(data);
+		called when a vm start,must cb,otherwise the cvm can not start,
+	},
+	get:function(cvm,path,cb){
+		cb(data,opt)
+	},
+	set:function(cvm,path,value,cb){
+		cb(true,opt);true will fire vm.data real change && ui change
+	},
+	add:function(cvm,path,index,value,cb){
+		cb(true,opt);true will fire vm.data real change && ui change
+	},
+	del:function(cvm,path,index,count,cb){
+		cb(true,opt);true will fire vm.data real change && ui change
+	}
+}
+you can set a strategy for every cvm's every data.request as a json.
+
+when some data changed,you can:
+app.setData(vm,p,v,cb)
+app.addData(vm,p,index,v,cb)
+app.delData(vm,p,index,count,cb)
+</pre>
+
+
+</body>
+
+<script>
+
+</script>

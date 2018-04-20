@@ -1,0 +1,45 @@
+
+<template>
+<div>
+<code>this is in child</code>
+<table class="table table-striped table-bordered "  >
+<tbody>
+
+<tr>
+
+<td>slot a</td>
+<td > <slot name='slota'>default</slot></td>
+<td><code><slot name='slota'>default</slot></code></td> 
+
+</tr>
+
+<tr>
+
+<td>slot b</td>
+<td > <slot name='slotb'>empty</slot></td>
+<td><code><slot name='slotb'>empty</slot></code></td> 
+
+</tr>
+
+<tr>
+
+<td>slot main</td>
+<td > <slot>default</slot></td>
+<td><code><slot>default</slot></code></td> 
+
+</tr>
+
+</tbody>
+</table>
+</div> 
+
+</template>
+
+<script>
+var mod={}
+
+mod.onstart=function(){
+}
+
+module.exports=mod;
+</script>

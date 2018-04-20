@@ -1,0 +1,45 @@
+
+<html lang="en">
+<h4>app.subpub</h4>
+<pre>
+
+app.sub(channel,vm,function(data,from,cb){cb(xyz)})
+app.subonce(channel,vm,function(data,from,cb){cb(xyz)})
+app.ubsub(channel,vm,cb)
+app.pub(channel,data,vm,function(ressult,from){})
+
+vm.pubup,vm.pubdown,vm.pubapp is function
+
+define:
+vm.event['app.'+name]=function(){} will auto sub when start and auto unsub when close
+</pre>
+<div>
+<button text='this is main,pub.gtest' on-click=pub_gtest/>
+</div>
+
+ 
+<vm style="display:block;padding-top:20px;background-color:#eee" src='./app.pubsub.child.html'   id='s1'>
+</vm>
+
+</html>
+
+<script type="text/javascript">
+
+ 
+var vm={};
+
+vm.pub_gtest=function(){
+	app.pub('gtest',{name:123},this,function(res,from){
+		console.log('i am:',this.id,'gtest.callback','from:',from,res)
+	})
+}
+
+
+vm.event={
+	'app.gtest2':function(data,from,cb){
+		console.log('i am:'+this.id,from.id,'get gtest2:',data)
+		cb('gtest2')
+	}
+}
+module.exports=vm;
+</script>

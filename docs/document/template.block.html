@@ -1,0 +1,64 @@
+
+<html>
+<h4>template block is a tiny view module,it only do string replace</h4>
+<button on-click='js:app.navigate("#!/document/template.block.example")'>goto template.block.example</button>
+
+<h4>1.define in config.template</h4>
+<pre>
+config.template={
+	blocktest:'<button>this is in config.template</button>',
+	twobutton:'<button>ony one top node allowed</button><button>2</button>',
+	badge:'<span class="badge">$badge</span>',	
+	badgetext:'<span class="badge">$text</span>',
+	badgevalue:'<span class="badge">$value</span>',
+	button_badge:'<button class="btn btn-primary" type="button" on-click="$click">
+	    $button   <span class="badge">$badge</span></button>',
+	buttonindiv:'<div style="background-color:#eee;width:200px">
+	   <div style="padding:10px;color:red">$buttonindiv<button>$text</button>
+	   $value</div></div>'
+}
+</pre>
+<h4>2.use as a element,but not real</h4>
+
+<bolcktest /><code><bolcktest /></code>
+<twobutton /><code><twobutton /></code><br><br>
+<badge badge={name} /><code><badge badge={name} /></code>
+<badge badge=123 /> <code><badge badge=123 /></code><br><br>
+
+<badgetext text=123 /> <code><badgetext text=123 /></code>
+<badgevalue value={name} /><code><badgevalue value={name} /></code><br><br>
+
+<button_badge button=hehe badge=123 click="clicktest({name})" />
+<code><button_badge button=hehe badge=123 click="clicktest({name})"/></code>this is best<br><br>
+<buttonindiv buttonindiv=000 text=123 value=888 /><code><buttonindiv buttonindiv=000 text=123 value=888 /></code><br><br>
+
+<button on-click=modname   >modname can not modify the block</button> 
+<button color=red>{!name}</button>
+<h4>3.import in html</h4>
+<pre>
+<import type='block' src="../block/blocklazytest2.html" name="blocklazytest2">
+<blocklazytest2 text=123/> 
+</pre>
+<import type='block' src="../block/blocklazytest2.html" name="blocklazytest2">
+<blocklazytest2 text=123/> 
+<h4>2.define in  config.path.block,will lazy load</h4>
+<pre>
+config.path.block['blocklazytest']='xxx.html'; 
+</pre>
+<blocklazytest text=123/>
+</html>
+
+<script>
+
+var mod={};
+mod.data={
+	name:100,
+}
+mod.modname=function(e,p){
+	this.setData('name',parseInt(Math.random()*100))
+}
+mod.clicktest=function(e,p){
+	console.log('clicktest',p)
+}
+module.exports=mod;
+</script>

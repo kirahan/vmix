@@ -1,0 +1,37 @@
+<template>
+<br>
+<button>this is datarel2</button>
+<div>
+<button >name={!name}</button>
+<button on-click='js:this.data.name=parseInt(Math.random()*100)'>this.data.name=xx,datarel name will not change</button><br>
+
+<button >name={!name}</button>
+<button on-click='js:this.dataput("name",parseInt(Math.random()*100))'>dataput,datacenter,onchange</button><br>
+<button >obj.name={!obj.name}</button>
+<button on-click='js:this.data.obj.name=parseInt(Math.random()*100)'>mod obj.name, is the same object with datarel</button>
+</div>
+<!-- <div>
+<button  el-list='book in books'  >{!book.name}</button> 
+</div>
+<div>
+<button on-click='js:this.dataput("books.1.name",parseInt(Math.random()*100))'>dataput books[1].name</button>
+<button on-click='js:this.data.books[1].name=parseInt(Math.random()*100)'>this.data.books[1].name=</button>
+<button on-click='js:this.data.books.$add({name:parseInt(Math.random()*100)});'>add  =</button>
+</div> -->
+
+</template>
+<script>
+var obj={}
+obj.data={}
+obj.domevent={
+
+}
+obj.ondatachange=function(path,value){
+	console.log("ondatachange",path,value);
+	if(path=='name')this.data.name=value;
+}
+obj.beforestart=function(){
+	console.log("beforestart",this.id,this.data);
+}
+module.exports=obj;
+</script>

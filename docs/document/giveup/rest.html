@@ -1,0 +1,25 @@
+
+<html lang="en">
+
+
+	<button on-click='testrest' >rest</button>
+
+</html>
+<script>
+
+var mod={};
+mod.testrest=function(){
+	vmix.rest.get(
+		'./package.json',
+	
+		function(data){
+			console.log("rest get data",data);
+		},
+		function(error){
+			console.log("rest get error",error);
+		}
+	)
+}
+
+module.exports=mod;
+</script>

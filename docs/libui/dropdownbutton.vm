@@ -1,0 +1,34 @@
+<template>
+<div class="dropdown" id='dropdown'>
+  <button  class="button btn-primary" on-click="toggle()">
+    {title}
+    <span class="caret"></span>
+  </button>	
+   <ul class="dropdown-menu"  >
+  <li el-list='item in items' class="{ifblank($index,$value)?divider:''}"><a href="#" on-click='itemclick({item},{$index})'>{item}</a></li>
+  </ul> 
+</div>
+</template>
+<script>
+var mod={};
+mod.onstart=function(){
+	this.mel=this.getel('#dropdown');
+}
+mod.data={
+	title:'',
+	items:[],
+}
+mod.method={};
+mod.method.ifblank=function(k,v ){
+	return (v=='')?true:false;
+}
+mod.domevent={};
+mod.domevent.toggle=function(e){
+	this.mel.classList.toggle('open');
+}
+mod.domevent.itemclick=function(e,title,index){
+	this.mel.className="dropdown";
+	this.pubup('itemclick',index);
+}
+module.exports=mod;
+</script>

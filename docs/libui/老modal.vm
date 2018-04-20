@@ -1,0 +1,184 @@
+<template>
+<div class="modal " id="modal-top"><!-- fade -->
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		<span aria-hidden="true"  on-click=close(0)>&times;</span>
+		</button>
+        <h4 class="modal-title">{!title}</h4>
+      </div>
+      <div class="modal-body"  id="modal-body" bind-html="content"  owner="{!senderid}"  >
+	  <!-- watch-sender="to-attr-owner"  -->
+	  <!-- bind-attr-owner="sender"  -->
+<!-- 
+        {!content} -->
+		 <slot>default</slot>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" on-click=close(1)>Close</button>
+        <button type="button" class="btn btn-primary"  on-click=close(2)>Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+</template>
+
+<script>
+var blank=function(){};
+var isDOM = ( typeof HTMLElement === 'object' ) ?function(obj){	return obj instanceof HTMLElement;} :
+	function(obj){	return obj && typeof obj === 'object' && obj.nodeType === 1 && typeof obj.nodeName === 'string';}
+
+var class2type = {
+    "[object HTMLDocument]": "Document",
+    "[object HTMLCollection]": "NodeList",
+    "[Object StaticNodeList]": "NodeList",
+    "[obejct IXMLDOMNodeList]": "NodeList",
+    "[object DOMWindow]": "Window",
+    "[object global]": "window",
+    "null": "Null",
+    "NaN": "NaN",
+    "undefined": "Undefined"
+};
+//toString = class2type.toString;
+"Boolean,Number.String,Function.Array.Date,RegExp,Window,Document,Arguments,NodeList".replace(/\w+/g, function(name) {
+    class2type[ "[object " + name + "]" ] = name;
+});
+
+var iftype = function(obj, str) {
+    var result = class2type[ (obj == null || obj !== obj) ? obj : {}.toString.call(obj) ] || obj.nodeName || "#";
+    if (result.charAt(0) === "#") {    //兼容旧版本浏览器与处理个别情况，如window.opera
+        //利用IE6、IE7、IE8 window == document 为true，document == window竟然为false的神奇特性
+        if (obj == obj.document && obj.document != obj ) {
+            result = 'Window';        //返回构造器名字
+        } else if (obj.nodeType === 9) {
+            result = 'Document';    //返回构造器名字
+        } else if (obj.callee) {
+            result = 'Arguments';    //返回构造器名字
+        } else if (isFinite(obj.length) && obj.item) {
+            result = 'NodeList';    //处理节点集合
+        } else {
+            result = {}.toString.call(obj).slice(8, -1);
+        }
+    }
+    if (str) {
+        return str === result;
+    }
+    return result;
+}
+
+var obj={
+	data:{
+		title:'title2',
+		content:'',
+		senderid:'',
+	},
+	state:{open:0},
+	onstart:function(){	
+		/*this.on('modal',function(data,who,cb){
+			this.modal(data,who,cb)
+		})*/
+		
+		this.getel('#modal-top').style.display='block';
+		this.state.open=1;	
+	},
+	domevent:{		
+		close:function(e,para){
+			//this.getel('#modal-top').style.display='none';
+			//this.state.open=0;
+			//this.callback({type:'close',result:para});
+			//this.callback=blank;
+			this.close();
+		}
+	}, 	
+	modal:function(data,sender,cb){
+		console.log('modal',data,cb,sender)
+		//console.log('收到 modal 消息',data,typeof data.content,Array.isArray(data.content),iftype(data.content)); 
+		//console.log(this.getel('#modal-top'));
+		if(this.state.open==1)return;
+		this.data.title= data.title|| 'title';
+		var content=data.content;
+
+		this.getel("#modal-body").innerHTML='';
+		if(typeof content=='string'){
+			this.getel("#modal-body").innerHTML=content ||'' ;
+		}else if(isDOM(content)){
+			this.getel("#modal-body").appendChild(content);
+		}else if(iftype(content,'NodeList')){
+			var array = new Array(); 
+			for (var i = 0; i < content.length; i++) 	array.push(content[i]); 
+			for(var i=0,len=array.length;i<len;i++)
+			this.getel("#modal-body").appendChild(array[i]);	
+		}else if(Array.isArray(content)){
+			for(var k in content){
+				if(isDOM(content[k])){
+					this.getel("#modal-body").appendChild(content[k]);
+				}
+			}
+		}
+
+		this.data.senderid=sender.id;
+		if(typeof cb=='function')this.callback=cb;
+		else this.callback=blank;
+
+		this.getel('#modal-top').style.display='block';
+		this.state.open=1;	
+		//没有了 this.bindnewel(this.getel("#modal-body"));
+	},
+	message:{
+		"modal":function(data,cb,sender){
+			if(this.state.open==1)return;
+			this.modal.call(this,data,cb,sender);
+		}
+	}
+}
+
+module.exports=obj;
+
+//调用时
+
+Launch:function(e,para){
+		
+			this.getChild('gmodal').start();
+			return;
+		//this.fire('modal',123)
+		console.log("回来了,this.id="+this.id,para,this.data.name,this.getel('#modal_data_test'));
+		var msg={
+				title:'title '+parseInt(Math.random()*100),
+				content:"<div owner='{this.sid}'><input type=text value='{!name!}' id='modal_data_test'></input><button on-click='backto("+para+")'>call back 2</button></div>"
+			};
+		//是否可以解析一下呢
+		var self=this;
+		var Launch_type=para;
+		var cb=function(receiver,result){
+			//console.log('model 关闭了',self.id);
+			if(Launch_type==3){
+				var el=self.getel('#modal_content');
+				el.style.display='none';	
+				self.pel.appendChild(el);
+				//再加回来
+			}
+			console.log("model 关闭了,receiver.id="+receiver.id,"this.id="+self.id,result||receiver );	
+		};
+		if(para==1){//html直接附加 没有node计算
+			//this.getgvm('globalmodal').modal(msg,cb,this);//cb执行时不一定有 receiver
+			this.fire('modal',msg,cb);
+		}else if(para==2){//html直接附加 没有node计算
+			this.fire('modal',msg,cb);
+		}else if(para==3){
+			this.getChild('gmodal').start();
+			return;
+			this.sethtml(this.getel("#modal_content"),msg.content);
+			msg.content=this.getel('#modal_content');
+			//this.fire('modal',msg,cb);
+			msg.content.style.display='';
+		}else if(para==4){
+			//msg.content=this.htmltodom(msg.content);
+			this.fire('modal',msg,cb);
+		}
+		//需要modal 自动bind onchange事件
+	}
+</script>
+
+

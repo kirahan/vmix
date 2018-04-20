@@ -1,0 +1,44 @@
+
+<html>
+<pre>
+config.path.lib.moda="lib/moda.js"
+var moda=require('moda');
+
+var modbnotinlibpath=require('./modbnotinlibpath.js');
+var abc=require('./abc.js');
+
+<import type='lib' src='./abcd.js' name='abcd' /> var abcd=require('abcd');
+<import type='json' src='./abc.json' name='abcjson' /> var abcjson=require('abcjson');
+
+./abc.js  will search from current file's path,
+lib/moda.js  will search from root path,
+./modbnotinlibpath.js will search from current file's path.
+
+require is automatic,all the js fill will download and parse,and cache before vm.start
+
+require can not used in inlinejs
+</pre>
+
+<import type='lib' src='./abcd.js' name='abcd' /> 
+<import type='json' src='./abc.json' name='abcjson' /> 
+
+<button on-click=test>test require module</button>
+</html>
+
+<script>
+var modbnotinlibpath=require('./modbnotinlibpath.js');
+var moda=require('moda');
+var abc=require('./abc.js');
+var abcd=require('abcd');
+var abcjson=require('abcjson');
+module.exports={
+		test:function(){
+			console.log('modbnotinlibpath',modbnotinlibpath);
+			console.log('moda',moda);
+			console.log('abc',abc);
+			console.log('abcd',abcd);
+			console.log('abcjson',abcjson);
+			
+		}
+};
+</script>

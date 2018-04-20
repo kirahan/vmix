@@ -1,0 +1,74 @@
+
+
+<html>
+ 
+<h4>load cache clean</h4>
+<h4>import </h4> 
+<import type='vm' src='./abc.html' name='xyz' />
+<xyz id='1' ><data name='1'/></xyz>
+<xyz id='2' ><data name='2'/></xyz>
+<vm src='./abd.html' id='3' data-name='3'/>
+ 
+<vm src='./abd.html' id='4' data-name='4'/>
+
+<pre>
+<import type='vm' src='abc.html' name='xyz' />
+<xyz id='1' ><data name='import'/></xyz>
+</pre> 
+<pre>
+when a vm start,such file will auto load and cached:
+subvm: <import type='vm' /><vm src='' /><div vm-src='' />
+block: <import type='block'/>
+jslib: <div el-hook='./abc.js' /> var abc=requir e('./abc.js')
+style: <style src='./abc.css'></style>
+
+cache used for open multi vm with same url to save http request.
+vm.clean() is not automatic,you need excute it mannuly,
+vm.clean should excute after vm.close,
+these will not clean:  app.use(vm|lib|elhook|block), app.config.path[vm|lib|block|elhook]
+
+there is a refcount about every loaded file,if refcount>0,will not clean()
+when vm.clean(),if same url not closed all,not clean
+
+if refcount==0,these will clean:bodytext,styletext,vmlib,and loaded file in this vm not in config.path and app.use:
+subvm-block-style: clean all,
+jslib:when a jslib need check clean,if other vm use this jslib,means refcount>0,will not clean,
+
+pvm.removeChild(cid) will auto close the child,
+when a vm.close(),pvm still has a child with the id,but empty,you can start again use the cached body,style,vmlib
+when pvm.removeChild(cid) ,if you want restart,you need pvm.appendChild(),
+</pre>
+<button text='clean 1' on-click="js:this.getChild('1').clean()"/>
+<button text='close 1' on-click="js:this.getChild('1').close()"/>
+<button text='restart 1' on-click="js:this.getChild('1').restart()"/>
+<code>restart need not reload abc.html,it is in path</code>
+
+<br>
+<button text='clean 2' on-click="js:this.getChild('2').clean()"/>
+<button text='close 2' on-click="js:this.getChild('2').close()"/>
+<button text='restart 2' on-click="js:this.getChild('2').restart()"/>
+<code>restart need not reload abc.html,it is in path</code>
+
+<br>
+<button text='clean 3' on-click="js:this.getChild('3').clean()"/>
+<button text='close 3' on-click="js:this.getChild('3').close()"/>
+<button text='start 3' on-click="js:this.getChild('3').start()"/>
+<code>restart need reload abd.html</code>
+<br>
+<button text='clean 4' on-click="js:this.getChild('4').clean()"/>
+<button text='close 4' on-click="js:this.getChild('4').close()"/>
+<button text='start 4' on-click="js:this.getChild('4').start()"/>
+<code>restart need reload abd.html</code>
+
+</html>
+
+<script>
+
+
+//var abc=require('./abc.js');
+var mod={}
+mod.onstart=function(){
+	//console.log(abc)
+}
+module.exports=mod;
+</script>

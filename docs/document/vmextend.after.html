@@ -1,0 +1,26 @@
+<style type="text/css">
+.test1{	border:1px red solid;}
+</style>
+<import type="prototype" src="./vmextend.from.html" />
+<html>
+<button class="test2">proto class  test2</button>
+<button on-click="test">old func</button>
+<button class="test2" on-click="newtest">new func</button>
+<button >{name}</button>
+</html>
+<script>
+var mod={};
+mod.data={
+	name:'new name'
+}
+mod.extendTemplate=function(from,newtemplate){
+	return from+"<br/>"+newtemplate;
+}
+mod.extendStyle=function(from,newstyle){
+	return from+"\n"+newstyle;
+}
+mod.newtest=function(){
+	console.log("test in new vm");	
+}
+module.exports=mod;
+</script>

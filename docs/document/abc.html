@@ -1,0 +1,22 @@
+<body>
+<div style="background-Color:#eee;">
+<button on-click="test">abc.html,data.name={this.data.name}, this.sid={this.sid}</button>
+
+<vm src='./abcd.html' style="display:inline-block"/>
+<div>
+</body>
+<script>
+var vm={};
+var abc=require('./abc.js');
+var abcjson=require('./abc.json');
+vm.data={
+	name:'0'
+}
+vm.test=function(){
+	console.log(abc,abcjson,'this.data.name='+this.data.name,this.sid)
+}
+vm.onstart=function(){
+	//console.log('abc.onstart')
+}
+module.exports=vm;
+</script>

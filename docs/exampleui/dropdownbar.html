@@ -1,0 +1,37 @@
+<template>
+
+<dropdownmenutoobar event-click=dropdownmenutoobarcb>
+<data 
+title=dropdownmenu
+groups="[{title:'title11',btns:[1,2,3,'',4]},{title:'title22',btns:[11,12,13,'',14]}]"
+/>
+</dropdownmenutoobar>  
+
+<pre>
+<dropdownmenutoobar event-click=dropdownmenutoobarcb>
+<data 
+title=dropdownmenu
+groups="[{title:'title11',btns:[1,2,3,'',4]},{title:'title22',btns:[11,12,13,'',14]}]"
+/>
+</dropdownmenutoobar> 
+</pre>
+
+<h4>dropdownmenutoobar.vm source</h4>
+<pre id='source'></pre>
+</template>
+
+<script>
+var mod={};
+mod.dropdownmenutoobarcb=function(para,e){
+	console.log("dropdownmenutoobar.cb",para);
+}
+mod.hook=function(when,cvm){
+	//console.error('main.hook',when,this.id)
+	if(when=='onstart'){
+		app.pub('getvmsource','/libui/dropdownmenutoobar.vm',function(text){
+			this.getel('#source').textContent=text;
+		}.bind(this))	
+	}
+}
+module.exports=mod;
+</script>

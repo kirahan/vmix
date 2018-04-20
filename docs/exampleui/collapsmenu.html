@@ -1,0 +1,35 @@
+<body>
+<collapsnav  id='collapsnav' event-click='navcb' option-cb='true'>
+<data menus="[{hash:'h111',name:'callback.exe'},{hash:'h222',name:222},{hash:'h333',name:333}]" />
+</collapsnav>
+
+<collapsnav  id='collapsnav2' option-cb='false'>
+<data menus="[{hash:'h111',name:'hash-change'},{hash:'h222',name:222},{hash:'h333',name:333}]" />
+</collapsnav>
+
+<pre>
+
+<collapsnav  id='collapsnav' event-click='navcb' option-cb='true'>
+<data menus="[{hash:'h111',name:111},{hash:'h222',name:222},{hash:'h333',name:333}]" />
+</collapsnav>
+
+</pre>
+<h4>collapsnav.vm source</h4>
+<pre id='source'></pre>
+</body>
+
+<script>
+var mod={};
+mod.hook=function(when,cvm){
+	//console.error('main.hook',when,this.id)
+	if(when=='onstart'){
+		app.pub('getvmsource','/libui/collapsnav.vm',function(text){
+			this.getel('#source').textContent=text;
+		}.bind(this))	
+	}
+}
+mod.navcb=function(data){
+	console.log('navcb',data.index,data.e)
+}
+module.exports=mod;
+</script>

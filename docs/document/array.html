@@ -1,0 +1,112 @@
+<template>
+
+
+<div>
+<button>before</button> 
+<input style='width:50px' type=text el-list="book1 in books" value="{!book1.name!}"  ></input>
+<button>after</button>
+</div>
+<div>
+<button>before</button> 
+<input  style='width:50px' type=text el-list="book2 in books" value="{!book2.name!}" ></input> 
+<button>after</button> 
+</div>
+<div>
+
+<button  on-click="mod_book(0)" >mod 0</button> 
+<button  on-click="mod_book(1)" >mod 1</button> 
+<button  on-click="mod_book(2)" >mod 2</button> 
+<button  on-click="mod_book(3)" >mod 3</button> 
+<button  on-click="mod_book(4)" >mod 4</button> 
+<button  on-click="mod_book(5)" >mod 5</button> 
+<button  on-click="mod_book(6)" >mod 6</button> 
+<br/>
+<code>this.setData('books.'+id+'.name',new Date().getTime()).toString().substr(10));</code>
+<br/>
+<br/>
+<button  on-click="add_book2(0)" >add2@0</button>
+<code>this.addData('books',this.data.books.length,{name:GetRandomNum(1,100)});</code>
+<br/>
+ <button  on-click="del_book(0)" >del 0</button>
+ <button  on-click="del_book(1)" >del 1</button> <code>this.delData('books',id,1);</code>
+
+<br/>
+
+<button  on-click="sort_manul_update()" >sort_manul_update</button> 
+<code>
+this.data.books.sort(function(a,b){});
+this.cleanList('books');
+this.rebuildList('books');
+</code><br/>
+
+<button  on-click="reverse_manul_update()">reverse manul update</button> 
+
+<code>
+this.data.books.reverse();
+this.cleanList('books');
+this.rebuildList('books');
+</code><br/>
+<button on-click="js:console.log(this.data.books.length)"  >books.length</button>  
+
+</div>
+<pre>
+array page should by store,listview only display it
+</pre>
+<button on-click='js:app.navigate("#!/document/array.page")'>array.page</button>
+
+</template>
+
+<script>
+
+	
+function GetRandomNum(Min,Max){   
+	var Range = Max - Min;   
+	var Rand = Math.random();   
+	return(Min + Math.round(Rand * Range));   
+}
+
+var obj={
+	data:{
+		books:[],
+		//books:[{name:11},{name:21}],
+		//books:[1,2,3],
+	},
+	method:{
+	},
+	domevent:{
+		
+		reverse_manul_update:function(e,id){
+			this.data.books.reverse();
+			this.cleanList('books');
+			this.rebuildList('books');
+		},
+		sort_manul_update:function(){
+			this.data.books.sort(function(a,b){	return  parseInt(a.name) - parseInt(b.name)			});
+			this.cleanList('books');
+			this.rebuildList('books');
+		},
+		add_book2:function(){
+			this.addData('books',this.data.books.length,{name:GetRandomNum(1,100)});
+		},
+		del_book:function(e,index){
+			var id=parseInt(index);GetRandomNum(0,1);	
+			if(this.data.books.length==1)id=0;
+			//this.data.books.$delat(id,index)
+			this.delData('books',id,1);
+		},
+		mod_book:function(e,id){
+			id=parseInt(id);
+			if(this.data.books[id] !=undefined){
+				this.setData('books.'+id+'.name',(new Date().getTime()).toString().substr(10));
+			}else{
+				console.error('not found this index',id,this.data.books)
+			}
+		},
+
+	},
+}
+
+
+module.exports=obj;
+
+</script>

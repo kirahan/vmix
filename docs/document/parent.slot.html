@@ -1,0 +1,50 @@
+<html>
+<h4>inject node to child and call back to pvm</h4>
+<div vm-src='./parent.slot.sub.html' id='sub' style='border:1px solid red'> 
+	<div slot=slota> 
+	<button on-click="fncb">1</button>
+	<button on-click="fncb">2</button>
+	</div>
+	<div > 
+	<button on-click="fncb">m1</button>
+	<button on-click="fncb">m2</button>
+	</div>
+	<div > 
+	<button on-click="fncb">m3</button>
+	<button on-click="fncb">{!name}</button>
+	</div>
+</div>
+<button on-click=modname   >mod this.data.name</button> 
+<code>this.setData('name',parseInt(Math.random()*100));</code>
+<pre>
+slot to child,but slot live in pvm,
+setData will change,
+on-click call back to pvm 
+</pre>
+
+
+<h4>main</h4>
+<pre id='slotmain'></pre>
+<h4>sub</h4>
+<pre id='slotsub'></pre>
+</html>
+<script>
+var mod={};
+mod.data={
+	name:'000'
+}
+mod.modname=function(){this.setData('name',parseInt(Math.random()*100));},
+
+mod.fncb=function(e){
+	console.log("fncb in pvm",'this.id='+this.id);
+}
+mod.onstart=function(){
+	app.pub('getvmsource','/document/parent.slot.html',function(text){
+		this.getel('#slotmain').textContent=text.replace('\n\n','\n');
+	}.bind(this))
+	app.pub('getvmsource','/document/parent.slot.sub.html',function(text){
+		this.getel('#slotsub').textContent=text.replace('\n\n','\n');
+	}.bind(this))
+}
+module.exports=mod;
+</script>

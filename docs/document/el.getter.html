@@ -1,0 +1,72 @@
+
+<style type="text/css">
+.c{color:red}
+.d{color:blue}
+</style>
+<html>
+
+<h4>vm.getel</h4>
+<pre>
+this.getel("a"),  node.id==a
+this.getel("#b"), node.id==b
+this.getel(".c"), node.calssName='c e f'
+this.getel(".e"), node.calssName='c e f'
+this.getel(".f"), node.calssName='c e f'
+this.getel("$d"), node.role==d
+
+mod.config={cacheClasses:['c','d']}; 
+then you can use this.getel('.c' | '.d' | '.c.d')
+</pre>
+<h4>getElementById</h4>
+<pre>
+config.not_document_getelbyid=false;
+if true,el.id will be modified ,such as vm_sid_nodeid,
+you can use vm.getel('#aaa'),but document.getElementById('aaa') wont get,
+and you can duplicate id in muti vm
+</pre>
+<h4>be aware</h4>
+<pre>
+when a element is cached,when parent.removeChild(el),there is still cached,unless vm.delel(el),
+when call getel() or watch-data changed,if not find el,the cache will be delete,
+when vm.destroy(),will auto clean all the cached el.
+</pre>
+<h4>sample</h4>
+<button id='a'>id=a</button> 
+<button id='b'>id=b</button> 
+<button class='c'>class=c</button> 
+<button class='c'>class=c</button> 
+<button class='d'>class=d</button> 
+<button class='d'>class=d</button> 
+<button class='c d'>class=c d</button> 
+<button class='c d'>class=c d</button> 
+<button role='c'>role=c</button> 
+<button role='c'>role=c</button> 
+<br>
+<button on-click='js:console.log(this.getel("#a"))'>check id=a</button> 
+<button on-click='js:console.log(this.getel("#b"))'>check id=b</button> 
+<button on-click='js:console.log(this.getel(".c"))'>check class=c</button> 
+<button on-click='js:console.log(this.getel(".d"))'>check class=d</button> 
+<button on-click='js:console.log(this.getel(".c.d"))'>check class=c d</button> 
+<button on-click='js:console.log(this.getel("$c"))'>check role=c</button>
+<br>
+<button on-click='js:this.delel(this.getel("#a"))'>del id=a</button> 
+<button on-click='js:this.delel(this.getel(".c")[0])'>del class=c [0]</button> 
+<button on-click='js:this.delel(this.getel("$c")[0])'>del role=c [0]</button>
+<h4>html source</h4>
+<pre>
+<button id='a'>id=a</button> 
+<button id='b'>id=b</button> 
+<button class='c'>class=c</button> 
+<button class='c'>class=c</button> 
+<button role='c'>role=c</button> 
+<button role='c'>role=c</button> 
+</pre> 
+
+</html>
+<script>
+var mod={};
+mod.config={cacheClasses:['c','d']};
+mod.onstart=function(){
+}
+module.exports=mod;
+</script>

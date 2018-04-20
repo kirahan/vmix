@@ -1,0 +1,34 @@
+
+<html>
+<h4>parent on-event,catch event of cvm in pvm</h4>
+
+
+
+<pre>
+
+<div vm-src='./parent.onevent.sub.html' id='sub2' on-click='sub2click' />
+mod.sub2click=function(){console.log('sub2click')}
+
+</pre>
+<div vm-src='./parent.onevent.sub.html' id='sub2' on-click='sub2click'/>
+
+<pre>
+
+<div vm-src='./parent.onevent.sub.html' id='sub3' on-click='sub3click' appendto=ppel />
+mod.sub3click=function(){console.log('sub3click,,appendto=ppel')}
+
+</pre>
+<div vm-src='./parent.onevent.sub.html' id='sub3' on-click='sub3click' appendto=ppel />
+
+</html>
+<script>
+
+var mod={};
+mod.sub2click=function(e){
+	console.log('sub2click')
+}
+mod.sub3click=function(e){
+	console.log('sub3click,appendto=ppel')
+}
+module.exports=mod;
+</script>

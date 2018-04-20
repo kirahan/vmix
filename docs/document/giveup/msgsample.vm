@@ -1,0 +1,43 @@
+<style type="text/css">
+ .@b{width:100px} 
+</style>
+<template>
+
+<div vm-id='vm1' vm-src='./message1.vm'></div>
+<div vm-id='vm2' vm-src='./message2.vm'></div>
+
+
+<div>
+<button class='@b'>this is parent</button>
+<button class='@b' on-click=pubto(0)>pubto vm1</button> 
+
+<button class='@b' on-click=pubto(1)>pubto vm2</button> 
+<button class='@b' on-click=pubdownmvm>pubdown</button> 
+<input value='{!msg}'  style='width:450px'></input> 
+</div>
+</template>
+
+<script>
+var mod={};
+mod.data={msg:''};
+mod.domevent={};
+mod.domevent.pubto=function(e,para){
+	this.pubto(this.children[para], 'test',{ data:123},function(result,receiver){
+		console.log("pubto",para,result  );
+	});
+}
+mod.domevent.pubdownmvm=function(){
+	this.pubdown('test',{data:123},function(result,receiver){
+		console.log("pubdownmvm to all",result,receiver);
+	});
+}
+mod.message={};
+mod.message['child@test']=function(data,cb,sender){
+	console.log("message.child",sender,data);
+	this.data.msg="send="+sender.id+',msg='+JSON.stringify(data)+',time='+parseInt(Math.random()*100);
+	cb(123,234);
+	return false;
+}
+
+module.exports=mod;
+</script>

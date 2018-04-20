@@ -1,0 +1,28 @@
+
+<body>
+<div style="background-Color:#eee;">
+<button on-click="test">abd.html,data.name={this.data.name} , this.sid={this.sid}</button>
+
+<!-- <button on-click="modjson">modjson</button>
+ --><!-- <vm src='./abcd.html' style="display:inline-block"/>
+ --><div>
+</body>
+<script>
+var vm={};
+//var abcjson=require('./abc.json');
+//var abcd=require('./abcd.js');
+
+vm.data={
+	name:'0'
+}
+vm.modjson=function(){
+	abcjson.name=parseInt(Math.random()*100);
+}
+vm.test=function(){
+	//console.log(abcd,abcjson,'this.data.name='+this.data.name,this.sid)
+}
+vm.onstart=function(){
+	console.log('abd.onstart',this.id,this.sid)
+}
+module.exports=vm;
+</script>

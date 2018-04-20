@@ -1,0 +1,31 @@
+<template>
+<dropdownbutton event-itemclick=on_dropdownbutton>
+	<data title="dropdownbutton"	items="[1,2,3]" />
+</dropdownbutton> 
+<pre>
+<dropdownbutton event-itemclick=on_dropdownbutton>
+	<data title="dropdownbutton"	items="[1,2,3]" />
+</dropdownbutton> 
+</pre>
+
+
+<h4>dropdownbutton.vm source</h4>
+<pre id='source'></pre>
+
+</template>
+
+<script>
+var mod={};
+mod.on_dropdownbutton=function(index){
+	console.log("dropdownbutton.cb",'index='+index);
+}
+mod.hook=function(when,cvm){
+	//console.error('main.hook',when,this.id)
+	if(when=='onstart'){
+		app.pub('getvmsource','/libui/dropdownbutton.vm',function(text){
+			this.getel('#source').textContent=text;
+		}.bind(this))	
+	}
+}
+module.exports=mod;
+</script>

@@ -1,0 +1,64 @@
+<html>
+<h4>vm can extend through three method</h4>
+
+
+<div class="row">
+<div class="col-md-2">
+	<a class="btn  btn-default" href="#!/document/el.event">el event</a><br>
+	<a class="btn  btn-default" href="#!/document/el.hook">el hook</a><br>
+</div>
+<div class="col-md-10">	
+<div><pre>
+
+<body> 
+<button on-click='xx'>abc</button>
+<input on-change='xx' />
+<div el-hook=xxx />
+</body>
+</pre></div>
+</div>
+</div>
+
+
+<div class="row">
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/el.getter">elgetter</a><br>
+</div>
+<div class="col-md-10">
+
+<div><pre>
+vm.getel('#x')-><el id='x'/> 
+vm.getel('.x')-><el class='x'/>
+vm.getel('$x')-><el role='x'/>
+vm.delel(el)
+</pre></div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-2">
+<a class="btn  btn-default" href="#!/document/el.html">el html</a><br>
+
+
+</div>
+<div class="col-md-10">
+<div><pre>
+vm.addhtml(id|el,html);	
+vm.sethtml(id|el,html)
+</pre></div>
+</div>
+</div>
+
+</html>
+
+<script>
+/*
+["cleanList", "rebuildList",  ]
+*/
+module.exports={
+	data:{xx:1},
+	onstart:function(){
+	
+	}
+}
+</script>

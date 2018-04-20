@@ -1,0 +1,33 @@
+<body>
+<div style="background-Color:#eee;">
+<button >this is sub2 ,data from parent</button>
+<button text={!name} />
+<button on-click="mytest">self setData,need parent allow</button>
+<br>
+input.value=<button text={!inp} />
+<input type=text value='{inp}' on-input="js:this.setData('inp',e.target.value)" />
+<button el-list='a in s' text={a} /><br>
+<button text="add,need permission" on-click='js:this.addData("s",-1,2)'/>
+<button text="del,need permission" on-click='js:this.delData("s",0,1)'/>
+
+<br>
+<div>
+</body>
+<script>
+exports.data={
+	name:'0',
+	inp:'1',
+	s:[]
+}
+exports.mytest=function(){
+	this.setData('name',parseInt(Math.random()*100),function(res){
+		console.log('set res=',res)
+	})
+}
+
+exports.event={
+	'pvm.setdata':function(data){console.log('pvm.setdata',data)},
+	'pvm.adddata':function(data){console.log('pvm.adddata',data)},
+	'pvm.deldata':function(data){console.log('pvm.deldata',data)},
+}
+</script>

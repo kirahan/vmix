@@ -1,0 +1,16 @@
+<html>
+<div>
+<button >this is datacenter4,from datacentersample.vm version=  {version}</button>  
+</div>
+</html>
+<script>
+var obj={
+	ondata:function(error,data){
+		console.log("datacenter4 ondata",error,data);
+	},
+	data:{
+	},
+}
+module.exports=obj;
+
+</script>
