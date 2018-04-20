@@ -34,9 +34,10 @@ or module.exports={
 - [x] custom Element name,private style,dom slot,inline js,
 
 
-# [demo](https://peterli888.github.io/vmix/#!/document/vmdemo)
-# [api](https://peterli888.github.io/vmix/#!/document/vmapi)
-# [app](https://peterli888.github.io/vmix/#!/document/app)
-# [file](https://peterli888.github.io/vmix/#!/document/file)
-# [dataflow](https://peterli888.github.io/vmix/#!/document/dataflow)
-# [interact](https://peterli888.github.io/vmix/#!/document/interact)
+#### [vm demo](https://peterli888.github.io/vmix/#!/document/vmdemo)
+#### [vm api](https://peterli888.github.io/vmix/#!/document/vmapi)
+#### [app config](https://peterli888.github.io/vmix/#!/document/app)
+#### [file load](https://peterli888.github.io/vmix/#!/document/file)
+#### [element](https://peterli888.github.io/vmix/#!/document/element)
+#### [vm dataflow](https://peterli888.github.io/vmix/#!/document/dataflow)
+#### [vm interact](https://peterli888.github.io/vmix/#!/document/interact)
