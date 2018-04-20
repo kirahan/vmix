@@ -32,3 +32,10 @@ or module.exports={
 - [x] dataflow:   3 data type(data,option,state),3 data source(store,parent,self),controllable dataflow,
 - [x] interact:   up-down through defined data-option-state-event
 - [x] custom Element name,private style,dom slot,inline js,
+
+[demo](https://github.com/peterli888/vmix/demo.md)
+[api](https://github.com/peterli888/vmix/api.md)
+[app](https://github.com/peterli888/vmix/app.md)
+[file](https://github.com/peterli888/vmix/file.md)
+[dataflow](https://github.com/peterli888/vmix/dataflow.md)
+[interact](https://github.com/peterli888/vmix/interact.md)
