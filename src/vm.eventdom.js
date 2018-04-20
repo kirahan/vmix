@@ -57,7 +57,7 @@ var goto_pelevent=function(e,vm){
 	if(!fn){
 		return;
 	}
-	core_vm.tryfn(pvm,fn,[e],'vm.domevent');
+	core_vm.tryfn(pvm,fn,[e],'vm.domevent.pelevent');
 }
 module.exports.all=function(e,thisvm){
 	var funcname=core_vm.eventdom.get_funcname(e,thisvm);
@@ -104,7 +104,7 @@ module.exports.all=function(e,thisvm){
 	if( core_vm.isfn(fn)){
 		var array=[e].concat(funcpara.split(','));
 		if(funcname.indexOf('inlinejs_on__')==0)array=[e,core_vm.wap];
-		result=core_vm.tryfn(tvm,fn,array,'vm.domevent');
+		result=core_vm.tryfn(tvm,fn,array,'vm.domevent.inline');
 	}else if(funcname.indexOf('inlinejs_on__')==0){
 		var jsid=parseInt(funcname.replace('inlinejs_on__',''));
 		if(jsid>0){
@@ -136,7 +136,7 @@ module.exports.all=function(e,thisvm){
 		}
 		result=false;
 	}else{
-		core_vm.tryfn(tvm,tvm.onerror,[e,'domevent'],'onerror');
+		core_vm.tryfn(tvm,tvm.onerror,[e,'domevent'],'onerror.nofunc');
 		core_vm.devalert("no function,tvm.id=",tvm.id,'funcname='+funcname );
 	}
 		module.exports.stopEvent(e);

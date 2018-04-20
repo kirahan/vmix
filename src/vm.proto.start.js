@@ -11,12 +11,12 @@ proto.__addto_onshow=function(cb){
 	if(this[core_vm.aprand].has_started!==1){
 		this[core_vm.aprand].cbs_onshow.push(cb);
 	}else{
-		core_vm.tryfn(this,cb,[this],'vm.onshow')
+		core_vm.tryfn(this,cb,[this],'vm.onshow.addto')
 	}
 }
 proto.__onshow=function(){
 	for(var k in this[core_vm.aprand].cbs_onshow){
-		core_vm.tryfn(this,this[core_vm.aprand].cbs_onshow[k],[this],'vm.onshow')
+		core_vm.tryfn(this,this[core_vm.aprand].cbs_onshow[k],[this],'vm.onshow.exec')
 	}
 	this[core_vm.aprand].cbs_onshow=[];
 	for(var k in this[core_vm.aprand].cbs_onstart){

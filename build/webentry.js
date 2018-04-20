@@ -49,6 +49,7 @@ core_vm.appclass=require('../src/vm.0app.js');
 core_vm.wap=new core_vm.appclass();
 core_vm.wap.blankvm=core_vm.define.define({id:'_blankforapp_'});
 core_vm.wap.blankvm.__define({name:'_blank_'});
+Object.defineProperty(core_vm.wap,'blankvm',{enumerable:false});
 
 
 module.exports={

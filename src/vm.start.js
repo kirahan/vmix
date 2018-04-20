@@ -9,7 +9,7 @@ module.exports.web=function(vm){
 }
 module.exports.mob=function(vm){
 	vm.pel.bubbleParent=false;
-	var now_orient=core.lib.device.getOrient();
+	var now_orient=core.mod.device.getOrient();
 	var topview_style={
 		layout:vm.pel.layout,
 		width:vm.pel.width,

@@ -6,11 +6,11 @@ var _libcal={};
 module.exports=_libcal;
 _libcal.evalResponse_genmod=function(spec,cb,meta,template,style_str,extend_from){
 	if(spec.type=='vm' && extend_from){
-		var mod_me=_requirecache(spec.id,'',spec.type,'genmod_1',spec.urlid);
+		var mod_me=_requirecache(spec.app,spec.id,'',spec.type,'genmod_1',spec.urlid);
 		if(mod_me && !mod_me.__has_extend_ed){
 			mod_me.__has_extend_ed=1;
 			mod_me.__extend_from=extend_from;
-			var mod_from=_requirecache(extend_from,'','vm','genmod_2',spec.urlid);
+			var mod_from=_requirecache(spec.app,extend_from,'','vm','genmod_2',spec.urlid);
 			if(mod_from){
 				core_vm.gcache.add_vmlib_ref(extend_from,spec.urlid,'vmextend');
 				mod_from=core_vm.tool.objClone(mod_from);
@@ -41,7 +41,7 @@ _libcal.evalResponse_genmod=function(spec,cb,meta,template,style_str,extend_from
 		}
 		cb(null,mod_me);
 	}else{
-		var mod = _requirecache(spec.id,'',spec.type,'genmod_3',spec.urlid);
+		var mod = _requirecache(spec.app,spec.id,'',spec.type,'genmod_3',spec.urlid);
 		if (spec.type=='vm'){
 			core_vm.gcache.newvmbody(spec.id,template);
 			if(style_str){

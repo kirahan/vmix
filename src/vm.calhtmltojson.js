@@ -70,7 +70,7 @@ function gentag(parentNode,psn) {
 	}else{
 		node.classList=[];
 	}
-	if (nodematch(reg_self_close,'slefclose')) {
+	if (nodematch(reg_self_close,'selfclose')) {
 		return node;
 	}
 	var index=xml.indexOf('>');
