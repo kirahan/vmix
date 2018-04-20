@@ -1,4 +1,4 @@
-# vmix
+# vmix.js
 view module web component system,with loader,parser,binder,watcher,dataflow-control,extend,private-style,custome-element,slot
 
 ## step.1 include vmix.js,it will take care everything
@@ -34,9 +34,9 @@ or module.exports={
 - [x] custom Element name,private style,dom slot,inline js,
 
 
-## [demo](https://github.com/peterli888/vmix/demo.md)
-## [api](https://github.com/peterli888/vmix/api.md)
-## [app](https://github.com/peterli888/vmix/app.md)
-## [file](https://github.com/peterli888/vmix/file.md)
-## [dataflow](https://github.com/peterli888/vmix/dataflow.md)
-## [interact](https://github.com/peterli888/vmix/interact.md)
+# [demo](https://peterli888.github.io/vmix/#!/document/vmdemo)
+# [api](https://peterli888.github.io/vmix/#!/document/vmapi)
+# [app](https://peterli888.github.io/vmix/#!/document/app)
+# [file](https://peterli888.github.io/vmix/#!/document/file)
+# [dataflow](https://peterli888.github.io/vmix/#!/document/dataflow)
+# [interact](https://peterli888.github.io/vmix/#!/document/interact)
