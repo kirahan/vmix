@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "./";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 30);
+/******/ 	return __webpack_require__(__webpack_require__.s = 31);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -362,14 +362,13 @@ core_vm.onerror=function(app,type,where,error){
 	}
 }
 core_vm.onload=function(app,url,xhr,opt){
-
 	var cb=app.onload;
 	if(core_vm.isfn(cb)){
 		var res;
 		try{
-			res=cb.apply(app,arguments);
+			res=cb.call(app,url,xhr,opt);
 		}catch(e){
-			//console.error('onload',e)
+			console.error('onload',e)
 		}
 		return res;
 	}
@@ -667,11 +666,11 @@ var proto=cacheclass.prototype;
 proto.destroy=function(){
 	for(var k in this)this[k]=null;
 }
-__webpack_require__(33).setproto(proto);
+__webpack_require__(35).setproto(proto);
+__webpack_require__(36).setproto(proto);
 __webpack_require__(34).setproto(proto);
+__webpack_require__(33).setproto(proto);
 __webpack_require__(32).setproto(proto);
-__webpack_require__(31).setproto(proto);
-__webpack_require__(55).setproto(proto);
 
 
 //强制http更新时如何清理cache 分开qingli
@@ -2081,6 +2080,86 @@ module.exports.event=function(vm,node,scope,thisel){
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
+
+module.exports=function(vm,node,scope){
+
+	//计算表达式attrexp 条件  text
+	//计算bind watch
+	//计算vm到到bind 到 _sub_vm_tmp
+	
+	var config=vm.getapp().config;
+
+	
+	if(config.precode.indexOf(node.utag)>-1){
+		return;
+	}
+	
+	var newvm;
+	core_vm.calexp.nodeattrexp(vm,node,scope);
+
+
+	if(node.id && node.id[0]=='{')node.id=core_vm.calexp.exp(vm,node.id,scope);
+	if(node.classList && node.classList.length>0 ){
+		node.classList.forEach(function(str,i){
+			if(node.classList[i][0]=='{')node.classList[i]=core_vm.calexp.exp(vm,str,scope);
+		})
+		node.classList=node.classList.join(' ').replace(/  /g,' ').split(' ');		
+	}
+	 //先计算数据 再计算style
+
+
+	if(node.tag=='_exptext_'){
+		node.text=core_vm.calexp.exp(vm,node.exp_text,scope,'_exptext_');
+		
+	}
+
+	if(node.watchs){		
+		if(node.id){
+			node.id=core_vm.calexp.exp(vm,node.id,scope);
+		}else {
+			node.id=core_vm.cal.forece_calnodeid(vm,node,scope,'watch');
+		}
+		//watch时 nodeid要确定因为要作为elid保存
+		core_vm.watchcal.cal(vm,node,scope,'common');
+		//text html 的初始值应该在标签之间 
+	}
+	
+
+	var utag=node.utag;
+	if(utag===config.vmtag || node.attr[config.vmtag+'-src'] || vm.getcache().vmlib[utag]||
+		config.path.vm[utag] || 	vm.getcache().check_if_import('vm',vm[core_vm.aprand].absrcid,utag)){
+		if(node.id=='parent'||node.id=='child')node.id='';
+		if(!node.id)node.id=core_vm.define.newvmid();
+		node.childNodes=node.childNodes||[];
+		node.attr=node.attr||{};
+
+		//console.error("在"+vm.id+" 发现 vm ",'utag='+utag, node.event,node);
+		if(node.childNodes.length>0)core_vm.inject.biaojiinject_in_calcommon(vm,scope,node.childNodes);
+		newvm={
+			src:vm.getcache().check_if_import('vm',vm[core_vm.aprand].absrcid,utag)||config.path.vm[utag]
+				||node.attr[config.vmtag+'-src']||node.attr.src||utag,
+			id:node.attr.id||node.id||core_vm.define.newvmid(),
+		};
+		if(vm.getcache().vmlib[utag]){
+			newvm.src=utag;
+			newvm.absrc=utag;
+		}
+
+		node.childskip_inject=1;
+	}
+
+
+	return newvm;
+	//接下来处理 _root_ text等标签 
+	//接下来 处理 event bind state 各自处理
+}
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var core_vm=__webpack_require__(0);
 var global_vmid_seed=10;//不要为
 var global_nodeid_seed=0;//不要为
 var vmclass=function(id){
@@ -2244,23 +2323,23 @@ vmproto.__define=function(vmobj){
 }
 
 
-__webpack_require__(37).setproto(vmproto);
-__webpack_require__(36).setproto(vmproto);
-
-
-__webpack_require__(49).setproto(vmproto);//store
-__webpack_require__(40).setproto(vmproto);
-__webpack_require__(41).setproto(vmproto);
-__webpack_require__(42).setproto(vmproto);
 __webpack_require__(39).setproto(vmproto);
-__webpack_require__(43).setproto(vmproto);
-
-__webpack_require__(46).setproto(vmproto);
-__webpack_require__(44).setproto(vmproto);
-__webpack_require__(45).setproto(vmproto);
-__webpack_require__(48).setproto(vmproto);
 __webpack_require__(38).setproto(vmproto);
+
+
+__webpack_require__(51).setproto(vmproto);//store
+__webpack_require__(42).setproto(vmproto);
+__webpack_require__(43).setproto(vmproto);
+__webpack_require__(44).setproto(vmproto);
+__webpack_require__(41).setproto(vmproto);
+__webpack_require__(45).setproto(vmproto);
+
+__webpack_require__(48).setproto(vmproto);
+__webpack_require__(46).setproto(vmproto);
 __webpack_require__(47).setproto(vmproto);
+__webpack_require__(50).setproto(vmproto);
+__webpack_require__(40).setproto(vmproto);
+__webpack_require__(49).setproto(vmproto);
 //require("./vm.proto.event.js").setproto(vmproto);
 //冒号放弃require("./vm.proto.pubsub.js").setproto(vmproto);
 //require("./vm.proto.pubupdown.js").setproto(vmproto);
@@ -2269,13 +2348,13 @@ vmproto.__setsrc=function(src){
 	if(typeof (src)!=='string')src='';
 	this.src=src||'';
 	if(this.src){
-		this.absrc=_reqlib.gen_path(this.getapp(),this.src,this.pvm.absrc,true,5);
+		this.absrc=_reqlib.gen_path(this.getapp(),this.src,this.pvm ?this.pvm.absrc:'',true,5);
 		this[core_vm.aprand].absrcid=this.getcache().geturlsid(this.absrc);
 		//if(this.absrc.indexOf('/webapp/')!==0)
 			//console.error('绝对地址',this.absrc,'相对地址',this[core_vm.aprand].absrcid)
 	}
 }
-var libbatchdom=__webpack_require__(35);
+var libbatchdom=__webpack_require__(37);
 vmproto.batchdom=function(fn, ctx){
 	libbatchdom.set(fn, ctx)
 };
@@ -2316,7 +2395,7 @@ var define=function(opt,uap){
 		tvm.pvm[core_vm.aprand].vmchildren= tvm.pvm[core_vm.aprand].vmchildren || {};
 		tvm.pvm[core_vm.aprand].vmchildren[tvm.id]=tvm.sid;
 	}
-	//console.log('define',tvm)
+	//console.log('define',tvm.id)
 	tvm.__setsrc(opt.src||opt.url);
 	return tvm;
 }
@@ -2356,7 +2435,7 @@ module.exports.extend=function(name,fn){
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -2441,7 +2520,7 @@ module.exports=function(vm,el,src,when,node){
 }
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -2676,7 +2755,7 @@ module.exports.all=function(e,thisvm){
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -2741,7 +2820,7 @@ module.exports.inmem=function(app,vm,id,extend_from){
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -2953,7 +3032,7 @@ module.exports.bind_vm_pvm_when_inject_node=function(tvm,node){
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -3115,7 +3194,7 @@ module.exports.get_fel_sn_in_parent=function(lopt){
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -3163,7 +3242,7 @@ module.exports=function(vm,cb){
 			if(pvm){
 				pvm[core_vm.aprand].loadingsub_count--;							
 				if(pvm[core_vm.aprand].loadingsub_count==0){
-					core_vm.tryvmfn(pvm,null,'__onstart_a_zero_sub');
+					pvm.__onstart_a_zero_sub()
 				}
 			}
 			cb.call(vm,err);
@@ -3182,7 +3261,7 @@ module.exports=function(vm,cb){
 }
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -3190,7 +3269,7 @@ module.exports=function(vm,cb){
 
 var core_vm=__webpack_require__(0);
 var _reqlib=__webpack_require__(1);
-var _libcal=__webpack_require__(50);
+var _libcal=__webpack_require__(52);
 var _requirecache=__webpack_require__(2);
 
 var load_pending={};
@@ -3535,7 +3614,7 @@ module.exports.normalizeUrl=_reqlib.normalizeUrl;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //<wrapper html=''> </wrapper>
@@ -3650,7 +3729,7 @@ module.exports.checkappconfig=function(app,obj){
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -3769,7 +3848,7 @@ module.exports.start_index_vm=start_index_vm;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -3863,7 +3942,7 @@ module.exports.start_system=start_system;
 //从外边启动，不需要docreay
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -3888,7 +3967,7 @@ module.exports.web=function(vm){
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -4167,7 +4246,7 @@ module.exports=vm_tool;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -4307,7 +4386,7 @@ exports=module.exports={
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -4454,7 +4533,7 @@ module.exports.setweb=function(el,bindtype,newv,wopt,path){
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports) {
 
 //https://github.com/jfriend00/docReady/blob/master/docready.js
@@ -4501,7 +4580,7 @@ module.exports.docReady = function(callback, context) {
 //把web的 config文件 及其 配置系统 转到 mob
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -4552,23 +4631,23 @@ module.exports.check=function(vm,node){
 }
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
 core_vm.aprand='vm'+(new Date()).getTime().toString();
 
 	
-core_vm.define=__webpack_require__(13);
+core_vm.define=__webpack_require__(14);
 
 //core_vm.hook=require('../corevm/vm.hook.js');
-core_vm.load=__webpack_require__(19),
+core_vm.load=__webpack_require__(20),
 
-core_vm.extend=__webpack_require__(16);
-core_vm.start=__webpack_require__(24);
-core_vm.elhook=__webpack_require__(14);
+core_vm.extend=__webpack_require__(17);
+core_vm.start=__webpack_require__(25);
+core_vm.elhook=__webpack_require__(15);
 
-core_vm.inject=__webpack_require__(17);
+core_vm.inject=__webpack_require__(18);
 
 core_vm.calhtmltojson=__webpack_require__(8); 
 core_vm.cal = __webpack_require__(6);
@@ -4577,33 +4656,33 @@ core_vm.calif=__webpack_require__(9);
 //core_vm.calblock=require('../corevm/vm.calblockwrapper.js');
 
 //core_vm.watchlib=require('../corevm/vm.watchlib.js');
-core_vm.watchcal=__webpack_require__(26);
-core_vm.watchcb=__webpack_require__(27);
+core_vm.watchcal=__webpack_require__(27);
+core_vm.watchcb=__webpack_require__(28);
 
 core_vm.create=__webpack_require__(10);
 core_vm.createcommon=__webpack_require__(12);
-core_vm.createvm=__webpack_require__(52);
+core_vm.createvm=__webpack_require__(13);
 core_vm.createblock=__webpack_require__(11);
 
-core_vm.list=__webpack_require__(18);
+core_vm.list=__webpack_require__(19);
 //core_vm.listholder=require('../corevm/vm.listholder.js');
 
-core_vm.eventdom=__webpack_require__(15);
+core_vm.eventdom=__webpack_require__(16);
 
-core_vm.tool=__webpack_require__(25);
-core_vm.require=__webpack_require__(20);
-
-
+core_vm.tool=__webpack_require__(26);
+core_vm.require=__webpack_require__(21);
 
 
-core_vm.rootvmset=__webpack_require__(21);
-core_vm.rootvmstart=__webpack_require__(22);
-core_vm.web=__webpack_require__(23);
-core_vm.webdocready=__webpack_require__(28);
+
+
+core_vm.rootvmset=__webpack_require__(22);
+core_vm.rootvmstart=__webpack_require__(23);
+core_vm.web=__webpack_require__(24);
+core_vm.webdocready=__webpack_require__(29);
 
 
 //core_vm.route=require('../corevm/mob/vm.web_route.js');
-core_vm.web_private_style=__webpack_require__(29);
+core_vm.web_private_style=__webpack_require__(30);
 
 //core_vm.web_eventdom=require('../corevm/mob/vm.web_eventdom.js');
 //core_vm.web_create=require('../corevm/mob/vm.web_create.js');
@@ -4632,7 +4711,52 @@ core_vm.webdocready.docReady(core_vm.web.start_system);
 
 
 /***/ }),
-/* 31 */
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var core_vm=__webpack_require__(0);
+module.exports.setproto=function(proto){
+
+
+proto.loadok_block=function(spec,text){
+	if(spec.utag){//import的
+		this.importblock[spec.id]={text:text||''};
+		this.add_ref('block',spec.id,spec.refsid,'loadok_block');
+
+	}else if(spec.pathtag){//巡查的
+		if(!this.use.block[spec.pathtag])this.use.block[spec.pathtag]=text;
+	}
+}
+proto.get_block_text=function(vm,utag){
+	//console.log('get_block_text',utag)
+	if(this.use.block[utag])return this.use.block[utag];
+	var src=this.check_if_import('block',vm[core_vm.aprand].absrcid,utag);
+	if(!src)return '';
+	var mod=this.importblock[src];		
+	if(!mod)return '';		
+	if(mod.refsids.indexOf(vm[core_vm.aprand].absrcid)===-1)mod.refsids.push(vm[core_vm.aprand].absrcid);
+	return mod.text ||'';
+	
+}
+
+proto.loadok_style=function(spec,text){	
+	this.importstyle[spec.id]={text:text||''};
+	this.add_ref('style',spec.id,spec.refsid,'loadok_style');
+}
+
+
+proto.__get_importstyle=function(vm){
+	var text='';
+	for(var k in this.importstyle){
+		if(this.importstyle[k].refsids.indexOf(vm[core_vm.aprand].absrcid)>-1)
+			text+=this.importstyle[k].text;
+	}
+	return text;
+}
+}
+
+/***/ }),
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -4743,7 +4867,7 @@ proto.clean_when_vm_clean=function(vm){
 }
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -4827,7 +4951,7 @@ proto.clean_import=function(absrcid){
 }
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -4852,7 +4976,7 @@ proto.get_jslib=function(id){
 }
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -4900,7 +5024,7 @@ proto.get_vmstyle=function(vm){
 }
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -4976,7 +5100,7 @@ module.exports={
 }
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -5024,7 +5148,7 @@ proto.__ensure_fn=function(){
 }
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -5140,7 +5264,7 @@ proto.appendChild=function(opt,pnode,ifpnode){
 }
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -5258,7 +5382,7 @@ proto.close=proto.__vmclose;
 }
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -5348,7 +5472,7 @@ proto.delChildData=function(cvmid,p,index,count,cb){
 }
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -5504,7 +5628,7 @@ proto.delData=function(p,index,count,cb){
 }
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -5548,7 +5672,7 @@ proto.setChildOption=function(cvmid,p,v,cb){
 }
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -5586,7 +5710,7 @@ proto.__autobind_setstate=function(p,v,oldv){
 }
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -5702,7 +5826,7 @@ proto.__confirm_del_data_to_el=function(vm,p,index,count,cb){
 }
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -5816,7 +5940,7 @@ proto.__bind_events=function(el){
 //pointerdown|pointerup|pointercancel|pointermove|pointerover|pointerout|pointerenter|pointerleave)
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -6007,7 +6131,7 @@ proto.delel=function(thisel,ifchild,ifhas_remove_from_parent){
 
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -6054,7 +6178,7 @@ proto.addhtml=function(el,html){
 }
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -6121,7 +6245,7 @@ proto.pubdown=function(cvmid,name,data,cb){
 }
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -6242,14 +6366,14 @@ proto.__vmstart=function(startcb){
 		
 		core_vm.web_private_style.add(vm,styletext);
 	}
-
 	core_vm.start.web(vm);
 	vm[core_vm.aprand].has_started_self=1;
+
 	if(vm.getapp().config.strategy.append_to_pel_wait_loading_child_vm==false){
-		core_vm.tryvmfn(vm,null,'__append_bin_el');
+		vm.__append_bin_el();
 	}
 	if(vm[core_vm.aprand].loadingsub_count==0){
-		core_vm.tryvmfn(vm,null,'__onstart_a_zero_sub');
+		vm.__onstart_a_zero_sub()
 	}
 }
 //loadingsub_count -- 一共两处 load.err 与 __onstart_a_zero_sub
@@ -6258,7 +6382,7 @@ proto.__onstart_a_zero_sub=function(){
 	//console.log('__onstart_a_zero_sub',this.id)
 	if(this.__top_fragment && this[core_vm.aprand].has_started_self==1 
 		&& vm.getapp().config.strategy.append_to_pel_wait_loading_child_vm==true){		
-		core_vm.tryvmfn(vm,null,'__append_bin_el');
+		vm.__append_bin_el();
 
 	}
 	//append后为了保证dom准备好 用了settimeout 
@@ -6437,7 +6561,7 @@ proto.hide=function(){
 }
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -6497,13 +6621,13 @@ proto.__initdata_then_start=function(cb){
 }
 
 /***/ }),
-/* 50 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
 var _reqlib=__webpack_require__(1);
 var _requirecache=__webpack_require__(2);
-var _req_caltext=__webpack_require__(51);
+var _req_caltext=__webpack_require__(53);
 var _libcal={};
 module.exports=_libcal;
 
@@ -6679,7 +6803,7 @@ _libcal.evalResponse=function(when,spec,responseText,cb,loads) {
 
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core_vm=__webpack_require__(0);
@@ -6870,134 +6994,8 @@ module.exports=function(content,id,type,spec){
 	//console.log('计算结果',deps,spec.id)
 
 	//console.log("计算 script_str",script_str);
-	return [script_str,meta_str,body_str,style_str,extend_from,deps ];
-}
-
-/***/ }),
-/* 52 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var core_vm=__webpack_require__(0);
-
-module.exports=function(vm,node,scope){
-
-	//计算表达式attrexp 条件  text
-	//计算bind watch
-	//计算vm到到bind 到 _sub_vm_tmp
-	
-	var config=vm.getapp().config;
-
-	
-	if(config.precode.indexOf(node.utag)>-1){
-		return;
-	}
-	
-	var newvm;
-	core_vm.calexp.nodeattrexp(vm,node,scope);
-
-
-	if(node.id && node.id[0]=='{')node.id=core_vm.calexp.exp(vm,node.id,scope);
-	if(node.classList && node.classList.length>0 ){
-		node.classList.forEach(function(str,i){
-			if(node.classList[i][0]=='{')node.classList[i]=core_vm.calexp.exp(vm,str,scope);
-		})
-		node.classList=node.classList.join(' ').replace(/  /g,' ').split(' ');		
-	}
-	 //先计算数据 再计算style
-
-
-	if(node.tag=='_exptext_'){
-		node.text=core_vm.calexp.exp(vm,node.exp_text,scope,'_exptext_');
-		
-	}
-
-	if(node.watchs){		
-		if(node.id){
-			node.id=core_vm.calexp.exp(vm,node.id,scope);
-		}else {
-			node.id=core_vm.cal.forece_calnodeid(vm,node,scope,'watch');
-		}
-		//watch时 nodeid要确定因为要作为elid保存
-		core_vm.watchcal.cal(vm,node,scope,'common');
-		//text html 的初始值应该在标签之间 
-	}
-	
-
-	var utag=node.utag;
-	if(utag===config.vmtag || node.attr[config.vmtag+'-src'] || vm.getcache().vmlib[utag]||
-		config.path.vm[utag] || 	vm.getcache().check_if_import('vm',vm[core_vm.aprand].absrcid,utag)){
-		if(node.id=='parent'||node.id=='child')node.id='';
-		if(!node.id)node.id=core_vm.define.newvmid();
-		node.childNodes=node.childNodes||[];
-		node.attr=node.attr||{};
-
-		//console.error("在"+vm.id+" 发现 vm ",'utag='+utag, node.event,node);
-		if(node.childNodes.length>0)core_vm.inject.biaojiinject_in_calcommon(vm,scope,node.childNodes);
-		newvm={
-			src:vm.getcache().check_if_import('vm',vm[core_vm.aprand].absrcid,utag)||config.path.vm[utag]
-				||node.attr[config.vmtag+'-src']||node.attr.src||utag,
-			id:node.attr.id||node.id||core_vm.define.newvmid(),
-		};
-		if(vm.getcache().vmlib[utag]){
-			newvm.src=utag;
-			newvm.absrc=utag;
-		}
-
-		node.childskip_inject=1;
-	}
-
-
-	return newvm;
-	//接下来处理 _root_ text等标签 
-	//接下来 处理 event bind state 各自处理
-}
-
-
-/***/ }),
-/* 53 */,
-/* 54 */,
-/* 55 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var core_vm=__webpack_require__(0);
-module.exports.setproto=function(proto){
-
-
-proto.loadok_block=function(spec,text){
-	if(spec.utag){//import的
-		this.importblock[spec.id]={text:text||''};
-		this.add_ref('block',spec.id,spec.refsid,'loadok_block');
-
-	}else if(spec.pathtag){//巡查的
-		if(!this.use.block[spec.pathtag])this.use.block[spec.pathtag]=text;
-	}
-}
-proto.get_block_text=function(vm,utag){
-	//console.log('get_block_text',utag)
-	if(this.use.block[utag])return this.use.block[utag];
-	var src=this.check_if_import('block',vm[core_vm.aprand].absrcid,utag);
-	if(!src)return '';
-	var mod=this.importblock[src];		
-	if(!mod)return '';		
-	if(mod.refsids.indexOf(vm[core_vm.aprand].absrcid)===-1)mod.refsids.push(vm[core_vm.aprand].absrcid);
-	return mod.text ||'';
-	
-}
-
-proto.loadok_style=function(spec,text){	
-	this.importstyle[spec.id]={text:text||''};
-	this.add_ref('style',spec.id,spec.refsid,'loadok_style');
-}
-
-
-proto.__get_importstyle=function(vm){
-	var text='';
-	for(var k in this.importstyle){
-		if(this.importstyle[k].refsids.indexOf(vm[core_vm.aprand].absrcid)>-1)
-			text+=this.importstyle[k].text;
-	}
-	return text;
-}
+	return [script_str.replace(/cor\e\./g,'co.').replace(/gcach\e\./g,'o0.'),
+		meta_str,body_str,style_str,extend_from,deps ];
 }
 
 /***/ })

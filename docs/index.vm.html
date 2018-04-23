@@ -59,12 +59,12 @@
 			<div  el-list='doc in documents' style='padding-top:5px'>
 			<a type="button" class="btn btn-default" href='#!/document/{doc}' style='width:100px'>{doc}</a>
 			 </div>
-		</div>	
+		</div>	<!-- 
 		<div  watch-this-state-showing="ifshow(example)">
 			<div  el-list='doc in examples' style='padding-top:5px'>
 			<a type="button" class="btn btn-default" href='#!/example/{doc}' style='width:100px'>{doc}</a>
 			 </div>
-		</div>
+		</div> -->
 		<div  watch-this-state-showing="ifshow(exampleui)" >
 			<div  el-list='doc in exampleui' style='padding-top:5px'>
 			<a type="button" class="btn btn-default" href='#!/exampleui/{doc}' style='width:100px'>{doc}</a>
@@ -133,15 +133,15 @@ vm.ifshow=function(e,name){
 vm.data={
 	x:1,y:1,
 	'alltypes':['document/base','document/viewmodel','document/reuse'],//,'exampleui'
-	exampleui:['nav','buttongroup', 'dropdown', 'ulli', 'tab','modal',
-	'scrollspy','tooltip','popover','alert','collapse','carousel','affix'],
+	//exampleui:['nav','buttongroup', 'dropdown', 'ulli', 'tab','modal','scrollspy','tooltip','popover','alert','collapse','carousel','affix'],
+
 	show:'document/base',//'document/base',
-	dirs:[{name:'document'},{name:'exampleui'},{name:'example'}],
+	dirs:[{name:'document'},{name:'exampleui'}],//,{name:'example'}
 
 	documents:['bootstrap','vmdemo','vmapi','element','app','interact','dataflow','file'],
-	examples:[1,2,3,4],
+	//examples:[1,2,3,4],
 	exampleui:['block','collapsmenu','nav','tab','modal','buttongroup',	'dropdownbtn','dropdownbar','breadcrumb',
-	'pager','tooltip','popover','progressbar',
+	'pager',//'tooltip','popover','progressbar',
 	],
 	name:'name0'
 };
@@ -197,7 +197,7 @@ Popover,
 */
 
 var showcode=function(showing,name){
-	console.log("addvm完成",'/webapp/'+showing+'/'+name+'.vm');
+	console.log("addvm.ok",'/webapp/'+showing+'/'+name+'.vm');
 }
 vm.beforestart=function(){	
 	app.route('#!/document/:file',this,function(file){
@@ -209,10 +209,10 @@ vm.beforestart=function(){
 		this.setState('showing','document');
 		app.navigate('#!/document/bootstrap');
 	})	
-	app.route('#!/example',this,function(file){
+	/*app.route('#!/example',this,function(file){
 		this.setState('showing','example');
 		app.navigate('#!/example/index');
-	})
+	})*/
 	app.route('#!/exampleui',this,function(file){
 		this.setState('showing','exampleui');
 		app.navigate('#!/exampleui/pager');

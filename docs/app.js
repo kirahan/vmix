@@ -78,12 +78,12 @@ app.theme={
 }
 //onload onerror 是页面级的 mob.app的在app目录下
 app.onerror=function(type,where,e){
-	console.error('错误跟踪','type='+type,'where='+where,e)
+	console.error('app.onerror','type='+type,'where='+where,e)
 }
 var _textcache={};
+var dirpath=window.location.fullhost+window.location.dirpath;
 app.onload=function(url,xhr,opt){
-	//console.error("下载了源文件",xhr.responseURL.replace('http://192.168.0.201:8080/webapp',''),xhr.responseText.length);
-	_textcache[xhr.responseURL.replace('http://192.168.0.201:8080/webapp','')]=xhr.responseText;
+	_textcache[xhr.responseURL.replace(dirpath,'')]=xhr.responseText;
 }
 app.onstart=function(){
 	console.log('app.onstart');

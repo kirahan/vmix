@@ -11,12 +11,14 @@ core_vm.onload=function(app,url,xhr,opt){
 	if(core_vm.isfn(cb)){
 		var res;
 		try{
-			res=cb.apply(app,arguments);
+			res=cb.call(app,url,xhr,opt);
 		}catch(e){
+			console.error('onload',e)
 		}
 		return res;
 	}
 }
+
 core_vm.elget=function(el,n){return el?el.getAttribute(n):''}
 core_vm.elset=function(el,n,v){return el?el.setAttribute(n,v):false;}
 core_vm.getprefn=function(vm,type,name){
@@ -34,6 +36,7 @@ core_vm.getprefn=function(vm,type,name){
 core_vm.devalert=function(app_vm,title,e,err){
 	var msg=e?(e.message ||e.error ||e.toString()):'';
 	if(err)msg+="\n"+(err.message ||err.error ||err.toString());
+	
 	console.error({
 		title:'dev alert:'+title.toString(),
 		message:msg,
@@ -60,6 +63,7 @@ core_vm.tryfn=function(_this,fn,args,message){
 	if(!Array.isArray(args))args=[args];
 	return fn.apply(_this,args);
 	var res;
+	
 		res=fn.apply(_this,args);
 	return res;
 }
