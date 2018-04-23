@@ -7,7 +7,13 @@ view module web component system,with loader,parser,binder,watcher,dataflow-cont
 ## step.2 write a vm file abc.html,mix your html-style-data-event,
 ```
 <style>...</style> 
-<template>...</template> 
+<template>
+<tag attra={a} attrb={b(1,2,3)} attrc={!c!}/>
+<tag on-click="a" />
+<tag watch-a="b" />
+<tag el-filter="a " el-hook="b" el-list="c"/>
+<tag vm-src="abd.html">
+</template> 
 <script>
 this.data={};
 this.abc=function(){};
