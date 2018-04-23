@@ -4,7 +4,7 @@ view module web component system,with loader,parser,binder,watcher,dataflow-cont
 ## step.1 include vmix.js,it will take care everything
 ```<script src="vmix.js" data-role='vmix' app-file="app.js" index-file='index.vm.html'></script>```
 
-## step.2 write a vm file,mix your html-style-data-event,
+## step.2 write a vm file abc.html,mix your html-style-data-event,
 ```
 <style>...</style> 
 <template>...</template> 
@@ -24,8 +24,8 @@ or module.exports={
 <abc id='xyz'/>                                   custom Element name
 ```
 ## specific
-- [x] only define:no "new vm()",vmix.js do everrything,
-- [x] code style: node style js module exports, or just this.abc=xyz,
+- [x] Declarative:no global object,no "new vm()",vmix.js do everrything,
+- [x] node style: node style js module exports, or just this.abc=xyz,
 - [x] viewModule: plain js define,no relation with html element,
 - [x] file:       auto load-parse-cache-clean file,js inline,js require,
 - [x] data-el:    one-way two-way data-bind,
