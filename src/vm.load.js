@@ -1,12 +1,13 @@
 var core_vm=require('./vm.0webcore.js');
-module.exports.load=function(vm,cb){
+var _reqlib=require('./vm.requirelib.js');
+module.exports=function(vm,cb){
 	if(vm[core_vm.aprand].has_defined || vm[core_vm.aprand].has_started ||!vm.src){
 		return;
 	}
 	if(!core_vm.isfn(cb))cb=function(){}
-	if(core_vm.gcache.vmlib[vm.src]){
-		core_vm.gcache.add_vmlib_ref(vm.src,vm[core_vm.aprand].absrcid,'loadsub');
-		vm.__define(core_vm.tool.objClone(core_vm.gcache.vmlib[vm.src].exports));
+	if(vm.getcache().vmlib[vm.src]){
+		vm.getcache().add_ref('vm',vm.src,vm[core_vm.aprand].absrcid,'loadsub');
+		vm.__define(core_vm.tool.objClone(vm.getcache().vmlib[vm.src].exports));
 		vm.absrc=vm.src;
 		vm.__initdata_then_start(cb);
 		return;
@@ -15,20 +16,23 @@ module.exports.load=function(vm,cb){
 	if(pvm)pvm[core_vm.aprand].loadingsub_count++;
 	var fresh=vm._is_fresh_ing ;
 	var opt={
+		app:vm.getapp(),
 		loadvm:	pvm,		pvmpath	:pvm.absrc,
 		url:	vm.absrc||vm.src,
 		type	:'vm',
 		from:	'loadvm',	fresh	:fresh,
-		urlid:vm[core_vm.aprand].absrcid,
-		refid:pvm[core_vm.aprand].absrcid
+		urlsid:vm[core_vm.aprand].absrcid,
+		refsid:pvm[core_vm.aprand].absrcid,
+		vm:vm,
 	};
+	_reqlib.cal_spec_path(opt);
 	core_vm.require.load(opt,function(err,mod,spec){
 		if(err){
-			core_vm.onerror('load_vm_fail',spec.id || vm.src,err);
+			core_vm.onerror(vm.getapp(),'load_vm_fail',spec.id || vm.src,err);
 			if(pvm){
 				pvm[core_vm.aprand].loadingsub_count--;
 				if(pvm[core_vm.aprand].loadingsub_count==0){
-					core_vm.tryvmfn(pvm,null,'__onstart_a_zero_sub');
+					pvm.__onstart_a_zero_sub()
 				}
 			}
 			cb.call(vm,err);

@@ -21,7 +21,7 @@ var method=function(funcname,para,vm,scope){
 	if(funcname[0]=='!')funcname=funcname.substr(1);
 	var func=core_vm.getprefn(vm,'method',funcname);
 	var paras=para.split(',');
-	if(!core_vm.isfn(func))func=core_vm.gcache.use.method[funcname];
+	if(!core_vm.isfn(func))func=vm.getcache().use.method[funcname];
 	if(core_vm.isfn(func )){
 		if(scope.$index!=undefined ){
 			for(var i=0,len=paras.length;i<len;i++){
@@ -35,7 +35,7 @@ var method=function(funcname,para,vm,scope){
 		try{
 			res=func.apply(vm,paras);
 		}catch(e){
-			core_vm.devalert('method.'+funcname,e)
+			core_vm.devalert(vm,'method.'+funcname,e)
 		}
 		return res===undefined?'':res;
 	}else if(funcname.indexOf('.')>-1){
@@ -45,7 +45,7 @@ var method=function(funcname,para,vm,scope){
 		if(v!==undefined && core_vm.isfn(v[funcname2])){
 			return v[funcname2].apply(vm,paras)+'';
 		}else {
-			core_vm.onerror("no_method_when_cal",vm.absrc,{funcname:funcname,para:para});
+			core_vm.onerror(vm.getapp(),"no_method_when_cal",vm.absrc,{funcname:funcname,para:para});
 			return '';
 		}
 	}else{
@@ -66,7 +66,7 @@ var val=function(str,vm,scope,where){
 		if(str.substr(0,5)=='this.'){
 			res=core_vm.tool.objGetDeep(vm,str.substr(5));
 			if(res==undefined){
-				core_vm.onerror("data_path_error1",vm.absrc,{path:str});
+				core_vm.onerror(vm.getapp(),"data_path_error1",vm.absrc,{path:str});
 				res='';
 			}
 		}else{
@@ -82,7 +82,7 @@ var val=function(str,vm,scope,where){
 					if(str[str.length-1]=='!'){
 						return val(str.substr(0,str.length-1),vm,scope,where)
 					}else{
-						core_vm.onerror("data_path_error2",vm.absrc,{path:str});
+						core_vm.onerror(vm.getapp(),"data_path_error2",vm.absrc,{path:str});
 						res='';
 					}
 				}
@@ -100,13 +100,13 @@ var gen_filter=function(exp,vm,scope){
 		for(var i=1;i<array.length;i++){
 			array[i]=core_vm.tool.trim(array[i]);
 			var func=core_vm.getprefn(vm,'filter',array[i]);
-			if(!core_vm.isfn(func))func=core_vm.gcache.use.filter[array[i]]||core_vm.getprefn(vm,'method',array[i]);
+			if(!core_vm.isfn(func))func=vm.getcache().use.filter[array[i]]||core_vm.getprefn(vm,'method',array[i]);
 			if(core_vm.isfn(func )){
 				try{
 					res=func.call(vm,res);
 				}catch(e){
 					res='';
-					core_vm.devalert('filter :'+array[i],e);
+					core_vm.devalert(vm,'filter :'+array[i],e);
 				}
 			}
 		}
@@ -114,7 +114,7 @@ var gen_filter=function(exp,vm,scope){
 	return res;
 }
 var exp_one=function(vm,attrexp,scope,k){
-	var ops=core_vm.gcache.use.operator;
+	var ops=vm.getcache().use.operator;
 	return (attrexp.replace(/{(.*?)}/g,function(item, str){
 		var result='';
 		if(k=='_exptext_' ){

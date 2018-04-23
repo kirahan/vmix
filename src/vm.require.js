@@ -12,7 +12,7 @@ var load_pending={};
 		try {                return new ActiveXObject("Msxml2.XMLHTTP");	            } catch (e) {}
 		throw new Error("This browser does not support XMLHttpRequest.");
 	};
-}
+}//$end
 var setparaxhr=function(xhr,cacheexpire,cache_text){
 	if(gcache.user.logintoken)xhr.setRequestHeader('logintoken',gcache.user.logintoken);
 	else xhr.setRequestHeader('clientid',gcache.clientid||'');
@@ -28,11 +28,12 @@ function load(spec,callback) {
 		callback({type:'missing both url and id'},null,spec);
 		return;
 	}
-	if(!spec.refid ){
-		callback({type:'missing spec.refid'},null,spec);
+	if(!spec.refsid ){
+		console.log('没有refsid',spec.url)
+		callback({type:'missing spec.refsid'},null,spec);
 		return;
 	}
-	if(!spec.urlid)	spec.urlid=core_vm.gcache.geturlsid(spec.url);
+	if(!spec.urlsid)	spec.urlsid=spec.app.__cache.geturlsid(spec.url);
 	_reqlib.cal_spec_path(spec);
 	if(spec && spec.text){
 		spec.callback=callback;
@@ -57,7 +58,7 @@ function load(spec,callback) {
 		return;
 	}
 	if (spec.elhook_second_times || (!spec.fresh )){
-		var module=_requirecache(spec.id,'',spec.type,'load',spec.urlid);
+		var module=_requirecache.get(spec.app,spec.vm,spec.id,'',spec.type,'check',spec.urlsid);
 		if(module){
 			find_cachevm_inrequie(module,spec,callback);
 			return;
@@ -82,7 +83,7 @@ function load(spec,callback) {
 		download_act(xhr,'onload',spec,cache_text);
 	};
 	xhr.onerror = function (error) {
-		core_vm.devalert('onerror',xhr.location,error)
+		core_vm.devalert(spec.app,'onerror.xhr',xhr.location,error)
 		download_act(xhr,'download_error',spec,cache_text,error);
 	};
 	try{
@@ -96,7 +97,7 @@ function load(spec,callback) {
 }
 function download_act(xhr,type,spec,cache_text,error,withtext){
 	if(withtext){
-		_libcal.evalResponse(spec,spec.text,function(err,mod){download_ok_pendingcb(spec,err,mod);},loads);
+		_libcal.evalResponse(0,spec,spec.text,function(err,mod){download_ok_pendingcb(spec,err,mod);},loads);
 		return
 	}
 	if(xhr.hascallbacked==1){
@@ -119,16 +120,16 @@ function download_act(xhr,type,spec,cache_text,error,withtext){
 	}
 	var xhr_responseText=sucess>0 ? xhr.responseText:'';
 	{
-			var result=core_vm.onload(spec.url,xhr,spec);
+			var result=core_vm.onload(spec.app,spec.url,xhr,spec);
 			if(result)xhr_responseText=result;
-	}
+	}//$end
 	{
 		if(sucess==0){
 			download_ok_pendingcb(spec,{type:type,url:spec.url,status:xhr.status,xhr:xhr} );
 		}else if(sucess==1){
-			_libcal.evalResponse(spec,xhr_responseText,function(err,mod){download_ok_pendingcb(spec,err,mod);},loads);
+			_libcal.evalResponse(3,spec,xhr_responseText,function(err,mod){download_ok_pendingcb(spec,err,mod);},loads);
 		}
-	}
+	}//$end
 }
 function download_ok_pendingcb(spec,error,mod){
 	var cbs=[];
@@ -151,32 +152,31 @@ function download_ok_pendingcb(spec,error,mod){
 		cbs.forEach(function(cb,i){		cb(error,null,specs[i]);	});
 	}else{
 		cbs.forEach(function(cb,i){
-			if(specs[i].type=='css'){
-				core_vm.gcache.add_importstyle_when_loadcb(specs[i],mod);
-				cb(null,mod,specs[i]);
-			}else	if(specs[i].type=='block'){
-				if(specs[i].importname){
-					core_vm.gcache.set_block_text_import(specs[i].id,specs[i].urlid,specs[i].importname,mod,specs[i].refid);
-				}else if(specs[i].blockpathname){
-					core_vm.gcache.add_block_inpath(specs[i].blockpathname,mod);
-				}
-				cb(null,mod,specs[i]);
-			}else if(specs[i].type=='text'){
-				cb(null,mod,specs[i]);
+			let spec=specs[i];
+			if(spec.type=='css'){
+				spec.app.__cache.loadok_style(spec,mod);
+				cb(null,mod,spec);
+			}else if(spec.type=='text'){
+				cb(null,mod,spec);
+			}else	if(spec.type=='block'){
+				spec.app.__cache.loadok_block(spec,mod);
+				cb(null,mod,spec);
 			}else{
-				if(specs[i].urlid){
-					if(specs[i].type=='vm'){
-						core_vm.gcache.add_vmlib_ref(specs[i].id,specs[i].refid,'loadok');
+				if(spec.urlsid){
+					if(spec.type=='vm'){
+						spec.app.__cache.add_ref('vm',spec.id,spec.refsid,'loadok');
 					}
-					if(specs[i].type=='lib'||specs[i].type=='json'){
-						core_vm.gcache.add_jslib_ref(specs[i].id,specs[i].refid,'loadok');
+					if(spec.type=='lib'||spec.type=='json'){
+						spec.app.__cache.add_ref('lib',spec.id,spec.refsid,'loadok');
 					}
 				}
-				if(first_type=='text' && specs[i].type=='lib'){
-					specs[i].text=mod;
-					core_vm.require.load(specs[i],cb);
+				if(first_type=='text' && spec.type=='lib'){
+					spec.text=mod;
+					core_vm.require.load(spec,cb);
+				}else if(spec.type=='vm'){
+					cb(null,clone_mod(mod,spec),spec);
 				}else{
-					cb(null,clone_mod(mod,specs[i]),specs[i]);
+					cb(null,clone_mod(mod,spec),spec);
 				}
 			}
 		});
@@ -189,13 +189,14 @@ function clone_mod(mod,spec){
 	else if('text'==spec.type)return mod;
 	else return null;
 }
-function find_cachevm_inrequie(mod,spec,loadcb){
-	loadcb(null,clone_mod(mod,spec),spec);
-}
 function find_cache_file_mob(spec,cache_text,loadcb){
-	_libcal.evalResponse(spec,cache_text,function(err,mod){
+	_libcal.evalResponse(4,spec,cache_text,function(err,mod){
 		loadcb(err,clone_mod(mod,spec),spec);
 	},loads);
+}
+function find_cachevm_inrequie(mod,spec,loadcb){
+	console.log("find_cachevm_inrequie",spec.type,mod.__extend_from);
+	loadcb(null,clone_mod(mod,spec),spec);
 }
 function loads(urls, callback) {
 	if(!Array.isArray(urls))urls=[urls];

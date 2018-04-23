@@ -1,7 +1,7 @@
 var core_vm=require('./vm.0webcore.js');
 var lopt_aid=0;
 module.exports.gendata=function(vm,node,scope,pel){
-	var array=node.dir['list'].split(' in ');
+	var array=node.dir.list.split(' in ');
 	array[1]=core_vm.calexp.exp(vm,array[1],scope);
 	var abpath=core_vm.cal.now_path(scope,array[1],vm,'listgen');
 	abpath=abpath.replace(/^\s*|\s*$/g, '').replace(/\[([\s\S]*?)\]/g,function(a,b){
@@ -24,7 +24,7 @@ module.exports.gen=function(vm,node,scope,pel){
 	var tmp=module.exports.gendata(vm,node,scope,pel);
 	var array=tmp[0],abpath=tmp[1],listdata=tmp[2];
 	if(!Array.isArray(listdata)){
-		core_vm.onerror('list_data_not_array',vm.absrc,{path:abpath},listdata);
+		core_vm.onerror(vm.getapp(),'list_data_not_array',vm.absrc,{path:abpath},listdata);
 		return;
 	}else{
 		gen_watch_listclass(node);
@@ -46,7 +46,6 @@ module.exports.gen=function(vm,node,scope,pel){
 		listing[abpath]=listing[abpath]||[];
 		listing[abpath].push(lopt);
 		lopt.pel=pel;
-		
 			vm.__addto_onstart(function(){
 				if(pel.nodeName=='#document-fragment' && pel.id==vm.id+'__tmp')lopt.pel=vm.pel;
 			});
@@ -77,7 +76,7 @@ module.exports.$rebuild=function(lopt){
 }
 module.exports.new_node=function(k,v,lopt,insert_pos,where){
 	var scope_node=core_vm.tool.objClone(lopt.node);
-	delete scope_node.dir['list'];
+	delete scope_node.dir.list;
 	delete scope_node['id'];
 	lopt.scope.$index=k;
 	core_vm.cal.nodeid(lopt.vm,scope_node,lopt.scope);

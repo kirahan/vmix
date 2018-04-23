@@ -23,7 +23,7 @@ proto.getData=function(p,cb){
 	if(source=='self'){
 		cb(null,null,source);
 	}else if(source=='store'){
-		core_vm.wap.store.get.call(core_vm.wap,vm,p,function(data,opt){
+		vm.getapp().store.get.call(vm.getapp(),vm,p,function(data,opt){
 			cb(data,opt,source);
 		});
 	}else if(source=='parent'){
@@ -49,7 +49,7 @@ proto.setData=function(p,v,cb){
 		vm.__confirm_set_data_to_el(vm,p,v,oldv,cb);
 		cb(true,null,source);
 	}else if(source=='store'){
-		core_vm.wap.store.set.call(core_vm.wap,vm,p,v,function(res,opt){
+		vm.getapp().store.set.call(vm.getapp(),vm,p,v,function(res,opt){
 			if(res)vm.__confirm_set_data_to_el(vm,p,v,oldv,cb);
 			cb(res,opt,source);
 		});
@@ -76,7 +76,7 @@ proto.addData=function(p,index,v,cb){
 	if(source=='self'){
 		vm.__confirm_add_data_to_el(vm,p,index,v,cb);
 	}else if(source=='store'){
-		core_vm.wap.store.add.call(core_vm.wap,vm,p,index,v,function(res,opt){
+		vm.getapp().store.add.call(vm.getapp(),vm,p,index,v,function(res,opt){
 			if(res)vm.__confirm_add_data_to_el(vm,p,index,v,cb);
 			else cb(res,opt,source);
 		});
@@ -105,7 +105,7 @@ proto.delData=function(p,index,count,cb){
 	if(source=='self'){
 		vm.__confirm_del_data_to_el(vm,p,index,count,cb);
 	}else if(source=='store'){
-		core_vm.wap.store.del.call(core_vm.wap,vm,p,index,count,function(res,opt){
+		vm.getapp().store.del.call(vm.getapp(),vm,p,index,count,function(res,opt){
 			if(res)vm.__confirm_del_data_to_el(vm,p,index,count,cb)
 			else cb(res,opt,source);
 		});

@@ -1,11 +1,11 @@
 var core_vm=require('./vm.0webcore.js');
 var hook=function(name,vm,el,when,node,libid){
-	var fn=core_vm.gcache.use.elhook[name] || (core_vm.gcache.jslib[libid]?core_vm.gcache.jslib[libid].exports:null);
+	var fn=vm.getcache().use.elhook[name] || (vm.getcache().jslib[libid]?vm.getcache().jslib[libid].exports:null);
 	if(core_vm.isfn(fn)){
 		try{
 			fn.call({},vm,el,when,node);
 		}catch(e){
-			core_vm.devalert('el-hook.'+name+':'+when,e)
+			core_vm.devalert(vm,'el-hook.'+name+':'+when,e)
 		}
 	}
 }
@@ -17,7 +17,7 @@ module.exports=function(vm,el,src,when,node){
 			try{
 				fn.call({},vm,el,when,node);
 			}catch(e){
-				core_vm.devalert('el-hook.'+name+':'+when,e)
+				core_vm.devalert(vm,'el-hook.'+name+':'+when,e)
 			}
 		}
 		if(when=='childrenCreated'){
@@ -27,7 +27,7 @@ module.exports=function(vm,el,src,when,node){
 		}
 		return;
 	}
-	if(core_vm.gcache.use.elhook[name]){
+	if(vm.getcache().use.elhook[name]){
 		hook(name,vm,el,when,node);
 		if(when=='childrenCreated'){
 			vm.__addto_onshow(function(){
@@ -37,23 +37,24 @@ module.exports=function(vm,el,src,when,node){
 		return;
 	}
 	var opt={
+		app:vm.getapp(),
 		loadvm:vm,pvmpath:vm.absrc,
-		url:core_vm.wap.config.path.elhook[name]||name,
+		url:vm.getapp().config.path.elhook[name]||name,
 		type:'lib',
 		fresh:false,
 		from:'loadelhook',elhook_second_times:(when=='childrenCreated'?true:false),
-		refid:vm[core_vm.aprand].absrcid
+		refsid:vm[core_vm.aprand].absrcid
 	};
 	var fresh=vm._is_fresh_ing ;
 	opt.fresh=fresh;
 	core_vm.require.load(opt,function(err,mod,spec){
 		if(err){
-			core_vm.onerror('load_elhook_fail',spec.id,vm.absrc,err);
+			core_vm.onerror(vm.getapp(),'load_elhook_fail',spec.id,vm.absrc,err);
 			return;
 		}else if(core_vm.isfn(mod)){
-			if(core_vm.wap.config.path.elhook[name]){
-				core_vm.gcache.use.elhook[name]=mod;
-				delete core_vm.gcache.jslib[spec.id];
+			if(vm.getapp().config.path.elhook[name]){
+				vm.getcache().use.elhook[name]=mod;
+				delete vm.getcache().jslib[spec.id];
 				hook(name,vm,el,when,node);
 			}else{
 				hook(name,vm,el,when,node,spec.id);

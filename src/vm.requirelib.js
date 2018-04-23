@@ -75,7 +75,7 @@ _reqlib.calUrl=function(href, pageurl) {
 	}
     return url;
 }
-_reqlib.gen_path=function(url,from_path,needid){
+_reqlib.gen_path=function(app,url,from_path,needid,where){
 	var location=window.location;
 	if(from_path){
 		if(from_path.indexOf(location.fullhost)==0)from_path=from_path.substr(location.fullhost.length);
@@ -93,23 +93,9 @@ _reqlib.gen_path=function(url,from_path,needid){
 }
 _reqlib.cal_spec_path=function(spec,from_path){
 	if(spec.from=='deps')return;
-	if(spec.url.indexOf('://')==-1)spec.url=_reqlib.gen_path(spec.url,from_path || spec.pvmpath)
+	if(spec.url.indexOf('://')==-1)spec.url=_reqlib.gen_path(spec.app,spec.url,from_path || spec.pvmpath,false,6)
 	if(!spec.knowpath || !spec.id ){
 		spec.id=spec.url.split("//")[1];
 		if(spec.id)spec.id=spec.id.substr(spec.id.indexOf('/'));
-	}
-}
-if (Object.defineProperty) {
-	_reqlib.defineConstant = function (obj, name, value) {
-		Object.defineProperty(obj, name, {
-			value: value,
-			writable: false,
-			enumerable: false,
-			configurable: false
-		});
-	}
-} else {
-	_reqlib.defineConstant = function (obj, name, value) {
-		obj[name] = value;
 	}
 }

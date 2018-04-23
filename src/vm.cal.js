@@ -3,7 +3,7 @@ var calnodejson=function(vm,tempalte_html){
 	vm[core_vm.aprand].node_max_sn=1;
 	var html=vm.template || tempalte_html||'';
 	html=core_vm.calif.multi(vm,html);
-	var tmp=core_vm.calhtmltojson(html,vm[core_vm.aprand].node_max_sn);
+	var tmp=core_vm.calhtmltojson(html,vm[core_vm.aprand].node_max_sn,0,vm.getapp(),3);
 	vm[core_vm.aprand].nodejson.push(tmp[0])
 }
 var forece_calnodeid=function(vm,node,scope,head){

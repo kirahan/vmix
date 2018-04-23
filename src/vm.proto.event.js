@@ -1,7 +1,17 @@
 var core_vm=require('./vm.0webcore.js');
 module.exports.setproto=function(proto){
+proto.__auto_sub_app=function(){
+	for(var k in this.event){
+		if(k.substr(0,4)=='app.' && typeof (this.event[k]=='function'))this.getapp().sub(k.substr(4),this,this.event[k])
+	}
+}
+proto.__auto_unsub_app=function(){
+	for(var k in this.event){
+		if(k.substr(0,4)=='app.' && typeof (this.event[k]=='function'))this.getapp().unsub(k.substr(4),this,this.event[k])
+	}
+}
 proto.pubapp=function(name,data,cb){
-	core_vm.wap.pub(name,data,this,cb)
+	this.getapp().pub(name,data,this,cb)
 }
 proto.pubup=function(name,data,cb){
 	if(!this.pvm){
@@ -9,8 +19,10 @@ proto.pubup=function(name,data,cb){
 	}
 	var fn=this[core_vm.aprand].pvmevent[name];
 	if(!fn)fn=this.pvm.event[this.id+'.'+name];
+	if(!fn)fn=this.pvm.event['child'+'.'+name];
 	if(!fn)return;
 	if(!core_vm.isfn(fn))fn=core_vm.tool.objGetDeep(this.pvm,fn);
+	if(!core_vm.isfn(fn))fn=core_vm.tool.objGetDeep(this.pvm.event,fn);
 	if(!core_vm.isfn(fn))return;
 	var vm=this;
 	var pvm=this.pvm;

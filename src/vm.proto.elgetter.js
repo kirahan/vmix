@@ -93,7 +93,7 @@ proto.__regel=function(type,name,webelid_or_mob_el,index){
 	}else	if(type=='classList'){
 		var array=name;
 		for(var k in  array){
-			if(core_vm.wap.config.strategy.cacheClassesAll!==true || this.config.cacheClasses.indexOf(array[k])===-1)continue;
+			if(this.getapp().config.strategy.cacheClassesAll!==true || this.config.cacheClasses.indexOf(array[k])===-1)continue;
 			elsdom.class[array[k]]=elsdom.class[array[k]] || [];
 			if(elsdom.class[array[k]].indexOf(webelid_or_mob_el)==-1){
 				if(index!=undefined)elsdom.class[array[k]].splice(index,0,webelid_or_mob_el)
@@ -140,7 +140,6 @@ proto.delel=function(thisel,ifchild,ifhas_remove_from_parent){
 			}
 		}
 	}
-	
 	if(thisel.childNodes){
 		for(var i=0,len=thisel.childNodes.length;i<len;i++){
 			if(thisel.childNodes[i].nodeType==1)this.delel.call(this,thisel.childNodes[i],true);

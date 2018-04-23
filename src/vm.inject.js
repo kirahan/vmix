@@ -43,13 +43,15 @@ module.exports.inject_one_string=function(pvm,vm,utag,text,where){
 		if(vm[core_vm.aprand].datafrom_parent.indexOf(utag)===-1)vm[core_vm.aprand].datafrom_parent.push(utag);
 	}
 }
-module.exports.cal_inject_node=function(vm,node){
-	var innode=node;
+module.exports.cal_inject_node=function(vm,innode){
 	var new_data_node={tag:'data',utag:'data',attr:{},attrexp:{},childNodes:[]};
 	var new_attr_node={tag:'option',utag:'option',attr:{},attrexp:{},childNodes:[]}
 	var finddata=0,findattr=0;
+	if(innode.dataset){
+		for(let k in innode.dataset)innode.attr['data-'+k]=innode.dataset[k]
+	}
 	core_vm.tool.each(innode.attr,function(v,k){
-		if(k=='id' || k=='style' || k=='role' || k=='event'|| k==core_vm.wap.config.vmtag+'-src')return;
+		if(k=='id' || k=='style' || k=='role' || k=='event'|| k==vm.getapp().config.vmtag+'-src')return;
 		if(k.indexOf('data-')===0){
 			k=k.substr(5);
 			finddata=1;

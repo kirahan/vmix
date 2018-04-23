@@ -1,6 +1,5 @@
 var core_vm=require('./vm.0webcore.js');
-var debug = 1 ? console.log.bind(console, '[batchdom]') : function() {};
-
+var debug = 1 ? console.log.bind(console, '[fastdom]') : function() {};
 var win=window;
 var raf = function(cb) {
 	  return setTimeout(cb, 16);

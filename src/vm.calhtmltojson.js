@@ -1,5 +1,6 @@
 
 var core_vm=require('./vm.0webcore.js');
+var tapp;
 var trim=function(str){
 	return str.replace(/^\s*|\s*$/g, '');
 }
@@ -91,13 +92,13 @@ function parse_attr(node){
 		find_attr2=1;
 		var attr = attribute();
 		if(attr){
-			if(node.tag=='data'||node.tag=='option'){
+			if(node.tag=='data'||(node.tag=='option' && node.parentNode.tag!=='select')){
 				node.attr[attr.name] = attr.value;
 			}else if(attr.name=='id') {
 				node.id=attr.value;
 			}
-			else if(attr.name=='el-filter'||attr.name=='el-hook'||attr.name=='list'){
-				node.dir[attr.name]=attr.value;
+			else if(attr.name=='el-filter'||attr.name=='el-hook'||attr.name=='el-list'){
+				node.dir[attr.name.substr(3)]=attr.value;
 			}else	if(attr.name.substr(0,6)=='watch-'){
 				attr.name=attr.name.substr(6);
 				if(attr.name[0]=='[' && attr.name[attr.name.length-1]==']')attr.name=attr.name.substr(1,attr.name.length-2);
@@ -223,7 +224,7 @@ function add_content_node(node,tcontent){
 	if(tcontent.indexOf('\\u')>-1)tcontent=tcontent.replace(/\\u[a-fA-F0-9]{4}/g,function(a,b,c){return unescape(a.replace(/\\u/,'%u'))});
 	if(tcontent.indexOf('\\U')>-1)tcontent=tcontent.replace(/\\U[a-fA-F0-9]{4}/g,function(a,b,c){return unescape(a.replace(/\\U/,'%u'))});
 	var tag=node.tag.toLowerCase();
-	if(core_vm.wap.config.precode.indexOf(tag)>-1){
+	if(tapp.config.precode.indexOf(tag)>-1){
 		node.attr=node.attr||{};
 		node.attr.text=core_vm.tool.htmlunescape(tcontent);
 		return;
@@ -238,7 +239,6 @@ function add_content_node(node,tcontent){
 		}
 		return;
 	}else{
-		
 			if(ifhave_operator(tcontent)){
 				var textnode=new_node('_exptext_',node);
 				textnode.text='';
@@ -301,11 +301,11 @@ function nodematch(re,where,tag,node) {
 			if(m[1]==tag   || m[1].toLowerCase()==tag.toLowerCase()){
 				return true;
 			}else{
-				return core_vm.wap.config.strategy.force_close_not_match_close_tag?true: false;
+				return tapp.config.strategy.force_close_not_match_close_tag?true: false;
 			}
 		}else{
 			xml = xml.slice(xml.indexOf('>')+1);
-			return core_vm.wap.config.strategy.force_close_error_close_tag?true: false;
+			return tapp.config.strategy.force_close_error_close_tag?true: false;
 		}
 	}
 	if (!m)return;
@@ -339,7 +339,8 @@ function removeDOCTYPE(html) {
   .replace(/<!doctype.*\>\n/, '')
   .replace(/<!DOCTYPE.*\>\n/, '');
 }
-module.exports=function(html,maxsn,psn){
+module.exports=function(html,maxsn,psn,app,where){
+	tapp=app;
 	html=html
       .replace(/<\?xml.*\?>\n/, '')
       .replace(/<!doctype.*\>\n/, '')
@@ -349,6 +350,6 @@ module.exports=function(html,maxsn,psn){
 	.replace(/\/\s*>/g, "/>")
 	.replace(/\/\>/g, " />")
 	.replace(/\<\>/g, "");
-	var all=parse(html,maxsn,psn);
+	var all=parse(html,maxsn,psn,app);
 	return [all._root_,all.nodescache];
 }

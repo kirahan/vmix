@@ -27,13 +27,10 @@ var check_block_text=function(nodes,name,text){
 module.exports.find_block=function(nodes,vm,scope,pel){
 	nodes.forEach(function(node,sn){
 		var utag=node.utag;
-		if(core_vm.gcache.use.block[utag] || core_vm.gcache.importblock_src[vm[core_vm.aprand].absrcid+':'+utag]){
+		if(vm.getcache().use.block[utag] || vm.getcache().check_if_import('block',vm[core_vm.aprand].absrcid,utag)){
 			var oldparent=node.parentNode;
 			var oldid=node.id;
-			var blocktext=core_vm.gcache.use.block[utag] ;
-			if(!blocktext){
-				blocktext=core_vm.gcache.get_importblock(vm,utag);
-			}
+			blocktext=vm.getcache().get_block_text(vm,utag);
 			if(!blocktext){
 				return;
 			}
@@ -51,7 +48,7 @@ module.exports.find_block=function(nodes,vm,scope,pel){
 					blocktext=blocktext.replace(new RegExp('\\$'+name, 'g'),text)
 				}
 			})
-			nodes[sn]=core_vm.calhtmltojson(blocktext,0,0)[0].childNodes[0];
+			nodes[sn]=core_vm.calhtmltojson(blocktext,0,0,vm.getapp(),5)[0].childNodes[0];
 			nodes[sn].parentNode=oldparent;
 			if(oldid)nodes[sn].id=oldid;
 			if(node.attr.style)nodes[sn].attr.style=node.attr.style;

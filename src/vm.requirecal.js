@@ -4,61 +4,28 @@ var _requirecache=require('./vm.requirecache.js');
 var _req_caltext=require('./vm.requirecaltext.js');
 var _libcal={};
 module.exports=_libcal;
-_libcal.evalResponse_genmod=function(spec,cb,meta,template,style_str,extend_from){
+_libcal.evalResponse_genmod=function(spec,cb,meta,template,style_str,extend_from,when){
 	if(spec.type=='vm' && extend_from){
-		var mod_me=_requirecache(spec.app,spec.id,'',spec.type,'genmod_1',spec.urlid);
-		if(mod_me && !mod_me.__has_extend_ed){
-			mod_me.__has_extend_ed=1;
-			mod_me.__extend_from=extend_from;
-			var mod_from=_requirecache(spec.app,extend_from,'','vm','genmod_2',spec.urlid);
-			if(mod_from){
-				core_vm.gcache.add_vmlib_ref(extend_from,spec.urlid,'vmextend');
-				mod_from=core_vm.tool.objClone(mod_from);
-				core_vm.tool.deepmerge_notreplace(mod_me,mod_from);
-				var newbody,oldbody=core_vm.gcache.get_body_extend(extend_from);
-				if(core_vm.isfn(mod_me.extendTemplate)){
-					try{
-						newbody=mod_me.extendTemplate(oldbody,template);
-					}catch(e){
-						core_vm.devalert('extendTemplate',e)
-					}
-				}else{
-					newbody=template||oldbody;
-				}
-				var newstyle='',oldstyle=core_vm.gcache.get_vmstyle_extend(extend_from);
-				if(core_vm.isfn(mod_me.extendStyle)){
-					try{
-						newstyle=mod_me.extendStyle(oldstyle,style_str);
-					}catch(e){
-						core_vm.devalert('extendStyle',e)
-					}
-				}else{
-					newstyle=style_str||oldstyle;
-				}
-				core_vm.gcache.newvmbody(spec.id,newbody);
-				core_vm.gcache.add_vmstyle_inline(spec.id,newstyle);
-			}
-		}
-		cb(null,mod_me);
+		core_vm.extend.onload(spec,cb,meta,template,style_str,extend_from,when);
 	}else{
-		var mod = _requirecache(spec.app,spec.id,'',spec.type,'genmod_3',spec.urlid);
+		var mod = _requirecache.get(spec.app,spec.vm,spec.id,'',spec.type,'genmod_3',spec.urlsid);
 		if (spec.type=='vm'){
-			core_vm.gcache.newvmbody(spec.id,template);
+			spec.app.__cache.add_vmbody(spec.id,template,2);
 			if(style_str){
-				core_vm.gcache.add_vmstyle_inline(spec.id,style_str);
+				spec.app.__cache.add_vmstyle_inline(spec.id,style_str);
 			}
 		}
 		cb(null,mod);
 	}
 }
-_libcal.evalResponse=function(spec,responseText,cb,loads) {
+_libcal.evalResponse=function(when,spec,responseText,cb,loads) {
 	if (!spec.url || !spec.id){
 		cb({type:'para',error:'!spec.url'},null);
 		return;
 	}
-		if(spec.loadfilefresh){
-			_requirecache.loadfilefresh_clear(spec.id);
-		}
+	if(spec.loadfilefresh){
+		_requirecache.loadfilefresh_clear(spec,spec.id);
+	}
 	if(spec.type=='css'||spec.type=='block'||spec.type=='text'){
 		cb(null,responseText);
 		return;
@@ -68,9 +35,9 @@ _libcal.evalResponse=function(spec,responseText,cb,loads) {
 		try{
 			obj=JSON.parse(responseText)
 		}catch(e){
-			core_vm.devalert('json error')
+			core_vm.devalert(spec.app,'json error')
 		}
-		_requirecache.define(spec.id,obj,spec.type,spec.refid);
+		_requirecache.define(spec,spec.id,obj,spec.type,spec.refsid);
 		cb(null,core_vm.tool.objClone(obj));
 		return;
 	}
@@ -79,13 +46,13 @@ _libcal.evalResponse=function(spec,responseText,cb,loads) {
 	funcpara+='app';
 	var func_str=array[0];
 	try{
-		var newfn=new Function(funcpara,(core_vm.wap.config.isdev==true?"//# sourceURL="+spec.url+"\n":'')+array[0]);
+		var newfn=new Function(funcpara,(spec.app.config.isdev==true?"//# sourceURL="+spec.url+"\n":'')+array[0]);
 	}catch(err){
-		core_vm.devalert('js_SyntaxError:'+spec.url,err);
+		core_vm.devalert(spec.app,'js_SyntaxError:',spec.url+"\n"+err.toString());
 		cb(new Error('js_SyntaxError'),null);
 		return;
 	}
-	_requirecache.define(spec.id,newfn,spec.type,spec.refid);
+	_requirecache.define(spec,spec.id,newfn,spec.type,spec.refsid);
 	if (array[4] || array[5].length>0){
 		var extend_from=array[4] ;
 		var deps=array[5];
@@ -102,8 +69,8 @@ _libcal.evalResponse=function(spec,responseText,cb,loads) {
 					var depobj={url:deps[k].src,type:'block'}
 					if(deps[k].importname){
 						depobj.importname=deps[k].importname;
-					}else if(deps[k].blockpathname){
-						depobj.blockpathname=deps[k].blockpathname;
+					}else if(deps[k].pathtag){
+						depobj.pathtag=deps[k].pathtag;
 					}
 					needs.push(depobj);
 				}
@@ -118,12 +85,15 @@ _libcal.evalResponse=function(spec,responseText,cb,loads) {
 			needs[i].fresh=spec.fresh;
 			needs[i].pvmpath=spec.id;
 			needs[i].loadvm=spec.loadvm;
-			if(needs[i].type=='vm' && core_vm.wap.config.path.vm[needs[i].url]){
-				needs[i].url=core_vm.wap.config.path.vm[needs[i].url];
+			needs[i].app=spec.app;
+			if(needs[i].type=='vm' && spec.app.config.path.vm[needs[i].url]){
+				needs[i].url=spec.app.config.path.vm[needs[i].url];
 				needs[i].knowpath=true;
-			}else	if((needs[i].type=='lib'||needs[i].type=='json') && core_vm.wap.config.path.lib[needs[i].url]){
-				needs[i].url=core_vm.wap.config.path.lib[needs[i].url];
+			}else	if((needs[i].type=='lib'||needs[i].type=='json') && spec.app.config.path.lib[needs[i].url]){
+				needs[i].url=spec.app.config.path.lib[needs[i].url];
 				needs[i].knowpath=true;
+			}
+			if(needs[i].type=='vm'){
 			}
 		}
 		for(var k in needs){
@@ -132,29 +102,32 @@ _libcal.evalResponse=function(spec,responseText,cb,loads) {
 		}
 		for(var i=needs.length-1;i>-1;i--){
 			needs[i].from='deps';
-			needs[i].refid=core_vm.gcache.geturlsid(spec.id);
-			if(!spec.fresh && core_vm.gcache.check(needs[i].type,needs[i].id,needs[i].refid)){
+			needs[i].refsid=spec.app.__cache.geturlsid(spec.id);
+			if(!needs[i].refsid){
+				console.error('找不到refsid',needs[i].url)
+			}
+			if(!spec.fresh && spec.app.__cache.check_ifhas(needs[i].type,needs[i].id,needs[i].refsid)){
 				needs.splice(i,1);
 			}
 		}
 		if(needs.length==0){
-			_libcal.evalResponse_genmod(spec,cb,array[1],array[2],array[3],extend_from);
+			_libcal.evalResponse_genmod(spec,cb,array[1],array[2],array[3],extend_from,0);
 		}else{
 			loads(needs,function(errcount, errs, mods){
 				if(!errcount){
-					_libcal.evalResponse_genmod(spec,cb,array[1],array[2],array[3],extend_from);
+					_libcal.evalResponse_genmod(spec,cb,array[1],array[2],array[3],extend_from,1);
 				}else{
-					core_vm.devalert("needs error",spec.id,spec.url,errs);
+					core_vm.devalert(spec.app,"needs error",spec.id,spec.url,errs);
 					for(var k in errs){
 						if(errs[k]){
-							core_vm.onerror(errs[k].type,needs[k].id,errs[k].error);
+							core_vm.onerror(spec.app,errs[k].type,needs[k].id,errs[k].error);
 						}
 					}
-					_libcal.evalResponse_genmod(spec,cb,array[1],array[2],array[3],extend_from);
+					_libcal.evalResponse_genmod(spec,cb,array[1],array[2],array[3],extend_from,2);
 				}
 			})
 		};
 	}else{
-		_libcal.evalResponse_genmod(spec,cb,array[1],array[2],array[3],array[4]);
+		_libcal.evalResponse_genmod(spec,cb,array[1],array[2],array[3],array[4],3);
 	}
 }

@@ -8,14 +8,13 @@ module.exports.watch=function(wopt,path,oldv,newv){
 	if(wopt.el){
 		el=wopt.el;
 	}else{
-		
 			el=document.getElementById(wopt.elid);
-			if(!el && core_vm.wap.config.strategy.not_document_getelbyid && wopt.elid.indexOf('_elid_')==-1){
+			if(!el && vm.getapp().config.strategy.not_document_getelbyid && wopt.elid.indexOf('_elid_')==-1){
 				el=vm.getel("#"+wopt.elid);
 			}
 	}
 	if(!el){
-		core_vm.devalert('没有el',wopt.elid,path);
+		core_vm.devalert(vm,'no el',wopt.elid,path);
 		vm.__delel_watchcb_notfind(wopt.elid);
 		return;
 	}else{
@@ -37,10 +36,10 @@ module.exports.watch=function(wopt,path,oldv,newv){
 			var fn=core_vm.getprefn(vm,'dataevent',funcname);
 			if(core_vm.isfn(fn)){
 				try{
-					if(funcname.indexOf('inlinejs_watch__')==0)result=fn.call(vm,event,wopt.watchpara,core_vm.wap);
+					if(funcname.indexOf('inlinejs_watch__')==0)result=fn.call(vm,event,wopt.watchpara,vm.getapp());
 					else result=fn.call(vm,event,wopt.watchpara);
 				}catch(e){
-					core_vm.devalert('dataevent error',e)
+					core_vm.devalert(vm,'dataevent error',e)
 				}
 			}else if(funcname.indexOf('inlinejs_watch__')==0){
 				var jsid=parseInt(funcname.replace('inlinejs_watch__',''));
@@ -48,11 +47,11 @@ module.exports.watch=function(wopt,path,oldv,newv){
 					var str=vm[core_vm.aprand].inline_watchjs[jsid];
 					try{
 						var fn=new Function("e,para,app",str);
-						result=fn.call(vm,event,wopt.watchpara,core_vm.wap);
+						result=fn.call(vm,event,wopt.watchpara,vm.getapp());
 						vm[funcname]=fn;
 					}catch(error){
 						vm[funcname]=function(){};
-						core_vm.devalert('dataevent error',e)
+						core_vm.devalert(vm,'dataevent error',e)
 					}
 					vm[core_vm.aprand].inline_watchjs[jsid]='';
 				}
@@ -68,8 +67,8 @@ module.exports.watch=function(wopt,path,oldv,newv){
 module.exports.setweb=function(el,bindtype,newv,wopt,path){
 	if(bindtype=='html')bindtype='innerHTML';
 	else if(bindtype=='class')bindtype='className';
-	if(core_vm.isfn(core_vm.gcache.use.dataevent[bindtype])){
-		core_vm.gcache.use.dataevent[bindtype](el,newv,wopt,path);
+	if(core_vm.isfn(core_vm.wap.__cache.use.dataevent[bindtype])){
+		core_vm.wap.__cache.use.dataevent[bindtype](el,newv,wopt,path);
 	}else	if(bindtype=='innerHTML' || bindtype=='html'){
 		el.innerHTML=newv;
 	}else if(bindtype=='text'){
@@ -90,24 +89,6 @@ module.exports.setweb=function(el,bindtype,newv,wopt,path){
 			else if(array[0]=='data')el.dataset[array[1]]=newv;
 			else if(array[0]=='style')el.style[array[1]]=newv;
 			else core_vm.tool.objSetDeep(el,array.join('.'),newv,false);
-		}
-	}
-}
-module.exports.setmob=function(el,bindtype,newv,wopt,path){
-	el=el||el;
-	if(!el)return;
-	if(el.ctag=='Input' && el._input==true && bindtype=='checked'){
-		el.set_checked(newv);
-	}else{
-		if(el.ctag=='Button' && bindtype=='text')bindtype='title';
-		if(el.ctag=='Button' && bindtype=='title')newv=''+newv;
-		var array=bindtype.split('-');
-		if(array.length==1)array=bindtype.split('.');
-		if(array.length==1){
-			el[array[0]]=newv;
-		}else if(array.length==2 ){
-			if(array[0]=='font' && el.font[array[1]]!==undefined)el.font[array[1]]=newv;
-			el[array[1]]=newv;
 		}
 	}
 }

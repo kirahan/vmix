@@ -6,12 +6,12 @@ proto.hasChild=function(id){
 }
 proto.getChild=function(id){
 	if(this[core_vm.aprand].vmchildren[id]){
-		return this[core_vm.aprand].vmchildren[id];
+		return this.getcache().vmsbysid[this[core_vm.aprand].vmchildren[id]];
 	}else if(id.indexOf('.')>-1){
 		var tvm=this;
 		var parts = ~id.indexOf('.') ? id.split('.') : [id];
 		for (var i = 0; i < parts.length; i++){
-			tvm = tvm[core_vm.aprand].vmchildren[parts[i]]
+			tvm = tvm.getcache().vmsbysid[tvm[core_vm.aprand].vmchildren[parts[i]]]
 			if(tvm===undefined)break;
 		}
 		return tvm;
@@ -23,24 +23,28 @@ proto.getParent=function(){
 proto.removeChild=function(id){
 	var cvm;
 	if(id instanceof core_vm.define.vmclass && this.sid===id.pvm.sid){
-		if (this[core_vm.aprand].vmchildren[id.id] && this[core_vm.aprand].vmchildren[id.id].sid==id.sid)cvm=id;
+		if (this[core_vm.aprand].vmchildren[id.id] && this[core_vm.aprand].vmchildren[id.id]==id.sid){
+			let realid=id.id;
+			cvm=id;
+			id=realid;
+		}
 	}
 	else if(core_vm.isstr(id))cvm=this.getChild(id);
 	if(cvm){
-		cvm.__vmclose();
-		core_vm.gcache.removesid(cvm.sid);
+		cvm.__vmclose(true);
+		cvm.getcache().removesid(cvm.sid);
 		delete this[core_vm.aprand].vmchildren[id];
 	}
 }
 proto.appendChild=function(opt,pnode,ifpnode){
 	if(!opt.id || this.hasChild(opt.id)){
-		core_vm.devalert('loadsub 缺少id或者重复',opt.id)
+		core_vm.devalert(this,'loadsub 缺少id或者重复',opt.id)
 		return;
 	}
 	if(!opt.el)return;
 	if(!core_vm.isfn(opt.el.appendChild))return;
 	if(!opt.src ){
-		if(opt.path)opt.src=core_vm.wap.config.path.vm[opt.path];
+		if(opt.path)opt.src=this.getapp().config.path.vm[opt.path];
 		else if(opt.tagname)opt.src=opt.tagname;
 	}
 	if(!opt.src){
@@ -54,7 +58,7 @@ proto.appendChild=function(opt,pnode,ifpnode){
 			cvm[core_vm.aprand].pvmnode=pnode;
 			if(pnode.attr.autostart!=false){
 				cvm._is_fresh_ing=this._is_fresh_ing;
-				core_vm.loadsubvm.load(cvm);
+				core_vm.load(cvm);
 			}
 		}
 	}else if(opt){

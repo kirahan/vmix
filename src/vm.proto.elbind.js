@@ -41,11 +41,11 @@ proto.__unbindall=function(event,el,fn){
 proto.__bind=function(el,event,fn,ifdirect){
 	if(!el || !core_vm.isfn(fn) ||typeof(event)!=='string' || !el.addEventListener)return;
 	if(ifdirect){
+		this[core_vm.aprand].els_binded.push([el,event,fn]);
 		el.addEventListener(event,fn);
 		return
 	}
 	var vm=this;
-	
 	var velfn=function(e){
 		fn.call(e.target,e,vm);
 	}

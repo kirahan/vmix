@@ -16,7 +16,7 @@ proto.__addto_onshow=function(cb){
 }
 proto.__onshow=function(){
 	for(var k in this[core_vm.aprand].cbs_onshow){
-		core_vm.tryfn(this,this[core_vm.aprand].cbs_onshow[k],[this],'vm.onshow.exec')
+		core_vm.tryfn(this,this[core_vm.aprand].cbs_onshow[k],[this],'vm.onshow.exe')
 	}
 	this[core_vm.aprand].cbs_onshow=[];
 	for(var k in this[core_vm.aprand].cbs_onstart){
@@ -27,7 +27,7 @@ proto.__onshow=function(){
 		core_vm.tryfn(this,this[core_vm.aprand].startcb_of_vmstart,[],'vm.start.cb,id='+this.id);
 	}else{
 	}
-	this.__clean_after_start();
+	this.__clean_tmp_after_start();
 }
 var check_slot=function(vm,nodes){
 	for(var sn=0,len=nodes.length;sn<len;sn++){
@@ -45,10 +45,10 @@ proto.__vmstart=function(startcb){
 	var vm=this;
 	if(core_vm.isfn(startcb))vm[core_vm.aprand].startcb_of_vmstart=startcb;
 	if(core_vm.isfn(this.hookStart) && !this.__hookStart_has_called){
-		core_vm.wap.hookstart_vm=vm;
+		vm.getapp().hookstart_ing_vm=vm;
 		try{
 			this.hookStart.call(this,function(result){
-				core_vm.wap.hookstart_vm=null;
+				vm.getapp().hookstart_ing_vm=null;
 				vm.__hookStart_has_called=1;
 				if(result!==false){
 					vm.__vmstart(startcb);
@@ -58,8 +58,8 @@ proto.__vmstart=function(startcb){
 				}
 			});
 		}catch(e){
-			core_vm.devalert('hookStart error',vm.src,e)
-			core_vm.wap.hookstart_vm=null;
+			core_vm.devalert(vm.getnap(),'hookStart error',vm.src,e)
+			vm.getapp().hookstart_ing_vm=null;
 			this.hookStart=null;
 			vm.__vmstart(startcb);
 		}
@@ -67,48 +67,51 @@ proto.__vmstart=function(startcb){
 	}
 	core_vm.tryvmfn(vm.pvm,vm,'beforechildstart');
 	core_vm.tryvmfn(vm,null,'beforestart');
-	var bodytext=core_vm.gcache.get_body(vm);
+	var bodytext=vm.getcache().get_body(vm);
 	if(core_vm.isfn(vm.hookTemplate)){
 		core_vm.cal.nodejson(vm,vm.hookTemplate(bodytext));
 	}else{
 		core_vm.cal.nodejson(vm,bodytext);
 	}
 	check_slot(vm,vm[core_vm.aprand].nodejson[0].childNodes);
-	var styletext=core_vm.gcache.get_vmstyle(vm);
+	var styletext=vm.getcache().get_vmstyle(vm);
 	if(styletext){
 		if(core_vm.isfn(vm.hookStyle)){
 			styletext=vm.hookStyle(styletext);
 		}
-		core_vm.web_private_style.add(vm,styletext);;
+		core_vm.web_private_style.add(vm,styletext);
 	}
 	core_vm.start.web(vm);
 	vm[core_vm.aprand].has_started_self=1;
-	if(core_vm.wap.config.strategy.append_to_pel_wait_loading_child_vm==false){
-		core_vm.tryvmfn(vm,null,'__append_bin_el');
+	if(vm.getapp().config.strategy.append_to_pel_wait_loading_child_vm==false){
+		vm.__append_bin_el();
 	}
 	if(vm[core_vm.aprand].loadingsub_count==0){
-		core_vm.tryvmfn(vm,null,'__onstart_a_zero_sub');
+		vm.__onstart_a_zero_sub()
 	}
 }
 proto.__onstart_a_zero_sub=function(){
 	var vm=this;
 	if(this.__top_fragment && this[core_vm.aprand].has_started_self==1
-		&& core_vm.wap.config.strategy.append_to_pel_wait_loading_child_vm==true){
-		core_vm.tryvmfn(vm,null,'__append_bin_el');
+		&& vm.getapp().config.strategy.append_to_pel_wait_loading_child_vm==true){
+		vm.__append_bin_el();
 	}
-	setTimeout(function(){
-	if(this.pvm){
-		this.pvm[core_vm.aprand].loadingsub_count--;
-		if(this.pvm[core_vm.aprand].loadingsub_count==0){
-			this.pvm.__onstart_a_zero_sub();
-		}
+	if(vm.pvm){
+		setTimeout(function(){
+			vm.pvm[core_vm.aprand].loadingsub_count--;
+			if(vm.pvm[core_vm.aprand].loadingsub_count==0){
+				vm.pvm.__onstart_a_zero_sub();
+			}
+		},0);
 	}else{
-		if(core_vm.wap.hasstart==0){
-			core_vm.wap.hasstart=1;
-			core_vm.wap.onstart();
-		}
+		setTimeout(function(){
+			if(vm.getapp().hasstart==0){
+				vm.getapp().hasstart=1;
+				console.log('执行app.onstart1')
+				vm.getapp().onstart();
+			}
+		},10);
 	}
-	}.bind(this),0);
 }
 proto.__after_append_real=function(){
 	var vm=this;
@@ -120,7 +123,7 @@ proto.__after_append_real=function(){
 }
 proto.__after_append=function(){
 	var vm=this;
-	if(core_vm.wap.config.strategy.append_to_pel_wait_loading_child_vm==true){
+	if(vm.getapp().config.strategy.append_to_pel_wait_loading_child_vm==true){
 		if(this.pvm){
 			this.pvm.__addto_onshow(function(){
 				vm.__after_append_real();
@@ -147,7 +150,6 @@ proto.__append_bin_el=function(){
 			vm.config.appendto='ppel';
 			core_vm.elset(vmpel,'_role_','placeholder');
 			var el=children[0];
-			
 			var ppel=vmpel.parentNode;
 			ppel.appendChild(el);
 			vmpel.after(el);
@@ -194,7 +196,7 @@ proto.start=function(cb){
 	if(this[core_vm.aprand].has_defined){
 		this.__initdata_then_start(cb);
 	}else{
-		core_vm.loadsubvm.load(this,cb);
+		core_vm.load(this,cb);
 	}
 }
 proto.show=function(){

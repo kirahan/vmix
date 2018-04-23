@@ -1,6 +1,6 @@
 var core_vm=require('./vm.0webcore.js');
 var global_rootvm={},index_vm={}
-var check_body=function(){
+var check_body_when_not_file_indexvm=function(){
 	core_vm.wap.indexvm[core_vm.aprand].has_started=1;
 	var s=Object.keys(core_vm.wap.config.path.vm);
 	s.push(core_vm.wap.config.vmtag);
@@ -17,7 +17,7 @@ var check_body=function(){
 			el.removeChild(node);
 		});
 		var vm=core_vm.define.define({pvm:core_vm.wap.indexvm,el:el,id:json.id,src:json.src});
-		core_vm.loadsubvm.load(vm,function(vm){
+		core_vm.load(vm,function(vm){
 		})
 	});
 }
@@ -52,7 +52,7 @@ var start_system=function(){
 	core_vm.rootvmstart.init();
 	core_vm.rootvmstart.start_system(core_vm.wap,file_app,file_indexvm,index_vm,function(){
 		if(!file_indexvm){
-			check_body();
+			check_body_when_not_file_indexvm();
 		}
 	});
 }

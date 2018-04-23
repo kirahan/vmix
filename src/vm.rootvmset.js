@@ -29,7 +29,7 @@ var defconf={
 	}
 }
 module.exports.checkappconfig=function(app,obj){
-	app.config=app.config||{};
+	app.config=app.config||app.pageconfig||{};
 	var apconf=app.config;
 	if(obj==0){
 		for(var k in defconf){
@@ -73,19 +73,19 @@ module.exports.checkappconfig=function(app,obj){
 			apconf.precode_regexp[apconf.precode[k]]=
 				new RegExp('<'+apconf.precode[k]+'([\\s\\S]*?)>([\\s\\S]*?)<\/'+apconf.precode[k]+'>', 'gi');
 		}
-		apconf.block_regexp={};
+		apconf.blockpath_regexp={};
 		for(var k in apconf.path){
 			if(typeof(apconf.path[k])!=='object')delete apconf.path[k];
 		}
 		for(var k in apconf.path.block){
-			apconf.block_regexp[k]=new RegExp('<'+k+' ', 'gi');
+			apconf.blockpath_regexp[k]=new RegExp('<'+k+' ', 'gi');
 		}
 		var _reqlib=require('./vm.requirelib.js');
 		for(var k in defconf.path){
 			if(apconf.path[k]==undefined)apconf.path[k]={};
 			for(var m in apconf.path[k]){
 				if(typeof(apconf.path[k][m])!=='string')delete apconf.path[k][m];
-				apconf.path[k][m]=_reqlib.gen_path(apconf.path[k][m],'',true);
+				apconf.path[k][m]=_reqlib.gen_path(app,apconf.path[k][m],'',true,4);
 			}
 		}
 	}

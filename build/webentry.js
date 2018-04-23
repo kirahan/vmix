@@ -8,7 +8,7 @@ core_vm.webdocready=require('../src/vm.web.docready.js');
 
 core_vm.define=require('../src/vm.define.js');
 
-core_vm.loadsubvm=require('../src/vm.loadsubvm.js'),
+core_vm.load=require('../src/vm.load.js'),
 
 core_vm.start=require('../src/vm.start.js');
 core_vm.elhook=require('../src/vm.elhook.js');
@@ -23,8 +23,10 @@ core_vm.calhtmltojson=require('../src/vm.calhtmltojson.js');
 core_vm.watchcal=require('../src/vm.watchcal.js');
 core_vm.watchcb=require('../src/vm.watchcb.js');
 
+
 core_vm.create=require('../src/vm.create.js');
 core_vm.createcommon=require('../src/vm.createcommon.js');
+core_vm.createvm=require('../src/vm.createvm.js');
 core_vm.createblock=require('../src/vm.createblock.js');
 
 core_vm.list=require('../src/vm.list.js');
@@ -47,9 +49,17 @@ core_vm.cacheclass=require('../src/vm.0cache.js');
 core_vm.gcache=new core_vm.cacheclass();
 core_vm.appclass=require('../src/vm.0app.js');
 core_vm.wap=new core_vm.appclass();
+
+core_vm.wap.id='ly';
+core_vm.wap.__cache=new core_vm.cacheclass();
 core_vm.wap.blankvm=core_vm.define.define({id:'_blankforapp_'});
 core_vm.wap.blankvm.__define({name:'_blank_'});
 Object.defineProperty(core_vm.wap,'blankvm',{enumerable:false});
+
+
+//core_vm.gcache=new core_vm.cacheclass();
+Object.defineProperty(core_vm.wap,'blankvm',{enumerable:false});
+
 
 
 module.exports={

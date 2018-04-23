@@ -7,7 +7,7 @@ var vmclass=function(id){
 }
 var vmproto=vmclass.prototype;
 var cb=function(){}
-var need_keep=['id','sid','src','absrc','pel','pvm',];
+var need_keep=['appsid','id','sid','src','absrc','pel','pvm',];
 var need_keep_rand=['absrcid','pvmevent','pvmelevent','pvmnode'];
 vmproto.__init=function(ifclose){
 	if(!ifclose){
@@ -15,9 +15,7 @@ vmproto.__init=function(ifclose){
 		this.id=this.id||('id_auto_'+String(this.sid));
 	}
 	if(ifclose){
-		for(var k in this.event){
-			if(k.substr(0,4)=='app.' && typeof (this.event[k]=='function'))core_vm.wap.unsub(k.substr(4),this,this.event[k])
-		}
+		this.__auto_unsub_app();
 		for(var k in this){
 			if(!this.hasOwnProperty(k))continue;
 			else if(need_keep.indexOf(k)>-1)continue;
@@ -32,21 +30,25 @@ vmproto.__init=function(ifclose){
 		this[core_vm.aprand]={};
 		Object.defineProperty(this,core_vm.aprand, {configurable: false,enumerable: false,writable:false});
 	}
+	let obj=this[core_vm.aprand];
 	if(!ifclose){
-		this[core_vm.aprand].pvmevent={};
-		this[core_vm.aprand].pvmelevent={};
-		this[core_vm.aprand].pvmnode=null;
+		obj.pvmevent={};
+		obj.pvmelevent={};
+		obj.pvmnode=null;
 	}
-	this[core_vm.aprand].pvmslot={};
-	this[core_vm.aprand].has_started=0;
-	this[core_vm.aprand].has_defined=0;
-	this[core_vm.aprand].append_data={};
-	this[core_vm.aprand].append_option={};
-	this[core_vm.aprand].datafrom_store=[];
-	this[core_vm.aprand].datafrom_parent=[];
-	this[core_vm.aprand].cbs_on_define=[];
+	obj.pvmslot={};
+	obj.has_started=0;
+	obj.has_defined=0;
+	obj.append_data={};
+	obj.append_option={};
+	obj.datafrom_store=[];
+	obj.datafrom_parent=[];
+	obj.cbs_on_define=[];
+	obj.cbs_onstart=[];
+	obj.cbs_onclose=[];
+	obj.cbs_onshow=[];
 }
-vmproto.__clean_after_start=function(){
+vmproto.__clean_tmp_after_start=function(){
 	delete this[core_vm.aprand].pvmslot;
 	delete this[core_vm.aprand].append_data;
 	delete this[core_vm.aprand].append_option;
@@ -75,9 +77,7 @@ vmproto.__define=function(vmobj){
 	tvm.config=tvm.config||{};
 	if(!Array.isArray(tvm.config.cacheClasses))tvm.config.cacheClasses=[];
 	tvm.config.appendto= (tvm.config.appendto==='ppel')?'ppel':"pel";
-	for(var k in tvm.event){
-		if(k.substr(0,4)=='app.' && typeof (tvm.event[k]=='function'))core_vm.wap.sub(k.substr(4),this,tvm.event[k])
-	}
+	tvm.__auto_sub_app();
 	var obj=this[core_vm.aprand];
 	obj.newid_2_oldid={}
 	obj.vmchildren={};
@@ -123,31 +123,35 @@ vmproto.__setsrc=function(src){
 	if(typeof (src)!=='string')src='';
 	this.src=src||'';
 	if(this.src){
-		this.absrc=_reqlib.gen_path(this.src,this.pvm.absrc,true);
-		this[core_vm.aprand].absrcid=core_vm.gcache.geturlsid(this.absrc);
+		this.absrc=_reqlib.gen_path(this.getapp(),this.src,this.pvm ?this.pvm.absrc:'',true,5);
+		this[core_vm.aprand].absrcid=this.getcache().geturlsid(this.absrc);
 	}
 }
 var libbatchdom=require("./vm.batchdom.js");
 vmproto.batchdom=function(fn, ctx){
 	libbatchdom.set(fn, ctx)
 };
-
+vmproto.getapp=function(){
+	return core_vm.wap;
+}
+vmproto.getcache=function(){
+	return core_vm.wap.__cache;
+}
 for(var k in vmproto){
 	if(k[0]=='_')Object.defineProperty(vmproto,k,{configurable: false,enumerable:false,writable:false});
 }
 var _reqlib=require('./vm.requirelib.js');
-var define=function(opt){
-	
+var define=function(opt,uap){
 	var tvm=new vmclass(opt.id);
 	if(opt.el)tvm.pel=opt.el;
-	core_vm.gcache.vmsbysid[tvm.sid]=tvm;
+	tvm.getcache().vmsbysid[tvm.sid]=tvm;
 	if(opt.pvm){
-		core_vm.gcache.vmparent[tvm.sid]=opt.pvm.sid;
+		tvm.getcache().vmparent[tvm.sid]=opt.pvm.sid;
 		tvm.pvm=opt.pvm;
 		tvm.pvm[core_vm.aprand].vmchildren= tvm.pvm[core_vm.aprand].vmchildren || {};
-		tvm.pvm[core_vm.aprand].vmchildren[tvm.id]=tvm;
+		tvm.pvm[core_vm.aprand].vmchildren[tvm.id]=tvm.sid;
 	}
-	tvm.__setsrc(opt.src);
+	tvm.__setsrc(opt.src||opt.url);
 	return tvm;
 }
 module.exports={
@@ -160,7 +164,6 @@ module.exports={
 	protect:function(){
 	}
 }
-
 module.exports.extend=function(name,fn){
 	if(core_vm.isfn(fn))vmproto[name]=fn;
 }

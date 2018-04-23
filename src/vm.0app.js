@@ -6,6 +6,7 @@ var appclass=function(){
 	core_vm.rootvmset.checkappconfig(this,0);
 	this.hasstart=0;
 	this.__events={}
+	Object.defineProperty(this,'__events',{enumerable:false});
 }
 var proto=appclass.prototype;
 proto.sub=function(name,vm,cb){
@@ -45,8 +46,9 @@ proto.loadfile=function(type,filename,cb){
 	if(type=='vm')loadobj.type='vm';
 	else if(type=='text')loadobj.type='text';
 	else loadobj.type='lib';
-		loadobj.urlid=2;
-		loadobj.refid=2;
+	loadobj.urlsid=2;
+	loadobj.refsid=2;
+	loadobj.app=this;
 	core_vm.require.load(loadobj,function(err,module,spec){
 		if (core_vm.isfn(cb)) cb(err,module,spec);
 	})
@@ -93,20 +95,22 @@ proto.use=function(where,name,fn){
 	if( !core_vm.isstr(name) )return;
 	if(where=='vm'){
 		if(!core_vm.isobj(fn) || (!fn.template&&!fn.body))return;
-		core_vm.gcache.vmbody[name]=fn.template||fn.body;
-		core_vm.gcache.vmstyle[name]=fn.style||'';
-		core_vm.gcache.newvmlib(name,{exports:fn.lib||{}});
+		this.__cache.vmbody[name]=fn.template||fn.body;
+		this.__cache.vmstyle[name]=fn.style||'';
+		this.__cache.add_vmlib(name,{exports:fn.lib||{}});
+		this.__cache.keep('vm',name);
 		return;
 	}else	if(where=='lib'){
-		core_vm.gcache.newjslib(name,{exports:fn});
+		this.__cache.add_jslib(name,{exports:fn});
+		this.__cache.keep('lib',name);
 		return;
 	}
 	if(where==='block' && !core_vm.isstr(fn))return;
 	if(where!=='block' &&  !core_vm.isfn(fn))return;
 	if(where=='vmprototype'){
 		core_vm.define.extend(name,fn,this);
-	}else if(core_vm.gcache.use[where]){
-		core_vm.gcache.use[where][name]=fn;
+	}else if(this.__cache.use[where]){
+		this.__cache.use[where][name]=fn;
 	}
 }
 module.exports=appclass;
